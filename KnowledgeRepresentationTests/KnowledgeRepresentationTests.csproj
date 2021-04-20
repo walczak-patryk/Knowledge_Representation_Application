@@ -8,7 +8,7 @@
     <ProjectGuid>{DCFD2796-815F-412C-843E-36EF7B8DED73}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>KnowledgeRepresentationTests</RootNamespace>
+    <RootNamespace>KR_Tests</RootNamespace>
     <AssemblyName>KnowledgeRepresentationTests</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -49,7 +49,6 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
