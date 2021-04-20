@@ -7,7 +7,7 @@
     <ProjectGuid>{D578DA36-B7D6-4CBD-8FA2-75B12ABEB973}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>KnowledgeRepresentationLib</RootNamespace>
+    <RootNamespace>KR_Lib</RootNamespace>
     <AssemblyName>KnowledgeRepresentationLib</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -41,13 +41,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataStructures\Action.cs" />
+    <Compile Include="DataStructures\Fluent.cs" />
+    <Compile Include="Descriptions\Description.cs" />
+    <Compile Include="Expressions\LogicExpression.cs" />
+    <Compile Include="Models\IStructure.cs" />
+    <Compile Include="Models\Model.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Queries\Query.cs" />
+    <Compile Include="Scenarios\ActionOccurrences.cs" />
+    <Compile Include="Scenarios\Observations.cs" />
+    <Compile Include="Scenarios\Scenario.cs" />
+    <Compile Include="Statements\IStatement.cs" />
+    <Compile Include="Statements\ReleaseStatement.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Environment\" />
-    <Folder Include="Expressions\" />
-    <Folder Include="Queries\" />
-    <Folder Include="Scenario\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
