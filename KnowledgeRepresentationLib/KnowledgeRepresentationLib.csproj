@@ -44,6 +44,7 @@
     <Compile Include="DataStructures\Action.cs" />
     <Compile Include="DataStructures\Fluent.cs" />
     <Compile Include="Descriptions\Description.cs" />
+    <Compile Include="Engine.cs" />
     <Compile Include="Expressions\LogicExpression.cs" />
     <Compile Include="Models\IStructure.cs" />
     <Compile Include="Models\Model.cs" />
