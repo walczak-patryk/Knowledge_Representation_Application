@@ -1,18 +1,17 @@
 ﻿using System.Runtime.CompilerServices;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 
-[assembly:InternalsVisibleTo("KnowledgeRepresentationTests")]
+using ExpressionEvaluator;// <-- Nuget
+
+// using KnowledgeRepresentationReasoning.Helpers;
+using KR_Lib.DataStructures;
 
 namespace KR_Lib.Expressions {
 
-  using System;
-  using System.Collections.Generic;
-  using System.Linq;
-  using System.Text.RegularExpressions;
 
-  using ExpressionEvaluator;// <-- Nuget
-
-  // using KnowledgeRepresentationReasoning.Helpers;
-  using KR_Lib.DataStructures;
 
   public interface ILogicExpression {
     bool Evaluate(IEnumerable<Tuple<string, bool>> values);
