@@ -51,7 +51,7 @@
     <Compile Include="DataStructures\Fluent.cs" />
     <Compile Include="Descriptions\Description.cs" />
     <Compile Include="Engine.cs" />
-    <Compile Include="Expressions\LogicExpression.cs" />
+    <Compile Include="Formulas\Formula.cs" />
     <Compile Include="Models\IStructure.cs" />
     <Compile Include="Models\Model.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -59,7 +59,12 @@
     <Compile Include="Scenarios\ActionOccurrences.cs" />
     <Compile Include="Scenarios\Observations.cs" />
     <Compile Include="Scenarios\Scenario.cs" />
+    <Compile Include="Statements\ImpossibleIfStatement.cs" />
+    <Compile Include="Statements\ImpossibleAtStatement.cs" />
     <Compile Include="Statements\IStatement.cs" />
+    <Compile Include="Statements\CauseStatement.cs" />
+    <Compile Include="Statements\InvokeStatement.cs" />
+    <Compile Include="Statements\TriggerStatement.cs" />
     <Compile Include="Statements\ReleaseStatement.cs" />
   </ItemGroup>
   <ItemGroup>

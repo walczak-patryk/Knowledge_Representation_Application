@@ -2,82 +2,82 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
+using System.Text.RegularFormulas;
 
-using ExpressionEvaluator;// <-- Nuget
+using FormulaEvaluator;// <-- Nuget
 
 // using KnowledgeRepresentationReasoning.Helpers;
 using KR_Lib.DataStructures;
 
-namespace KR_Lib.Expressions {
+namespace KR_Lib.Formulas {
 
 
 
-  public interface ILogicExpression {
-    bool Evaluate(IEnumerable<Tuple<string, bool>> values);
-    //       bool Evaluate(State state);
-    void SetExpression(string expression);
-    string[] GetFluentNames();
-    //List<Fluent[]> CalculatePossibleFluents();  // Nie ma grey'a
-    void AddExpression(ILogicExpression logicExpression);
-  }
+    public interface ILogicFormula
+    {
+        bool Evaluate(IEnumerable<Tuple<string, bool>> values);
+        //       bool Evaluate(State state);
+        void SetFormula(string Formula);
+        string[] GetFluentNames();
+        //List<Fluent[]> CalculatePossibleFluents();  // Nie ma grey'a
+        void AddFormula(ILogicFormula logicFormula);
+    }
 
-
-  public class LogicExpression : ILogicExpression {
+  public class Formula : ILogicFormula {
     private readonly char[] _specialCharacters = new[] { '|', '&', '(', ')', '!' };
 
-    private string _expression;
+    private string _Formula;
 
-    public LogicExpression(LogicExpression logicExpression) {
-      this._expression = logicExpression._expression;
+    public Formula(Formula logicFormula) {
+      this._Formula = logicFormula._Formula;
     }
 
-    public LogicExpression() {
-      _expression = string.Empty;
+    public Formula() {
+      _Formula = string.Empty;
     }
 
-    public LogicExpression(string expression) : this() {
-      if (!string.IsNullOrEmpty(expression)) {
-        this._expression = expression;
+    public Formula(string Formula) : this() {
+      if (!string.IsNullOrEmpty(Formula)) {
+        this._Formula = Formula;
       }
     }
 
     public bool Evaluate(IEnumerable<Tuple<string, bool>> values) {
-      if (_expression == null || _expression.Equals(string.Empty)) {
+      if (_Formula == null || _Formula.Equals(string.Empty)) {
         return true;
       }
 
-      var expression = new CompiledExpression(this._expression);
-      //expression("h", typeof(ExpressionHelper));
+      var Formula = new CompiledFormula(this._Formula);
+      //Formula("h", typeof(FormulaHelper));
       //if (values != null) {
       //  foreach (var value in values) {
-      //    expression(value.Item1, value.Item2);
+      //    Formula(value.Item1, value.Item2);
       //  }
       //}
-      return (bool) expression.Eval();
+      return (bool) Formula.Eval();
     }
 
     //public bool Evaluate(State state) {
-    //  if (_expression == null || _expression.Equals(string.Empty)) {
+    //  if (_Formula == null || _Formula.Equals(string.Empty)) {
     //    return true;
     //  }
 
-    //  var expression = new CompiledExpression(this._expression);
-    //  expression.RegisterType("h", typeof(ExpressionHelper));
+    //  var Formula = new CompiledFormula(this._Formula);
+    //  Formula.RegisterType("h", typeof(FormulaHelper));
     //  if (state != null) {
     //    foreach (var fluent in state.Fluents) {
-    //      expression.RegisterType(fluent.Name, fluent.Value);
+    //      Formula.RegisterType(fluent.Name, fluent.Value);
     //    }
     //  }
-    //  return (bool) expression.Eval();
+    //  return (bool) Formula.Eval();
     //}
 
-    public void SetExpression(string expression) {
-      this._expression = expression ?? string.Empty;
+    public void SetFormula(string Formula) {
+      this._Formula = Formula ?? string.Empty;
     }
 
     public string[] GetFluentNames() {
-      string filteredString = this._expression;
+      string filteredString = this._Formula;
       filteredString = this._specialCharacters.Aggregate(filteredString, (current, specialCharacter) => current.Replace(specialCharacter, ' '));
       filteredString = Regex.Replace(filteredString, " {2,}", " ");
       return filteredString.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Distinct().ToArray();
@@ -99,7 +99,7 @@ namespace KR_Lib.Expressions {
     //  return result;
     //}
 
-    private class ExpressionHelper {
+    private class FormulaHelper {
       public static bool impl(bool a, bool b) {
         if (a == false) {
           return true;
@@ -116,18 +116,18 @@ namespace KR_Lib.Expressions {
       }
     }
 
-    public void AddExpression(ILogicExpression logicExpression) {
-      if (logicExpression != null) {
-        if (!string.IsNullOrEmpty(logicExpression.ToString()) && !string.IsNullOrEmpty(_expression)) {
-          _expression = "(" + _expression + ") && (" + logicExpression + ")";
-        } else if (!string.IsNullOrEmpty(logicExpression.ToString())) {
-          _expression = logicExpression.ToString();
+    public void AddFormula(ILogicFormula logicFormula) {
+      if (logicFormula != null) {
+        if (!string.IsNullOrEmpty(logicFormula.ToString()) && !string.IsNullOrEmpty(_Formula)) {
+          _Formula = "(" + _Formula + ") && (" + logicFormula + ")";
+        } else if (!string.IsNullOrEmpty(logicFormula.ToString())) {
+          _Formula = logicFormula.ToString();
         }
       }
     }
 
     public override string ToString() {
-      return this._expression;
+      return this._Formula;
     }
   }
 }
