@@ -7,7 +7,6 @@ namespace KR_Lib.DataStructures
         public Guid Id
         {
             get;
-            set;
         }
 
         public bool State
@@ -19,7 +18,12 @@ namespace KR_Lib.DataStructures
         public string Name 
         { 
             get;
-            set;
+        }
+
+        public Fluent(string name, bool initialState)
+        {
+            this.Name = name;
+            this.State = initialState;
         }
     }
 }
