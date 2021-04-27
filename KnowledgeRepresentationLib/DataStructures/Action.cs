@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace KR_Lib.DataStructures
 {
-    class Action
+    public class Action
     {
     }
 }
