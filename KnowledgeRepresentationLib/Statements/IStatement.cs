@@ -7,7 +7,6 @@ namespace KR_Lib.Statements
 {
     public interface IStatement
     {
-        Guid Id { get; }
     }
     public abstract class Statement : IStatement
     {

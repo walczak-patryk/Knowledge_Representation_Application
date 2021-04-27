@@ -52,6 +52,7 @@
     <Compile Include="Descriptions\Description.cs" />
     <Compile Include="Engine.cs" />
     <Compile Include="Formulas\Formula.cs" />
+    <Compile Include="Formulas\NegationFormula.cs" />
     <Compile Include="Models\IStructure.cs" />
     <Compile Include="Models\Model.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
