@@ -6,6 +6,7 @@ namespace KR_Lib.Statements
     public class ImpossibleAtStatement : Statement
     {
         private int time;
+
         public ImpossibleAtStatement(Action action, int time) : base(action, null, null) { this.time = time; }
     }
 }

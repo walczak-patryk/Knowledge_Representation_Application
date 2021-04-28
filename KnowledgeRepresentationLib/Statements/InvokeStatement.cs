@@ -5,7 +5,14 @@ namespace KR_Lib.Statements
 {
     public class InvokeStatement : Statement
     {
-        public InvokeStatement(Action action, Fluent fluent, Formula formula = null) : base(action, fluent, formula) { }
+        private Action actionInvoked;
+        private int time;
+
+        public InvokeStatement(Action action, Fluent fluent, Formula formula = null) : base(action, null, formula)
+        {
+            this.actionInvoked = actionInvoked;
+            this.time = time;
+        }
 
     }
 }
