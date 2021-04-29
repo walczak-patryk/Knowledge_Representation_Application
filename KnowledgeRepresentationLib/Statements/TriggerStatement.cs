@@ -5,6 +5,6 @@ namespace KR_Lib.Statements
 {
     public class TriggerStatement : Statement
     {
-        public TriggerStatement(Action action, Fluent fluent, Formula formula = null) : base(action, fluent, formula) { }
+        public TriggerStatement(Action action, Fluent fluent, Formula formula = null) : base(action, null, formula) { }
     }
 }

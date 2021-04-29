@@ -12,6 +12,10 @@ namespace KR_Lib.Descriptions
         /// <param name="statement">Nowe zdanie.</param>
         /// <returns>Identyfikator nowego zdania.</returns>
         Guid AddStatement(IStatement statement);
+        /// <summary>
+        /// Usunięcie zdania z domeny.
+        /// </summary>
+        /// <param name="guid">Identyfikator zdania do usunięcia.</param>
         void DeleteStatement(Guid guid);
     }
     public class Description : IDescription
