@@ -3,10 +3,58 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:KnowledgeRepresentationInterface"
+        xmlns:local="clr-namespace:KnowledgeRepresentationInterface" xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="RW" Height="600" Width="900"
+        WindowStartupLocation="CenterScreen">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="3" />
+            <ColumnDefinition Width="2*" />
+        </Grid.ColumnDefinitions>
+        <DockPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
+            <Menu DockPanel.Dock="Top">
+                <MenuItem Header="_File">
+                    <MenuItem Header="_Open" />
+                    <MenuItem Header="_Save" />
+                </MenuItem>
+                <MenuItem Header="About" />
+            </Menu>
+        </DockPanel>
+        <TreeView Grid.Column="0" Grid.Row="1" Name="Panel_TreeView" Margin="5,5,5,5">
+            <TreeViewItem Name="Actions_TreeViewItem" Header="Actions">
+                <TreeViewItem Header="Action I" />
+            </TreeViewItem>
+            <TreeViewItem Name="Fluents_TreeViewItem" Header="Fluents">
+                <TreeViewItem Header="Fluent I" />
+            </TreeViewItem>
+            <TreeViewItem Name="Statements_TreeViewItem" Header="Statements">
+                <TreeViewItem Header="Statement I" />
+            </TreeViewItem>
+            <TreeViewItem Name="Scenarios_TreeViewItem" Header="Scenarios">
+                <TreeViewItem Header="Scenario I" />
+            </TreeViewItem>
+        </TreeView>
+        <GridSplitter Grid.Column="1" Grid.Row="1" Width="3" HorizontalAlignment="Stretch" />
+        <TabControl Name="Panel_TabControl" Grid.Column="2" Grid.Row="1" Margin="5,5,5,5">
+            <TabItem Name="Actions_Fluents_Tab" Header="Actions and Fluents" Width="{c:Binding ElementName=Panel_TabControl, Path=ActualWidth/4 - 1}">
+                <Label>Actions and Fluents...</Label>
+            </TabItem>
+            <TabItem Name="Statements_Tab" Header="Statements" Width="{c:Binding ElementName=Panel_TabControl, Path=ActualWidth/4 - 1}">
+                <Label>Statements...</Label>
+            </TabItem>
+            <TabItem Name="Scenarios_Tab" Header="Scenarios" Width="{c:Binding ElementName=Panel_TabControl, Path=ActualWidth/4 - 1}">
+                <Label>Scenarios...</Label>
+            </TabItem>
+            <TabItem Name="Queries_Tab" Header="Queries" Width="{c:Binding ElementName=Panel_TabControl, Path=ActualWidth/4 - 1}">
+                <Label>Queries...</Label>
+            </TabItem>
+
+        </TabControl>
     </Grid>
 </Window>
