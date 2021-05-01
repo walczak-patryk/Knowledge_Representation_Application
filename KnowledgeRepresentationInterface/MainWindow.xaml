@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:KnowledgeRepresentationInterface" xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
         mc:Ignorable="d"
         Title="RW" Height="600" Width="900"
+        MinWidth="403" MinHeight="200"
         WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.RowDefinitions>
@@ -13,9 +14,9 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" MinWidth="100"/>
             <ColumnDefinition Width="3" />
-            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="2*" MinWidth="300"/>
         </Grid.ColumnDefinitions>
         <DockPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
             <Menu DockPanel.Dock="Top">
