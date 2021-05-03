@@ -22,6 +22,7 @@ namespace KnowledgeRepresentationInterface
     public partial class MainWindow : Window
     {
 
+
         public MainWindow()
         {
             InitializeComponent();
@@ -89,6 +90,11 @@ namespace KnowledgeRepresentationInterface
             Scenario_ListView.ItemsSource = tmp_ListView;
             Scenario_ListView.Items.Refresh();
 
+        }
+
+        private void Panel_TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            //do actions on tab change
         }
     }
 
