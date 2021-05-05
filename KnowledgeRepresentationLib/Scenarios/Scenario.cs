@@ -1,6 +1,6 @@
 ﻿namespace KR_Lib.Scenarios
 {
-    interface IScenario
+    public interface IScenario
     {
 
     }

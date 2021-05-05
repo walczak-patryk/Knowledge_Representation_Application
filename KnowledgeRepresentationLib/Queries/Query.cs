@@ -2,10 +2,10 @@
 {
     interface IQuery
     {
-
+        int Time { get; }
     }
 
-    class Query : IQuery //IQueryable
-    {
-    }
+    //class Query : IQuery //IQueryable
+    //{
+    //}
 }

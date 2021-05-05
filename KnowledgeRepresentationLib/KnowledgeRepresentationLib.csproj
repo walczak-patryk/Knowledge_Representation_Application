@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -67,9 +67,20 @@
     <Compile Include="Statements\InvokeStatement.cs" />
     <Compile Include="Statements\TriggerStatement.cs" />
     <Compile Include="Statements\ReleaseStatement.cs" />
+    <Compile Include="Tree\Node.cs" />
+    <Compile Include="Tree\State.cs" />
+    <Compile Include="Tree\Tree.cs" />
+    <Compile Include="Tree\Extentions.cs" />
+    <Compile Include="Queries\FluentQuery.cs" />
+    <Compile Include="Queries\FormulaQuery.cs" />
+    <Compile Include="Exceptions\InconsistentException.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Tree\" />
+    <Folder Include="Exceptions\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

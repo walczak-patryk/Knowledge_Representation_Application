@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace KR_Lib.Descriptions
 {
-    interface IDescription
+    public interface IDescription
     {
         /// <summary>
         /// Dodanie nowego zdania do domeny.
