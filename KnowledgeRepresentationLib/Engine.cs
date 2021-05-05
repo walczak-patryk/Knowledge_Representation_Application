@@ -1,8 +1,14 @@
 ﻿using KR_Lib.DataStructures;
+using KR_Lib.Descriptions;
+using KR_Lib.Exceptions;
+using KR_Lib.Models;
 using KR_Lib.Queries;
 using KR_Lib.Scenarios;
 using KR_Lib.Statements;
+using KR_Lib.Tree;
 using System;
+using System.Collections.Generic;
+using Action = KR_Lib.DataStructures.Action;
 
 namespace KR_Lib
 {
@@ -74,75 +80,136 @@ namespace KR_Lib
     }
     class Engine : IEngine
     {
-        public void AddAction(DataStructures.Action action)
+        IDescription description = new Description();
+        IScenario scenario = new Scenario();
+        List<Action> actions = new List<Action>();
+        List<Fluent> fluents = new List<Fluent>();
+        List<Structure> models;
+        private bool newChangesFlag = true;
+
+        private void GenerateModels() 
         {
-            throw new NotImplementedException(); 
+            var root = TreeMethods.GenerateTree(description, scenario); //Kacper, Kacper, Kornel
+            var structures = TreeMethods.GenerateStructues(root); //Kacper, Kacper, Kornel
+            this.models = structures.ToModels(); //Ala, Filip
         }
 
+        /// <summary>
+        /// Add action to list of actions
+        /// </summary>
+        /// <param Action="action"></param>
+        public void AddAction(Action action)
+        {
+            newChangesFlag = true;
+            actions.Add(action);
+        }
+
+        /// <summary>
+        /// Adds fluent to list of fluents
+        /// </summary>
+        /// <param Fluent="fluent"></param>
         public void AddFluent(Fluent fluent)
         {
-            throw new NotImplementedException();
+            newChangesFlag = true;
+            fluents.Add(fluent);
         }
 
+        /// <summary>
+        /// Adds scenario to list of scenarios
+        /// </summary>
+        /// <param IScenario="scenario"></param>
         public void AddScenario(IScenario scenario)
         {
+            newChangesFlag = true;
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Adds statement to list of statements
+        /// </summary>
+        /// <param IStatement="statement"></param>
         public void AddStatement(IStatement statement)
         {
-            throw new NotImplementedException();
+            newChangesFlag = true;
+            this.description.AddStatement(statement);
         }
 
-        public bool ExecuteQuerry(IQuery querry)
-        {
-            /*
-            stworzenie drzewa możliwości zacznjącego sie od stanu pierwotnego
-            generującego wszystkie możliwe scieżki/stany w węzłach
-
-            przetworzenie tego drzewa na modele
-
-
-            if ( sprawdzenie czy kwerenda odnosi sie do akcji czy formuly ) {
-            # zapytanie o formule #
-                 foreach( var modelu in modelach){
-                    if ( model.H(a,t) != 1)
-                        return false;
-                }
-             return true;
-             if ( model.H(a,t) 
-                foreach( var modelu in mofelach){
-                    if ( !((A,t) in model.E))
-                        return false;
-                }
-             return true;
-            }
-            else{
-            # zapytanie o akcje #
-
-            }
-            */
-            return false;
-        }
-
+        /// <summary>
+        /// Removes action from list of actions
+        /// </summary>
+        /// <param Action="action"></param>
         public void RemoveAction(Guid id)
         {
+            newChangesFlag = true;
             throw new NotImplementedException();
         }
 
+
+        /// <summary>
+        /// Removes fluent from list of fluents
+        /// </summary>
+        /// <param Fluent="fluent"></param>
         public void RemoveFluent(Guid id)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Removes scenario from list of scenarios
+        /// </summary>
+        /// <param name="id"></param>
         public void RemoveScenario(Guid id)
         {
+            newChangesFlag = true;
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Removes statement from list of statements
+        /// </summary>
+        /// <param IStatement="statement"></param>
         public void RemoveStatement(Guid id)
         {
+            newChangesFlag = true;
             throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Checks if querry is correct
+        /// </summary>
+        /// <param IQuery="querry"></param>
+        /// <returns></returns>
+        public bool ExecuteQuerry(IQuery querry)
+        {
+            if (newChangesFlag)
+            {
+                GenerateModels();
+                newChangesFlag = false;
+            }
+
+            if (models.Count == 0)
+                throw new InconsistentException();
+
+            //Ala, Filip
+            if (querry is FormulaQuery)
+            {
+                var q = querry as FormulaQuery;
+                foreach (var model in this.models)
+                {
+                    if (model.H(q.Formula, q.Time) != 1)
+                        return false;
+                }
+            }
+            else
+            {
+                var q = querry as FluentQuery;
+                foreach (var model in this.models)
+                {
+                    if (!model.E.Contains((q.Action, q.Time)))
+                        return false;
+                }
+            }
+            return true;
         }
     }
 }
