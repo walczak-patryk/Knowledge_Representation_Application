@@ -53,8 +53,8 @@
     <Compile Include="Engine.cs" />
     <Compile Include="Formulas\Formula.cs" />
     <Compile Include="Formulas\NegationFormula.cs" />
-    <Compile Include="Models\IStructure.cs" />
-    <Compile Include="Models\Model.cs" />
+    <Compile Include="Structures\IStructure.cs" />
+    <Compile Include="Structures\Structure.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\Query.cs" />
     <Compile Include="Scenarios\ActionOccurrences.cs" />

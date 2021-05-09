@@ -8,6 +8,7 @@ using KR_Lib.Statements;
 using KR_Lib.Tree;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Action = KR_Lib.DataStructures.Action;
 
 namespace KR_Lib
@@ -141,7 +142,9 @@ namespace KR_Lib
         public void RemoveAction(Guid id)
         {
             newChangesFlag = true;
-            throw new NotImplementedException();
+            var actionToRemove = actions.SingleOrDefault(action => action.Id == id);
+            if (actionToRemove != null)
+                actions.Remove(actionToRemove);
         }
 
 
@@ -151,7 +154,10 @@ namespace KR_Lib
         /// <param Fluent="fluent"></param>
         public void RemoveFluent(Guid id)
         {
-            throw new NotImplementedException();
+            newChangesFlag = true;
+            var fluentToRemove = fluents.SingleOrDefault(fluent => fluent.Id == id);
+            if (fluentToRemove != null)
+                fluents.Remove(fluentToRemove);
         }
 
         /// <summary>
@@ -161,7 +167,9 @@ namespace KR_Lib
         public void RemoveScenario(Guid id)
         {
             newChangesFlag = true;
-            throw new NotImplementedException();
+            var fluentToRemove = fluents.SingleOrDefault(fluent => fluent.Id == id);
+            if (fluentToRemove != null)
+                fluents.Remove(fluentToRemove);
         }
 
         /// <summary>
@@ -171,7 +179,7 @@ namespace KR_Lib
         public void RemoveStatement(Guid id)
         {
             newChangesFlag = true;
-            throw new NotImplementedException();
+            this.description.DeleteStatement(id);
         }
 
         /// <summary>

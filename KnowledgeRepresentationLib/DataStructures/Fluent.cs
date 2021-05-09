@@ -24,6 +24,7 @@ namespace KR_Lib.DataStructures
         {
             this.Name = name;
             this.State = initialState;
+            this.Id = Guid.NewGuid();
         }
     }
 }
