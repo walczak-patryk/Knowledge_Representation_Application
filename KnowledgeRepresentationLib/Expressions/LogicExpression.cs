@@ -101,6 +101,13 @@ namespace KR_Lib.Expressions {
     //}
 
     private class ExpressionHelper {
+      public static bool Nega(bool a) {
+        if (a == true) {
+          return false;
+        } else {
+          return true;
+        }
+      }
       public static bool Koni(bool a, bool b) {
         if (a == true && b == true) {
           return true;
