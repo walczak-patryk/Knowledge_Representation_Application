@@ -51,8 +51,12 @@
     <Compile Include="DataStructures\Fluent.cs" />
     <Compile Include="Descriptions\Description.cs" />
     <Compile Include="Engine.cs" />
+    <Compile Include="Formulas\AlternativeFormula.cs" />
+    <Compile Include="Formulas\ConjunctionFormula.cs" />
+    <Compile Include="Formulas\EquivalenceFormula.cs" />
     <Compile Include="Formulas\Formula.cs" />
     <Compile Include="Formulas\NegationFormula.cs" />
+    <Compile Include="Formulas\ImplicationFormula.cs" />
     <Compile Include="Structures\IStructure.cs" />
     <Compile Include="Structures\Structure.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
