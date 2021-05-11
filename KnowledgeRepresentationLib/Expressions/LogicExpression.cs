@@ -54,7 +54,7 @@ namespace KR_Lib.Expressions {
       //  foreach (var value in values) {
       //    expression(value.Item1, value.Item2);
       //  }
-      //}
+      //} // --> po aktualizacji nie trzeba rejestrować
       return (bool) expression.Eval();
     }
 
@@ -101,14 +101,28 @@ namespace KR_Lib.Expressions {
     //}
 
     private class ExpressionHelper {
-      public static bool impl(bool a, bool b) {
+      public static bool Koni(bool a, bool b) {
+        if (a == true && b == true) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+      public static bool Alte(bool a, bool b) {
+        if (a == false && b == false) {
+          return false;
+        } else {
+          return true;
+        }
+      }
+      public static bool Impl(bool a, bool b) {
         if (a == false) {
           return true;
         }
         return b;
       }
 
-      public static bool rown(bool a, bool b) {
+      public static bool Rown(bool a, bool b) {
         if (a == b) {
           return true;
         } else {
