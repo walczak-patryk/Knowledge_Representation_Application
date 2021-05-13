@@ -3,6 +3,7 @@ using KR_Lib.Queries;
 using KR_Lib.Scenarios;
 using KR_Lib.Statements;
 using System;
+using Action = System.Action;
 
 namespace KR_Lib
 {
@@ -74,7 +75,7 @@ namespace KR_Lib
     }
     class Engine : IEngine
     {
-        public void AddAction(DataStructures.Action action)
+        public void AddAction(Action action)
         {
             throw new NotImplementedException(); 
         }

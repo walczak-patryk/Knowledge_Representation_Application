@@ -89,34 +89,49 @@
                 <!--Label>Actions and Fluents...</-->
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="100"/>
-                        <RowDefinition Height="0.3*"/>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="1.1*"/>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="30"/>
-                        <RowDefinition Height="0.3*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="150"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="30"/>
-                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="30"/>
                     </Grid.ColumnDefinitions>
                     
-                    <Label Grid.Row="1" Grid.Column="1" Content="Action"/>
-                    <TextBox Grid.Row="2" Grid.Column="1" Text="Action do wpisania"/>
-                    <Label Grid.Row="1" Grid.Column="2" 
-                           Content="Czas trwania akcji..."/>
-                    
-                    <Button Grid.Row="2" Grid.Column="3" Content="Add action"/>
+                    <Label Grid.Row="1" Grid.Column="1" Content="Action" VerticalAlignment="Bottom"/>
+                    <TextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" 
+                             Margin="3,3,4,3" Text="Action name"/>
+                    <Label Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="1" HorizontalAlignment="Center"
+                           VerticalAlignment="Top" Content="duration"/>
+                    <xctk:UIntegerUpDown Name="Action_Duration_UIntUpDown"
+                                         Grid.Row="2" Grid.Column="3" Margin="3,3,3,3" />
+                    <Button Grid.Row="2" Grid.Column="4" Content="Add action" Margin="3"/>
 
                     <Label Grid.Row="4" Grid.Column="1" Content="Fluent"/>
-                    <TextBox Grid.Row="5" Grid.Column="1" Text="Fluent do wpisania"/>
+                    <TextBox Grid.Row="5" Grid.Column="1" Text="Fluent name"
+                            Margin="3,3,4,3" Grid.ColumnSpan="2"/>
                     
                     
-                    <Button Grid.Row="5" Grid.Column="3" Content="Add Fluent"/>
+                    <Button Grid.Row="5" Grid.Column="4" Content="Add fluent"
+                            Margin="3"/>
 
                 </Grid>
             </TabItem>
@@ -128,18 +143,34 @@
                             <RowDefinition Height="50"/>
                             <RowDefinition Height="30"/>
                             <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="0.5*"/>
+                            <RowDefinition Height="*"/>
                             
                         </Grid.RowDefinitions>
 
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="100"/>
                             <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="100"/>
                         </Grid.ColumnDefinitions>
 
-                        <ComboBox Grid.Row="1" Grid.Column="1" />
+                        <ComboBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="7"/>
                         
-                        <GroupBox Grid.Row="2" Grid.Column="1"/>
+                        <GroupBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="7"
+                                  Grid.RowSpan="5"/>
+                        <Button Grid.Row="7" Grid.Column="3" Content="Add statement" 
+                                Grid.ColumnSpan="3" Margin="3"/>
                     </Grid>
                 </DockPanel>
                 
