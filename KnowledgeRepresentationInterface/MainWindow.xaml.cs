@@ -112,5 +112,6 @@ namespace KnowledgeRepresentationInterface
             this.Observation = Observation;
             this.Duration = Duration;
         }
+
     }
 }

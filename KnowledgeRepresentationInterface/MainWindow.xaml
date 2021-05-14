@@ -9,6 +9,13 @@
         Title="RW" Height="600" Width="900"
         MinWidth="403" MinHeight="270"
         WindowStartupLocation="CenterScreen">
+    <!--<Window.Resources>
+        xmlns:viewmodels="clr-namespace:KnowledgeRepresentationInterface.ViewModels"
+        xmlns:views="clr-namespace:KnowledgeRepresentationInterface.Views"
+        <DataTemplate x:Name="ActionsAndFluentsTemplate" DataType="{x:Type viewmodels:ActionsAndFluentsViewModel}">
+            <views:ActionAndFluentsView DataContext="{Binding}"/>
+        </DataTemplate>
+    </Window.Resources>-->
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="20" />
@@ -79,10 +86,95 @@
         <GridSplitter Grid.Column="1" Grid.Row="1" Width="3" HorizontalAlignment="Stretch" />
         <TabControl Name="Panel_TabControl" Grid.Column="2" Grid.Row="1" Margin="5,5,5,5" SelectionChanged="Panel_TabControl_SelectionChanged">
             <TabItem Name="Actions_Fluents_Tab" Header="Actions and Fluents" Width="{c:Binding ElementName=Panel_TabControl, Path=ActualWidth/4 - 1}">
-                <Label>Actions and Fluents...</Label>
+                <!--Label>Actions and Fluents...</-->
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="1.1*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="150"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="30"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="30"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <Label Grid.Row="1" Grid.Column="1" Content="Action" VerticalAlignment="Bottom"/>
+                    <TextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" 
+                             Margin="3,3,4,3" Text="Action name"/>
+                    <Label Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="1" HorizontalAlignment="Center"
+                           VerticalAlignment="Top" Content="duration"/>
+                    <xctk:UIntegerUpDown Name="Action_Duration_UIntUpDown"
+                                         Grid.Row="2" Grid.Column="3" Margin="3,3,3,3" />
+                    <Button Grid.Row="2" Grid.Column="4" Content="Add action" Margin="3"/>
+
+                    <Label Grid.Row="4" Grid.Column="1" Content="Fluent"/>
+                    <TextBox Grid.Row="5" Grid.Column="1" Text="Fluent name"
+                            Margin="3,3,4,3" Grid.ColumnSpan="2"/>
+                    
+                    
+                    <Button Grid.Row="5" Grid.Column="4" Content="Add fluent"
+                            Margin="3"/>
+
+                </Grid>
             </TabItem>
             <TabItem Name="Statements_Tab" Header="Statements" Width="{c:Binding ElementName=Panel_TabControl, Path=ActualWidth/4 - 1}">
-                <Label>Statements...</Label>
+                <!--<Label>Statements...</Label> -->
+                <DockPanel>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="50"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="0.5*"/>
+                            <RowDefinition Height="*"/>
+                            
+                        </Grid.RowDefinitions>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="100"/>
+                        </Grid.ColumnDefinitions>
+
+                        <ComboBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="7"/>
+                        
+                        <GroupBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="7"
+                                  Grid.RowSpan="5"/>
+                        <Button Grid.Row="7" Grid.Column="3" Content="Add statement" 
+                                Grid.ColumnSpan="3" Margin="3"/>
+                    </Grid>
+                </DockPanel>
+                
+                
             </TabItem>
             <TabItem Name="Scenarios_Tab" Header="Scenarios" Width="{c:Binding ElementName=Panel_TabControl, Path=ActualWidth/4 - 1}">
                 <Grid>
