@@ -31,9 +31,9 @@ namespace KR_Lib.Queries
         /// <summary>
         /// Odpowiedź na pytanie czy w chwili t realizacji scenariusza wykonywana jest akcja A
         /// </summary>
-        /// <param name="modeledStructures">Lista modeli i niespójnych struktur</param>
+        /// <param name="modeledStructures">Lista modeli i niespójnych struktur, dla których sprawdzana będzie prawdziwość query</param>
         /// <param name="scenario">Scenariusz</param>
-        /// <returns>bool</returns>
+        /// <returns>Prawda jeżeli akcja A jest wykonywana w chwili t w każdej stukturze z listy, fałsz w.p.p.<returns>
         public bool GetAnswer(List<IStructure> modeledStructures, IScenario scenario)
         {
             bool atLeastOneModel = false;
