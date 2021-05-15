@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using KnowledgeRepresentationLib.Scenarios;
 using KR_Lib.DataStructures;
 using KR_Lib.Formulas;
 using KR_Lib.Scenarios;
@@ -8,21 +9,12 @@ using KR_Lib.Structures;
 namespace KR_Lib.Queries 
 {
     /// <summary>
-    /// Zapytanie użytkownika czy w chwili t ≥ 0 realizacji podanego scenariusza warunek γ zachodzi zawsze/kiedykolwiek?
+    /// Zapytanie użytkownika  czy podany cel γ jest osiągalny zawsze/kiedykolwiek przy zadanym zbiorze obserwacji OBS?
     /// </summary>
-    public class FormulaQuery : IQuery
+    public class TargetQuery : IQuery
     {
-        
-        private int time;
-        private Formula formula;
-        
-        public int Time
-        {
-            get
-            {
-                return time;
-            }
-        }
+
+        Formula formula;
 
         public Formula Formula
         {
@@ -40,17 +32,23 @@ namespace KR_Lib.Queries
 
         public bool GetAnswer(List<IStructure> models, IScenario scenario)
         {
+            List<int> possibleTimes = new List<int>();
             bool atLeatOneTrue = false;
             bool atLeatOneFalse = false;
             foreach (var model in models)
             {
-                bool evaluationResult = model.EvaluateFormula(this.formula, this.Time);
-                if (evaluationResult) atLeatOneTrue = true;
+                possibleTimes.Clear(); 
+                int time = model.EndTime;
+                for (int i=0; i<time; i++)
+                {
+                    bool evaluationResult = model.EvaluateFormula(this.formula, i);
+                    if (evaluationResult) possibleTimes.Add(i);
+                }
+                if (possibleTimes.Count > 0) atLeatOneTrue = true;
                 else atLeatOneFalse = true;
             }
             if (this.QueryType == QueryType.Ever) return atLeatOneTrue;
             else return !atLeatOneFalse;
         }
     }
-    
 }

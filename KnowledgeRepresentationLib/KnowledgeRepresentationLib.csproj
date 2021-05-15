@@ -49,10 +49,16 @@
   <ItemGroup>
     <Compile Include="DataStructures\Action.cs" />
     <Compile Include="DataStructures\Fluent.cs" />
+    <Compile Include="DataStructures\QueryEnumerables.cs" />
     <Compile Include="Descriptions\Description.cs" />
     <Compile Include="Engine.cs" />
     <Compile Include="Formulas\Formula.cs" />
     <Compile Include="Formulas\NegationFormula.cs" />
+    <Compile Include="Queries\ActionQuery.cs" />
+    <Compile Include="Structures\Model.cs" />
+    <Compile Include="Queries\PossibleScenarioQuery.cs" />
+    <Compile Include="Queries\TargetQuery.cs" />
+    <Compile Include="Structures\InconsistentStructure.cs" />
     <Compile Include="Structures\IStructure.cs" />
     <Compile Include="Structures\Structure.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -71,16 +77,12 @@
     <Compile Include="Tree\State.cs" />
     <Compile Include="Tree\Tree.cs" />
     <Compile Include="Tree\Extentions.cs" />
-    <Compile Include="Queries\FluentQuery.cs" />
     <Compile Include="Queries\FormulaQuery.cs" />
     <Compile Include="Exceptions\InconsistentException.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Tree\" />
-    <Folder Include="Exceptions\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
