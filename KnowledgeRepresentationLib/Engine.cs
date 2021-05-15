@@ -85,14 +85,14 @@ namespace KR_Lib
         IScenario scenario = new Scenario();
         List<Action> actions = new List<Action>();
         List<Fluent> fluents = new List<Fluent>();
-        List<IStructure> models;
+        List<IStructure> modeledStructures;
         private bool newChangesFlag = true;
 
         private void GenerateModels() 
         {
             var root = TreeMethods.GenerateTree(description, scenario); //Kacper, Kacper, Kornel
             var structures = TreeMethods.GenerateStructues(root); //Kacper, Kacper, Kornel
-            this.models = structures.ToModels(); //Ala, Filip
+            this.modeledStructures = structures.ToModels(); //Ala, Filip
         }
 
         /// <summary>
@@ -195,7 +195,7 @@ namespace KR_Lib
                 newChangesFlag = false;
             }
 
-            return query.GetAnswer(models, scenario);           
+            return query.GetAnswer(modeledStructures, scenario);           
 
         }
     }

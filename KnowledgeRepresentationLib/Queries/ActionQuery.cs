@@ -31,17 +31,22 @@ namespace KR_Lib.Queries
         /// <summary>
         /// Odpowiedź na pytanie czy w chwili t realizacji scenariusza wykonywana jest akcja A
         /// </summary>
-        /// <param name="models">Lista modeli i niespójnych struktur</param>
+        /// <param name="modeledStructures">Lista modeli i niespójnych struktur</param>
         /// <param name="scenario">Scenariusz</param>
         /// <returns>bool</returns>
-        public bool GetAnswer(List<IStructure> models, IScenario scenario)
+        public bool GetAnswer(List<IStructure> modeledStructures, IScenario scenario)
         {
-            foreach (var model in models)
+            bool atLeastOneModel = false;
+            foreach (var structure in modeledStructures)
             {
-                if (model.CheckActionBelongingToE(this.Action, this.Time) != 1)
-                    return false;
+                if (structure is Model)
+                {
+                    atLeastOneModel = true;
+                    if (structure.CheckActionBelongingToE(this.Action, this.Time) != 1)
+                        return false;
+                }
             }
-            return true;
+            return atLeastOneModel && true;
         }
     }
 }

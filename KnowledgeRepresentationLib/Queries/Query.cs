@@ -9,10 +9,10 @@ namespace KR_Lib.Queries
         /// <summary>
         /// Odpowiedź na pytanie użytkownika, działanie zależy od typu obiektu query
         /// </summary>
-        /// <param name="models"></param>
+        /// <param name="modeledStructures"></param>
         /// <param name="scenario"></param>
         /// <returns>bool</returns>
-        bool GetAnswer(List<IStructure> models, IScenario scenario);
+        bool GetAnswer(List<IStructure> modeledStructures, IScenario scenario);
     }
 
 }
