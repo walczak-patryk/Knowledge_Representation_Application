@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using KR_Lib.Descriptions;
-using KR_Lib.Models;
+using KR_Lib.Structures;
 using KR_Lib.Scenarios;
 using KR_Lib.Tree;
 
@@ -25,9 +25,9 @@ namespace KR_Lib
         /// </summary>
         /// <param name="root"></param>
         /// <returns>Lista struktur</returns>
-        public static List<Structure> GenerateStructues(Node root)
+        public static List<IStructure> GenerateStructues(Node root)
         {
-            return new List<Structure>();
+            return new List<IStructure>();
         }
     }
 }
