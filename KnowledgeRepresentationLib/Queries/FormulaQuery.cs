@@ -38,18 +38,30 @@ namespace KR_Lib.Queries
             set;
         }
 
-        public bool GetAnswer(List<IStructure> models, IScenario scenario)
+        /// <summary>
+        /// Odpowiedź na pytanie czy w chwili t ≥ 0 realizacji podanego scenariusza 
+        /// formuła jest prawdziwa zawsze/kiedykolwiek?
+        /// </summary>
+        /// <param name="modeledStructures">Lista modeli i niespójnych struktur, dla których sprawdzana będzie prawdziwość query</param>
+        /// <param name="scenario">Scenariusz</param>
+        /// <returns>Prawda jeżeli podana formuła jest prawdziwa przy każdej/przynajmniej jednej strukturze z listy, fałsz w.p.p.<returns>
+        public bool GetAnswer(List<IStructure> modeledStructures, IScenario scenario)
         {
             bool atLeatOneTrue = false;
-            bool atLeatOneFalse = false;
-            foreach (var model in models)
+            bool atLeastOneFalse = false;
+            bool atLeastOneModel = false;
+            foreach (var structure in modeledStructures)
             {
-                bool evaluationResult = model.EvaluateFormula(this.formula, this.Time);
-                if (evaluationResult) atLeatOneTrue = true;
-                else atLeatOneFalse = true;
+                if (structure is Model)
+                {
+                    atLeastOneModel = true;
+                    bool evaluationResult = structure.EvaluateFormula(this.formula, this.Time);
+                    if (evaluationResult) atLeatOneTrue = true;
+                    else atLeastOneFalse = true;
+                }
             }
-            if (this.QueryType == QueryType.Ever) return atLeatOneTrue;
-            else return !atLeatOneFalse;
+            if (this.QueryType == QueryType.Ever) return atLeastOneModel && atLeatOneTrue;
+            else return atLeastOneModel && !atLeastOneFalse;
         }
     }
     

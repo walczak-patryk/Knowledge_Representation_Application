@@ -6,7 +6,13 @@ namespace KR_Lib.Queries
 {
     interface IQuery
     {
-        bool GetAnswer(List<IStructure> models, IScenario scenario);
+        /// <summary>
+        /// Odpowiedź na pytanie użytkownika, działanie zależy od typu obiektu query
+        /// </summary>
+        /// <param name="modeledStructures"></param>
+        /// <param name="scenario"></param>
+        /// <returns>bool</returns>
+        bool GetAnswer(List<IStructure> modeledStructures, IScenario scenario);
     }
 
 }
