@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using KR_Lib.Models;
+using KR_Lib.Structures;
 
 namespace KR_Lib.Tree
 {
     public static class ModelExtensions
     {
-        public static List<Structure> ToModels(this List<Structure> structures)
+        public static List<IStructure> ToModels(this List<IStructure> structures)
         {
-            var result = new List<Structure>();
+            var result = new List<IStructure>();
             foreach(var structure in structures)
             {
                 result.Add(structure.ToModel());
