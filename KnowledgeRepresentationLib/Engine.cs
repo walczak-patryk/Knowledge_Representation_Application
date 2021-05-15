@@ -1,7 +1,7 @@
 ﻿using KR_Lib.DataStructures;
 using KR_Lib.Descriptions;
 using KR_Lib.Exceptions;
-using KR_Lib.Models;
+using KR_Lib.Structures;
 using KR_Lib.Queries;
 using KR_Lib.Scenarios;
 using KR_Lib.Statements;
@@ -85,7 +85,7 @@ namespace KR_Lib
         IScenario scenario = new Scenario();
         List<Action> actions = new List<Action>();
         List<Fluent> fluents = new List<Fluent>();
-        List<Structure> models;
+        List<IStructure> models;
         private bool newChangesFlag = true;
 
         private void GenerateModels() 
