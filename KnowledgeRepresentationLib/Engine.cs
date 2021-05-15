@@ -64,11 +64,11 @@ namespace KR_Lib
         void RemoveScenario(Guid id);
 
         /// <summary>
-        /// Checks if querry is correct
+        /// Checks if query is correct
         /// </summary>
-        /// <param IQuery="querry"></param>
+        /// <param IQuery="query"></param>
         /// <returns></returns>
-        bool ExecuteQuerry(IQuery querry);
+        bool ExecuteQuery(IQuery query);
 
         // What else is needed? :
         // constructor for Action (string name, int timeDuration)
@@ -77,7 +77,7 @@ namespace KR_Lib
         // constuctor for action occurance(Action action, int amoutOfOccurances)
         // constructor for observations(IlogicExpression logicExpression, int amoutOfObservations)
         // constructor for scenario (string scenarioName, ActionOccurance actionOccurance, List<IlogicExpression> logicExpressions) 
-        // constructor for querry ([enum]? question type, [enum]? querry type)
+        // constructor for query ([enum]? question type, [enum]? query type)
     }
     class Engine : IEngine
     {
@@ -183,11 +183,11 @@ namespace KR_Lib
         }
 
         /// <summary>
-        /// Checks if querry is correct
+        /// Checks if query is correct
         /// </summary>
-        /// <param IQuery="querry"></param>
+        /// <param IQuery="query"></param>
         /// <returns></returns>
-        public bool ExecuteQuerry(IQuery querry)
+        public bool ExecuteQuery(IQuery query)
         {
             if (newChangesFlag)
             {
@@ -198,33 +198,8 @@ namespace KR_Lib
             if (models.Count == 0)
                 throw new InconsistentException();
 
-            //Ala, Filip
-            // 1.1. Czy podany scenariusz jest możliwy do realizacji kiedykolwiek?
-            // 1.2. Czy podany scenariusz jest możliwy do realizacji zawsze?
-            // 2. Czy w chwili t realizacji scenariusza wykonywana jest akcja A?
-            // 3.1. Czy w chwili t ≥ 0 realizacji podanego scenariusza warunek γ zachodzi kiedykolwiek?
-            // 3.2. Czy w chwili t ≥ 0 realizacji podanego scenariusza warunek γ zachodzi zawsze?
-            // 4.1. Czy podany cel γ jest osiągalny kiedykolwiek przy zadanym zbiorze obserwacji OBS?
-            // 4.2. Czy podany cel γ jest osiągalny zawsze przy zadanym zbiorze obserwacji OBS?
-            if (querry is FormulaQuery)
-            {
-                var q = querry as FormulaQuery;
-                foreach (var model in this.models)
-                {
-                    if (model.H(q.Formula, q.Time) != 1)
-                        return false;
-                }
-            }
-            else
-            {
-                var q = querry as FluentQuery;
-                foreach (var model in this.models)
-                {
-                    if (!model.E.Contains((q.Action, q.Time)))
-                        return false;
-                }
-            }
-            return true;
+            return query.GetAnswer(models, scenario);           
+
         }
     }
 }
