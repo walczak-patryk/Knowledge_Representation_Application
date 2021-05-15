@@ -21,14 +21,14 @@ namespace KR_Lib.Queries
         /// <summary>
         /// Odpowiedź na pytanie czy podany scenariusz jest możliwy do realizacji zawsze/kiedykolwiek
         /// </summary>
-        /// <param name="models">Lista modeli i niespójnych struktur</param>
+        /// <param name="modeledStructures">Lista modeli i niespójnych struktur</param>
         /// <param name="scenario">Scenariusz</param>
         /// <returns>bool</returns>
-        public bool GetAnswer(List<IStructure> models, IScenario scenario)
+        public bool GetAnswer(List<IStructure> modeledStructures, IScenario scenario)
         {
             bool atLeatOneModel = false;
             bool atLeatOneInconsistent = false;
-            foreach (var model in models)
+            foreach (var model in modeledStructures)
             {
                 if (model is InconsistentStructure) atLeatOneInconsistent = true;
                 else if (model is Model) atLeatOneModel = true;
