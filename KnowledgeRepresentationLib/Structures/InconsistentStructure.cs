@@ -5,20 +5,16 @@ using KR_Lib.Formulas;
 
 namespace KR_Lib.Structures
 {
-    public class InconsistentStructure : IStructure
+    public class InconsistentStructure : Structure
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public Structure ToModel()
-        {
-            throw new InconsistentException();
-        }
+        //new public Structure ToModel()
+        //{
+        //    throw new InconsistentException();
+        //}
 
-        public int H(Formula formula, int time)
-        {
-            throw new InconsistentException();
-        }
+        //new public bool H(Formula formula, int time)
+        //{
+        //    throw new InconsistentException();
+        //}
     }
 }

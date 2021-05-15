@@ -2,6 +2,7 @@
 using KR_Lib.Queries;
 using KR_Lib.Structures;
 using System;
+using System.Collections.Generic;
 
 namespace KR_Lib.Structures
 {
@@ -12,8 +13,13 @@ namespace KR_Lib.Structures
         /// </summary>
         int EndTime { get; }
 
+        /// <summary>
+        /// Akcje - potrzebne do wyliczenia E
+        /// </summary>
+        List<Action> Actions { get; }
+
         Structure ToModel();
-        int H(Formula formula, int time);
+        bool H(Formula formula, int time);
         int E(Action action, int duration, int startTime);
         int CheckActionBelongingToE(Action action, int time);
         bool EvaluateFormula(Formula formula, int time);
