@@ -38,6 +38,13 @@ namespace KR_Lib.Queries
             set;
         }
 
+        /// <summary>
+        /// Odpowiedź na pytanie czy w chwili t ≥ 0 realizacji podanego scenariusza 
+        /// formuła jest prawdziwa zawsze/kiedykolwiek?
+        /// </summary>
+        /// <param name="models">Lista modeli i niespójnych struktur</param>
+        /// <param name="scenario">Scenariusz</param>
+        /// <returns>bool</returns>
         public bool GetAnswer(List<IStructure> models, IScenario scenario)
         {
             bool atLeatOneTrue = false;

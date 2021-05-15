@@ -9,7 +9,7 @@ using KR_Lib.Structures;
 namespace KR_Lib.Queries 
 {
     /// <summary>
-    /// Zapytanie użytkownika  czy podany cel γ jest osiągalny zawsze/kiedykolwiek przy zadanym zbiorze obserwacji OBS?
+    /// Zapytanie użytkownika czy podany cel γ jest osiągalny zawsze/kiedykolwiek przy zadanym zbiorze obserwacji OBS?
     /// </summary>
     public class TargetQuery : IQuery
     {
@@ -30,6 +30,13 @@ namespace KR_Lib.Queries
             set;
         }
 
+        /// <summary>
+        /// Odpowiedź na pytanie o spełnialność formuły przy ustalonym scenariuszu - w ciągu 
+        /// całego czasu trwania (od 0 do końca ostatniej akcji)
+        /// </summary>
+        /// <param name="models">Lista modeli i niespójnych struktur</param>
+        /// <param name="scenario">Scenariusz</param>
+        /// <returns>bool</returns>
         public bool GetAnswer(List<IStructure> models, IScenario scenario)
         {
             List<int> possibleTimes = new List<int>();

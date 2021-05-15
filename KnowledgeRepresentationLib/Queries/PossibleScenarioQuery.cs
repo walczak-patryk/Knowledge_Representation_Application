@@ -18,6 +18,12 @@ namespace KR_Lib.Queries
             set; 
         }
 
+        /// <summary>
+        /// Odpowiedź na pytanie czy podany scenariusz jest możliwy do realizacji zawsze/kiedykolwiek
+        /// </summary>
+        /// <param name="models">Lista modeli i niespójnych struktur</param>
+        /// <param name="scenario">Scenariusz</param>
+        /// <returns>bool</returns>
         public bool GetAnswer(List<IStructure> models, IScenario scenario)
         {
             bool atLeatOneModel = false;
