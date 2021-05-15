@@ -199,6 +199,13 @@ namespace KR_Lib
                 throw new InconsistentException();
 
             //Ala, Filip
+            // 1.1. Czy podany scenariusz jest możliwy do realizacji kiedykolwiek?
+            // 1.2. Czy podany scenariusz jest możliwy do realizacji zawsze?
+            // 2. Czy w chwili t realizacji scenariusza wykonywana jest akcja A?
+            // 3.1. Czy w chwili t ≥ 0 realizacji podanego scenariusza warunek γ zachodzi kiedykolwiek?
+            // 3.2. Czy w chwili t ≥ 0 realizacji podanego scenariusza warunek γ zachodzi zawsze?
+            // 4.1. Czy podany cel γ jest osiągalny kiedykolwiek przy zadanym zbiorze obserwacji OBS?
+            // 4.2. Czy podany cel γ jest osiągalny zawsze przy zadanym zbiorze obserwacji OBS?
             if (querry is FormulaQuery)
             {
                 var q = querry as FormulaQuery;
