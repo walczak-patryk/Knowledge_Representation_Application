@@ -195,9 +195,6 @@ namespace KR_Lib
                 newChangesFlag = false;
             }
 
-            if (models.Count == 0)
-                throw new InconsistentException();
-
             return query.GetAnswer(models, scenario);           
 
         }
