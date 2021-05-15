@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using KR_Lib.Exceptions;
 using KR_Lib.Formulas;
 
 namespace KR_Lib.Structures
