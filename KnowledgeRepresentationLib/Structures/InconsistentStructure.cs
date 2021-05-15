@@ -7,6 +7,10 @@ namespace KR_Lib.Structures
 {
     public class InconsistentStructure : IStructure
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public Structure ToModel()
         {
             throw new InconsistentException();

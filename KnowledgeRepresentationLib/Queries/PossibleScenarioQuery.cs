@@ -21,9 +21,9 @@ namespace KR_Lib.Queries
         /// <summary>
         /// Odpowiedź na pytanie czy podany scenariusz jest możliwy do realizacji zawsze/kiedykolwiek
         /// </summary>
-        /// <param name="modeledStructures">Lista modeli i niespójnych struktur</param>
+        /// <param name="modeledStructures">Lista modeli i niespójnych struktur, dla których sprawdzana będzie prawdziwość query</param>
         /// <param name="scenario">Scenariusz</param>
-        /// <returns>bool</returns>
+        /// <returns>Prawda jeżeli podany scenariusz jest możliwy do realizacji zawsze/kiedykolwiek w stukturach z listy, fałsz w.p.p.<returns>
         public bool GetAnswer(List<IStructure> modeledStructures, IScenario scenario)
         {
             bool atLeatOneModel = false;

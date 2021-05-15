@@ -32,11 +32,11 @@ namespace KR_Lib.Queries
 
         /// <summary>
         /// Odpowiedź na pytanie o spełnialność formuły przy ustalonym scenariuszu - w ciągu 
-        /// całego czasu trwania (od 0 do końca ostatniej akcji)
+        /// całego czasu trwania (od 0 do końca ostatniej akcji) dla przynajmniej jednego/każdego modelu
         /// </summary>
-        /// <param name="modeledStructures">Lista modeli i niespójnych struktur</param>
+        /// <param name="modeledStructures">Lista modeli i niespójnych struktur, dla których sprawdzana będzie prawdziwość query</param>
         /// <param name="scenario">Scenariusz</param>
-        /// <returns>bool</returns>
+        /// <returns>Prawda jeżeli formuła jest prawdziwa dla każdej/przynajmniej jednej struktury w jakichkolwiek czasach z przedziału, fałsz w.p.p.<returns>
         public bool GetAnswer(List<IStructure> modeledStructures, IScenario scenario)
         {
             List<int> possibleTimes = new List<int>();
