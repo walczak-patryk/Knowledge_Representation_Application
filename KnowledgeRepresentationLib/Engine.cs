@@ -64,11 +64,11 @@ namespace KR_Lib
         void RemoveScenario(Guid id);
 
         /// <summary>
-        /// Checks if querry is correct
+        /// Checks if query is correct
         /// </summary>
-        /// <param IQuery="querry"></param>
+        /// <param IQuery="query"></param>
         /// <returns></returns>
-        bool ExecuteQuerry(IQuery querry);
+        bool ExecuteQuery(IQuery query);
 
         // What else is needed? :
         // constructor for Action (string name, int timeDuration)
@@ -77,7 +77,7 @@ namespace KR_Lib
         // constuctor for action occurance(Action action, int amoutOfOccurances)
         // constructor for observations(IlogicExpression logicExpression, int amoutOfObservations)
         // constructor for scenario (string scenarioName, ActionOccurance actionOccurance, List<IlogicExpression> logicExpressions) 
-        // constructor for querry ([enum]? question type, [enum]? querry type)
+        // constructor for query ([enum]? question type, [enum]? query type)
     }
     class Engine : IEngine
     {
@@ -85,14 +85,14 @@ namespace KR_Lib
         IScenario scenario = new Scenario();
         List<Action> actions = new List<Action>();
         List<Fluent> fluents = new List<Fluent>();
-        List<IStructure> models;
+        List<IStructure> modeledStructures;
         private bool newChangesFlag = true;
 
         private void GenerateModels() 
         {
             var root = TreeMethods.GenerateTree(description, scenario); //Kacper, Kacper, Kornel
             var structures = TreeMethods.GenerateStructues(root); //Kacper, Kacper, Kornel
-            this.models = structures.ToModels(); //Ala, Filip
+            this.modeledStructures = structures.ToModels(); //Ala, Filip
         }
 
         /// <summary>
@@ -183,11 +183,11 @@ namespace KR_Lib
         }
 
         /// <summary>
-        /// Checks if querry is correct
+        /// Checks if query is correct
         /// </summary>
-        /// <param IQuery="querry"></param>
+        /// <param IQuery="query"></param>
         /// <returns></returns>
-        public bool ExecuteQuerry(IQuery querry)
+        public bool ExecuteQuery(IQuery query)
         {
             if (newChangesFlag)
             {
@@ -195,29 +195,8 @@ namespace KR_Lib
                 newChangesFlag = false;
             }
 
-            if (models.Count == 0)
-                throw new InconsistentException();
+            return query.GetAnswer(modeledStructures, scenario);           
 
-            //Ala, Filip
-            if (querry is FormulaQuery)
-            {
-                var q = querry as FormulaQuery;
-                foreach (var model in this.models)
-                {
-                    if (model.H(q.Formula, q.Time) != 1)
-                        return false;
-                }
-            }
-            else
-            {
-                var q = querry as FluentQuery;
-                foreach (var model in this.models)
-                {
-                    if (!model.E.Contains((q.Action, q.Time)))
-                        return false;
-                }
-            }
-            return true;
         }
     }
 }
