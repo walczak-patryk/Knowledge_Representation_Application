@@ -9,8 +9,15 @@ namespace KR_Lib.Tree
         List<Node> children;
         State currentState;
         
-        public Node()
+        public Node(Node parent, State currentState)
         {
+            this.parent = parent;
+            this.currentState = currentState;
+        }
+
+        public void addChild(Node child)
+        {
+            this.children.Add(child);
         }
     }
 }

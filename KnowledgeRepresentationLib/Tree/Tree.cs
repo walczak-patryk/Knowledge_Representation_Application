@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using KR_Lib.Descriptions;
-using KR_Lib.Models;
 using KR_Lib.Scenarios;
 using KR_Lib.Tree;
+using KR_Lib.DataStructures;
 
 namespace KR_Lib
 {
@@ -11,13 +11,42 @@ namespace KR_Lib
         /// <summary>
         /// Metoda tworząca drzewo możliwości na podstawie domeny oraz scenariusza.
         /// </summary>
-        /// <param name="descrpition"></param>
+        /// <param name="description"></param>
         /// <param name="scenario"></param>
+        /// <param name="fluents"></param>
         /// <returns>Korzeń powstałego drzewa możliwości.</returns>
-        public static Node GenerateTree(IDescription descrpition, IScenario scenario)
+        public static Node GenerateTree(IDescription description, IScenario scenario, List<Fluent> fluents)
         {
-            Node root = new Node();
+            int treeDepth = scenario.GetScenarioDuration();
+            Action startAction = scenario.GetScenarios(0)[1];
+            State startState = new State(startAction, fluents);
+            Node root = new Node(null, startState);
+
             return root;
+        }
+
+        /// <summary>
+        /// Metoda tworzy nowe liście drzewa z danego liścia-rodzica dla danego czasu
+        /// </summary>
+        /// <param name="time"></param>
+        /// <param name="parentNode"></param>
+        /// <param name="scenario"></param>
+        /// <param name="description"></param>
+        public static void CreateNodesAtTime(int time, Node parentNode, IScenario scenario, IDescription description)
+        {
+
+        }
+
+        /// <summary>
+        /// Metoda znajduje wszystkie stany w danym czasie na podstawie scenariusza i 
+        /// </summary>
+        /// <param name="time"></param>
+        /// <param name="lastState"></param>
+        /// <param name="scenario"></param>
+        /// <param name="description"></param>
+        public static void GetAllPossibleStates(int time, State lastState, IScenario scenario, IDescription description)
+        {
+
         }
 
         /// <summary>

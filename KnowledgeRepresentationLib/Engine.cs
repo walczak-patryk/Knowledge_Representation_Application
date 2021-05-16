@@ -90,7 +90,7 @@ namespace KR_Lib
 
         private void GenerateModels() 
         {
-            var root = TreeMethods.GenerateTree(description, scenario); //Kacper, Kacper, Kornel
+            var root = TreeMethods.GenerateTree(description, scenario, fluents); //Kacper, Kacper, Kornel
             var structures = TreeMethods.GenerateStructues(root); //Kacper, Kacper, Kornel
             this.models = structures.ToModels(); //Ala, Filip
         }
