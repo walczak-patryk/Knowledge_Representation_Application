@@ -5,6 +5,9 @@ namespace KR_Lib.Statements
 {
     public class ImpossibleIfStatement : Statement
     {
-        public ImpossibleIfStatement(Action action, Formula formula = null) : base(action, null, formula) { }
+        public ImpossibleIfStatement(Action action, Formula formula = null) : base(action, null, formula)
+        {
+            // logika chyba w nodzie? TODO
+        }
     }
 }
