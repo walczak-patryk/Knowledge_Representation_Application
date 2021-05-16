@@ -1,0 +1,202 @@
+﻿using KR_Lib.DataStructures;
+using KR_Lib.Descriptions;
+using KR_Lib.Exceptions;
+using KR_Lib.Structures;
+using KR_Lib.Queries;
+using KR_Lib.Scenarios;
+using KR_Lib.Statements;
+using KR_Lib.Tree;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Action = KR_Lib.DataStructures.Action;
+
+namespace KR_Lib
+{
+    interface IEngine
+    {
+        /// <summary>
+        /// Adds fluent to list of fluents
+        /// </summary>
+        /// <param Fluent="fluent"></param>
+        void AddFluent(Fluent fluent);
+
+        /// <summary>
+        /// Removes fluent from list of fluents
+        /// </summary>
+        /// <param Fluent="fluent"></param>
+        void RemoveFluent(Guid id);
+
+        /// <summary>
+        /// Add action to list of actions
+        /// </summary>
+        /// <param Action="action"></param>
+        void AddAction(Action action);
+
+        /// <summary>
+        /// Removes action from list of actions
+        /// </summary>
+        /// <param Action="action"></param>
+        void RemoveAction(Guid id);
+
+        /// <summary>
+        /// Adds statement to list of statements
+        /// </summary>
+        /// <param IStatement="statement"></param>
+        void AddStatement(IStatement statement);
+
+        /// <summary>
+        /// Removes statement from list of statements
+        /// </summary>
+        /// <param IStatement="statement"></param>
+        void RemoveStatement(Guid id);
+
+        /// <summary>
+        /// Adds scenario to list of scenarios
+        /// </summary>
+        /// <param IScenario="scenario"></param>
+        void AddScenario(IScenario scenario);
+
+        /// <summary>
+        /// Removes scenario from list of scenarios
+        /// </summary>
+        /// <param name="id"></param>
+        void RemoveScenario(Guid id);
+
+        /// <summary>
+        /// Checks if query is correct
+        /// </summary>
+        /// <param IQuery="query"></param>
+        /// <returns></returns>
+        bool ExecuteQuery(IQuery query);
+
+        // What else is needed? :
+        // constructor for Action (string name, int timeDuration)
+        // constructor for fluent (string name)
+        // constructor for statement
+        // constuctor for action occurance(Action action, int amoutOfOccurances)
+        // constructor for observations(IlogicExpression logicExpression, int amoutOfObservations)
+        // constructor for scenario (string scenarioName, ActionOccurance actionOccurance, List<IlogicExpression> logicExpressions) 
+        // constructor for query ([enum]? question type, [enum]? query type)
+    }
+    class Engine : IEngine
+    {
+        IDescription description = new Description();
+        IScenario scenario = new Scenario();
+        List<Action> actions = new List<Action>();
+        List<Fluent> fluents = new List<Fluent>();
+        List<IStructure> modeledStructures;
+        private bool newChangesFlag = true;
+
+        private void GenerateModels() 
+        {
+            var root = TreeMethods.GenerateTree(description, scenario); //Kacper, Kacper, Kornel
+            var structures = TreeMethods.GenerateStructues(root); //Kacper, Kacper, Kornel
+            this.modeledStructures = structures.ToModels(); //Ala, Filip
+        }
+
+        /// <summary>
+        /// Add action to list of actions
+        /// </summary>
+        /// <param Action="action"></param>
+        public void AddAction(Action action)
+        {
+            newChangesFlag = true;
+            actions.Add(action);
+        }
+
+        /// <summary>
+        /// Adds fluent to list of fluents
+        /// </summary>
+        /// <param Fluent="fluent"></param>
+        public void AddFluent(Fluent fluent)
+        {
+            newChangesFlag = true;
+            fluents.Add(fluent);
+        }
+
+        /// <summary>
+        /// Adds scenario to list of scenarios
+        /// </summary>
+        /// <param IScenario="scenario"></param>
+        public void AddScenario(IScenario scenario)
+        {
+            newChangesFlag = true;
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Adds statement to list of statements
+        /// </summary>
+        /// <param IStatement="statement"></param>
+        public void AddStatement(IStatement statement)
+        {
+            newChangesFlag = true;
+            this.description.AddStatement(statement);
+        }
+
+        /// <summary>
+        /// Removes action from list of actions
+        /// </summary>
+        /// <param Action="action"></param>
+        public void RemoveAction(Guid id)
+        {
+            newChangesFlag = true;
+            var actionToRemove = actions.SingleOrDefault(action => action.Id == id);
+            if (actionToRemove != null)
+                actions.Remove(actionToRemove);
+        }
+
+
+        /// <summary>
+        /// Removes fluent from list of fluents
+        /// </summary>
+        /// <param Fluent="fluent"></param>
+        public void RemoveFluent(Guid id)
+        {
+            newChangesFlag = true;
+            var fluentToRemove = fluents.SingleOrDefault(fluent => fluent.Id == id);
+            if (fluentToRemove != null)
+                fluents.Remove(fluentToRemove);
+        }
+
+        /// <summary>
+        /// Removes scenario from list of scenarios
+        /// </summary>
+        /// <param name="id"></param>
+        public void RemoveScenario(Guid id)
+        {
+            newChangesFlag = true;
+            var fluentToRemove = fluents.SingleOrDefault(fluent => fluent.Id == id);
+            if (fluentToRemove != null)
+                fluents.Remove(fluentToRemove);
+        }
+
+        /// <summary>
+        /// Removes statement from list of statements
+        /// </summary>
+        /// <param IStatement="statement"></param>
+        public void RemoveStatement(Guid id)
+        {
+            newChangesFlag = true;
+            this.description.DeleteStatement(id);
+        }
+
+        /// <summary>
+        /// Checks if query is correct
+        /// </summary>
+        /// <param IQuery="query"></param>
+        /// <returns></returns>
+        public bool ExecuteQuery(IQuery query)
+        {
+            if (newChangesFlag)
+            {
+                GenerateModels();
+                newChangesFlag = false;
+            }
+
+            return query.GetAnswer(modeledStructures, scenario);           
+
+        }
+    }
+}

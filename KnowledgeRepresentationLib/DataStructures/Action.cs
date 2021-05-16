@@ -1,12 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace KR_Lib.DataStructures
 {
-    class Action
+    public class Action
     {
+        public Guid Id
+        {
+            get;
+        }
+
+        public string Name
+        {
+            get;
+        }
+
+        public Action(string name)
+        {
+            this.Name = name;
+            this.Id = Guid.NewGuid();
+        }
     }
 }
