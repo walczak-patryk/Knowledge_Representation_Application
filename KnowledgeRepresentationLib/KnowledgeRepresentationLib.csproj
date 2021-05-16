@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="DataStructures\Action.cs" />
     <Compile Include="DataStructures\Fluent.cs" />
+    <Compile Include="DataStructures\Observation.cs" />
     <Compile Include="DataStructures\QueryEnumerables.cs" />
     <Compile Include="Descriptions\Description.cs" />
     <Compile Include="Engine.cs" />
