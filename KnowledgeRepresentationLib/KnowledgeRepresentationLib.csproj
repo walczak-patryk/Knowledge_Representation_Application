@@ -53,7 +53,11 @@
     <Compile Include="DataStructures\QueryEnumerables.cs" />
     <Compile Include="Descriptions\Description.cs" />
     <Compile Include="Engine.cs" />
+    <Compile Include="Formulas\AlternativeFormula.cs" />
+    <Compile Include="Formulas\ConjunctionFormula.cs" />
+    <Compile Include="Formulas\EquivalenceFormula.cs" />
     <Compile Include="Formulas\Formula.cs" />
+    <Compile Include="Formulas\ImplicationFormula.cs" />
     <Compile Include="Formulas\NegationFormula.cs" />
     <Compile Include="Queries\ActionQuery.cs" />
     <Compile Include="Structures\Model.cs" />

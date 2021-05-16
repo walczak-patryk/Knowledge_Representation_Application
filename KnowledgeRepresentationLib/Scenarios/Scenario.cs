@@ -21,6 +21,7 @@ namespace KR_Lib.Scenarios
         public Guid Id { get ; set ; }
         public List<DataStructures.Observation> observations { get; set; }
         public List<DataStructures.Action> actions { get; set; }
+        public Scenario() { }
         public Scenario(string name)
         {
             this.Name = name;

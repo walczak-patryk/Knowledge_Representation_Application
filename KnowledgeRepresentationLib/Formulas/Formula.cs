@@ -1,10 +1,9 @@
 ﻿using KR_Lib.DataStructures;
-using KR_Lib.Tree;
 
 namespace KR_Lib.Formulas {
     public interface IFormula
     {
-        bool Evaluate(State state);
+        bool Evaluate();
     
     }
 
@@ -16,7 +15,7 @@ namespace KR_Lib.Formulas {
         {
             this.fluent = fluent;
         }
-        public bool Evaluate(State state)
+        public bool Evaluate()
         {
             return this.fluent.State;
         }

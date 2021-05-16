@@ -31,7 +31,7 @@ namespace KR_Lib.Scenarios
             {
                 return true;
             }
-            return Form.Evaluate(state);
+            return Form.Evaluate();
         }
         public override string ToString()
         {
