@@ -38,7 +38,7 @@ namespace KR_Lib.Queries
                 if (structure is Model)
                 {
                     atLeastOneModel = true;
-                    if (structure.CheckActionBelongingToE(this.Action, this.Time) != 1)
+                    if (structure.CheckActionBelongingToE(this.action, this.time) != 1)
                         return false;
                 }
             }
