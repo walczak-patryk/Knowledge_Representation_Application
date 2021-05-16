@@ -11,10 +11,10 @@ namespace KR_Lib
         /// <summary>
         /// Metoda tworząca drzewo możliwości na podstawie domeny oraz scenariusza.
         /// </summary>
-        /// <param name="descrpition"></param>
+        /// <param name="description"></param>
         /// <param name="scenario"></param>
         /// <returns>Korzeń powstałego drzewa możliwości.</returns>
-        public static Node GenerateTree(IDescription descrpition, IScenario scenario)
+        public static Node GenerateTree(IDescription description, IScenario scenario)
         {
             Node root = new Node();
             return root;
