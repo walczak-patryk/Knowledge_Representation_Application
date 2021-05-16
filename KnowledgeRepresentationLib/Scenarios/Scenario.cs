@@ -58,9 +58,23 @@ namespace KR_Lib.Scenarios
             return scenario;
         }
 
-        internal Observations GetObservations()
+        public List<DataStructures.Observation> GetObservations()
         {
-            throw new NotImplementedException();
+            return observations;
+        }
+        public int GetScenarioDuration()
+        {
+            int durationObs = 0;
+            int durationAcs = 0;
+            foreach (DataStructures.Action acs in actions)
+            {
+                durationAcs += acs.DurationTime;
+            }
+            foreach (DataStructures.Observation obs in observations)
+            {
+                durationObs = Math.Max(durationObs, obs.Time);
+            }
+            return Math.Max(durationAcs, durationObs);
         }
     }
 }
