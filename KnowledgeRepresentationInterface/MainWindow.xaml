@@ -224,6 +224,7 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
                         <Label Grid.Row="0" Grid.Column="0">Fluent</Label>
@@ -288,29 +289,22 @@
                         <RowDefinition Height="*" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
-                    
-                    <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">Select question type</Label>
-                    <ComboBox Name="Question_Type_ComboBox" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="2,2,2,2">
-                        <ComboBoxItem IsSelected="True">Always</ComboBoxItem>
-                        <ComboBoxItem>Ever</ComboBoxItem>
-                    </ComboBox>
 
                     <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">Select query type</Label>
-                    <ComboBox Name="Query_Type_ComboBox" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Margin="2,2,2,2" />
+                    <ComboBox Name="Query_Type_ComboBox" Grid.Row="3" Grid.Column="0" SelectionChanged="Query_Type_ComboBox_SelectionChanged" SelectedIndex="0" Grid.ColumnSpan="2" Margin="2,2,2,2" >
+                        <ComboBoxItem Content="Possible scenario" Margin="1,1,1,1" />
+                        <ComboBoxItem Content="Action execution" Margin="1,1,1,1" />
+                        <ComboBoxItem Content="Condition occurence" Margin="1,1,1,1" />
+                        <ComboBoxItem Content="Goal attainability" Margin="1,1,1,1" />
+                    </ComboBox>
 
-                    <GroupBox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="6" Name="Query1_GroupBox">
-                        <Label>1</Label>
-                    </GroupBox>
-                    <GroupBox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="6" Name="Query2_GroupBox">
-                        <Label>2</Label>
-                    </GroupBox>
+                    <GroupBox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="6" Name="Query_GroupBox" />
 
-                    <RichTextBox Grid.Column="0" Grid.ColumnSpan="6" Grid.Row="5" Name="Query_RichTextBox"></RichTextBox>
-                    <Label Grid.Column="1" Grid.Row="7" HorizontalContentAlignment="Right">Scenario</Label>
-                    <ComboBox Grid.Row="7" Grid.Column="2" Grid.ColumnSpan="2"  Name="Query_Scenario_ComboBox" Margin="2,2,2,2"></ComboBox>
-                    <Button Grid.Row="8" Grid.Column="2" Grid.ColumnSpan="2" Margin="2,2,2,2">Execute query</Button>
-                    <Label Grid.Row="9" Grid.Column="2">Result</Label>
-                    <Label Grid.Row="9" Grid.Column="3">True</Label>
+                    <Label Grid.Column="1" Grid.Row="6" HorizontalContentAlignment="Right">Scenario</Label>
+                    <ComboBox Grid.Row="6" Grid.Column="2" Grid.ColumnSpan="2"  Name="Query_Scenario_ComboBox" Margin="2,2,2,2"></ComboBox>
+                    <Button Grid.Row="7" Grid.Column="2" Grid.ColumnSpan="2" Margin="2,2,2,2" Click="ExecuteQuery_Click">Execute query</Button>
+                    <Label Grid.Row="8" Grid.Column="2">Result</Label>
+                    <Label Grid.Row="8" Grid.Column="3">True</Label>
                     
                 </Grid>
             </TabItem>

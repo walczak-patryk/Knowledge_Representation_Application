@@ -1,4 +1,5 @@
-﻿using System;
+﻿using KnowledgeRepresentationInterface.Queries;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,11 +22,16 @@ namespace KnowledgeRepresentationInterface
     /// </summary>
     public partial class MainWindow : Window
     {
-
+        PossibleScenarioQuery PSQ;
+        ActionQuery AQ;
+        FormulaQuery FQ;
+        TargetQuery TQ;
 
         public MainWindow()
         {
+            Initialize_Query_Types();
             InitializeComponent();
+            Query_GroupBox.Content = this.PSQ;
             List<ScenarioItem> test = new List<ScenarioItem>();
             Scenario_ListView.ItemsSource = test;
             TreeViewItem t = new TreeViewItem();
@@ -38,9 +44,19 @@ namespace KnowledgeRepresentationInterface
             {
                 TreeViewItem t3 = new TreeViewItem();
                 t3.Header = "Fluent " + i.ToString();
+                ScenarioItem item = new ScenarioItem("2", "3", "4");
+                t3.Tag = item.ID;
                 Fluents_TreeViewItem.Items.Add(t3);
-                test.Add(new ScenarioItem(i.ToString(), "2", "3","4"));
+                test.Add(item);
             }
+        }
+
+        private void Initialize_Query_Types()
+        {
+            this.PSQ = new PossibleScenarioQuery();
+            this.AQ = new ActionQuery();
+            this.FQ = new FormulaQuery();
+            this.TQ = new TargetQuery();
         }
 
         private void Delete_TreeView_Click(object sender, RoutedEventArgs e)
@@ -96,18 +112,45 @@ namespace KnowledgeRepresentationInterface
         {
             //do actions on tab change
         }
+
+        private void ExecuteQuery_Click(object sender, RoutedEventArgs e)
+        {
+        }
+
+        private void Query_Type_ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if(Query_GroupBox == null)
+            {
+                return;
+            }
+            switch(Query_Type_ComboBox.SelectedIndex)
+            {
+                case 0:
+                    Query_GroupBox.Content = this.PSQ;
+                    break;
+                case 1:
+                    Query_GroupBox.Content = this.AQ;
+                    break;
+                case 2:
+                    Query_GroupBox.Content = this.FQ;
+                    break;
+                case 3:
+                    Query_GroupBox.Content = this.TQ;
+                    break;
+            }
+        }
     }
 
     public class ScenarioItem
     {
-        public string ID { get; set; }
+        public Guid ID { get; set; }
         public string ActionOccurence { get; set; }
         public string Observation { get; set; }
         public string Duration { get; set; }
 
-        public ScenarioItem(string ID, string ActionOccurence, string Observation, string Duration)
+        public ScenarioItem(string ActionOccurence, string Observation, string Duration)
         {
-            this.ID = ID;
+            this.ID = new Guid();
             this.ActionOccurence = ActionOccurence;
             this.Observation = Observation;
             this.Duration = Duration;

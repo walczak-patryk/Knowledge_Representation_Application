@@ -8,6 +8,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
+        <!--Zapytanie użytkownika czy w chwili t realizacji scenariusza wykonywana jest akcja A-->
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
@@ -27,12 +28,11 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <Label Grid.Row="1" Grid.Column="2" Content="At the moment" VerticalAlignment="Bottom" />
-        <xctk:UIntegerUpDown Name="Action_Duration_UIntUpDown"
-                                         Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" Margin="3,3,3,3" />
-        <Label Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2" Content="while executing the scenario" VerticalAlignment="Bottom" />
-        <ComboBox Grid.Row="4" Grid.Column="2" Grid.ColumnSpan="2" SelectedIndex="0" Margin="5,0,5,15" />
-        <Label Grid.Row="5" Grid.Column="2" Grid.ColumnSpan="2" Content="is executed the action" VerticalAlignment="Bottom" />
-        <ComboBox Grid.Row="6" Grid.Column="2" Grid.ColumnSpan="2" SelectedIndex="0" Margin="5,0,5,15" />
+
+        <Label Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" Content="Is the action" HorizontalAlignment="Center" VerticalAlignment="Bottom" />
+        <ComboBox Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" SelectedIndex="0" Margin="1,0,1,5" />
+
+        <Label Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2" Content="executed at the moment" VerticalAlignment="Bottom" HorizontalAlignment="Center" />
+        <xctk:UIntegerUpDown Name="Duration_UIntUpDown" Grid.Row="4" Grid.Column="2" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" Margin="3,3,3,3" />
     </Grid>
 </UserControl>
