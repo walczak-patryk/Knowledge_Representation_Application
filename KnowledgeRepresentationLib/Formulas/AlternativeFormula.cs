@@ -12,7 +12,7 @@
         }
         public bool Evaluate()
         {
-            return this.formula.Evaluate() | this.formula2.Evaluate();
+            return this.formula.Evaluate() || this.formula2.Evaluate();
         }
     }
 }
