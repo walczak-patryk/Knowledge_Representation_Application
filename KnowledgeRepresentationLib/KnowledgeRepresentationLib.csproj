@@ -83,7 +83,7 @@
     <Compile Include="Tree\Tree.cs" />
     <Compile Include="Tree\Extentions.cs" />
     <Compile Include="Queries\FormulaQuery.cs" />
-    <Compile Include="Exceptions\InconsistentException.cs" />
+    <Compile Include="Exceptions\ScenarioNoExistsException.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
