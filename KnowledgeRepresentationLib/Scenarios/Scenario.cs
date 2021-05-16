@@ -9,7 +9,7 @@ namespace KR_Lib.Scenarios
     public interface IScenario
     {
         string Name { get; set; }
-        Guid Id { get; set; }
+        Guid Id { get; }
         int GetScenarioDuration();
         (List<DataStructures.Observation>, List<DataStructures.Action>) GetScenarios(int time);
         //List<DataStructures.Observation> observations { get; set; }
@@ -18,7 +18,7 @@ namespace KR_Lib.Scenarios
     public class Scenario : IScenario
     {
         public string Name { get; set; }
-        public Guid Id { get ; set ; }
+        public Guid Id { get; }
         public List<DataStructures.Observation> observations { get; set; }
         public List<DataStructures.Action> actions { get; set; }
         public Scenario() { }

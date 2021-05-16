@@ -45,7 +45,7 @@ namespace KR_Lib.Queries
                 if (structure is Model)
                 {
                     atLeastOneModel = true;
-                    bool evaluationResult = structure.EvaluateFormula(this.formula, this.Time);
+                    bool evaluationResult = structure.EvaluateFormula(this.formula, this.time);
                     if (evaluationResult) atLeatOneTrue = true;
                     else atLeastOneFalse = true;
                 }
