@@ -1,5 +1,5 @@
-﻿using KR_Lib.Scenarios;
-using KR_Lib.Structures;
+﻿using KR_Lib.Structures;
+using System;
 using System.Collections.Generic;
 
 namespace KR_Lib.Queries
@@ -10,9 +10,10 @@ namespace KR_Lib.Queries
         /// Odpowiedź na pytanie użytkownika, działanie zależy od typu obiektu query
         /// </summary>
         /// <param name="modeledStructures"></param>
-        /// <param name="scenario"></param>
         /// <returns>bool</returns>
-        bool GetAnswer(List<IStructure> modeledStructures, IScenario scenario);
+        bool GetAnswer(List<IStructure> modeledStructures);
+
+        Guid ScenarioId { get; }
     }
 
 }

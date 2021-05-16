@@ -15,27 +15,18 @@ namespace KR_Lib.Queries
         
         private int time;
         private Formula formula;
-        
-        public int Time
-        {
-            get
-            {
-                return time;
-            }
-        }
+        public QueryType queryType;
 
-        public Formula Formula
-        {
-            get
-            {
-                return formula;
-            }
-        }
-
-        public QueryType QueryType
+        public Guid ScenarioId
         {
             get;
-            set;
+        }
+
+        public FormulaQuery(int time, Formula formula, Guid scenarioId)
+        {
+            this.ScenarioId = scenarioId;
+            this.time = time;
+            this.formula = formula;
         }
 
         /// <summary>
@@ -43,9 +34,8 @@ namespace KR_Lib.Queries
         /// formuła jest prawdziwa zawsze/kiedykolwiek?
         /// </summary>
         /// <param name="modeledStructures">Lista modeli i niespójnych struktur, dla których sprawdzana będzie prawdziwość query</param>
-        /// <param name="scenario">Scenariusz</param>
         /// <returns>Prawda jeżeli podana formuła jest prawdziwa przy każdej/przynajmniej jednej strukturze z listy, fałsz w.p.p.<returns>
-        public bool GetAnswer(List<IStructure> modeledStructures, IScenario scenario)
+        public bool GetAnswer(List<IStructure> modeledStructures)
         {
             bool atLeatOneTrue = false;
             bool atLeastOneFalse = false;
@@ -60,7 +50,7 @@ namespace KR_Lib.Queries
                     else atLeastOneFalse = true;
                 }
             }
-            if (this.QueryType == QueryType.Ever) return atLeastOneModel && atLeatOneTrue;
+            if (this.queryType == QueryType.Ever) return atLeastOneModel && atLeatOneTrue;
             else return atLeastOneModel && !atLeastOneFalse;
         }
     }
