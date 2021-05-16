@@ -49,7 +49,7 @@ namespace KR_Lib.Scenarios
             }
             foreach (DataStructures.Action acs in actions)
             {
-                if (acs.StartTime == time)
+                if (acs.StartTime <= time && acs.StartTime + acs.DurationTime >= time)
                 {
                     retActions.Add(acs);
                 }
