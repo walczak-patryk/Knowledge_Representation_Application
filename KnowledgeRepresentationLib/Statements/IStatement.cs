@@ -7,6 +7,7 @@ namespace KR_Lib.Statements
 {
     public interface IStatement
     {
+        Guid GetId();
     }
     public abstract class Statement : IStatement
     {
@@ -15,12 +16,17 @@ namespace KR_Lib.Statements
         private Fluent fluent;
         private Formula formula;
 
-        protected Statement(Action action, Fluent fluent, Formula formula = null)
+        protected Statement(Action action, Fluent fluent = null, Formula formula = null)
         {
             this.guid = Guid.NewGuid();
             this.action = action;
             this.fluent = fluent;
             this.formula = formula;
+        }
+
+        public Guid GetId()
+        {
+            return guid;
         }
     }
 }

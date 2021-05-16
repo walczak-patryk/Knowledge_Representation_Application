@@ -1,6 +1,7 @@
 ﻿using KR_Lib.Statements;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace KR_Lib.Descriptions
 {
@@ -34,12 +35,18 @@ namespace KR_Lib.Descriptions
         public Guid AddStatement(IStatement statement)
         {
             statements.Add(statement);
-            return statement.Id;
+            return statement.GetId();
         }
 
+        /// <summary>
+        /// Usunięcie zdania z domeny.
+        /// </summary>
+        /// <param name="guid">Identyfikator zdania do usunięcia.</param>
         public void DeleteStatement(Guid guid)
         {
-            throw new NotImplementedException();
+            var statementToRemove = statements.SingleOrDefault(statement => statement.GetId() == guid);
+            if (statementToRemove != null)
+                statements.Remove(statementToRemove);
         }
 
         #endregion
