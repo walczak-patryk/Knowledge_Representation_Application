@@ -7,7 +7,7 @@ namespace KR_Lib.Scenarios
 {
     public class Observations
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; }
         string Name { get; set; }
         IFormula Form { get; set; }
         public int Time { get; set; }

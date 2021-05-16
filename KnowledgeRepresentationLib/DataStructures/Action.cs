@@ -7,7 +7,6 @@ namespace KR_Lib.DataStructures
         public Guid Id
         {
             get;
-            set;
         }
         public string Name
         {
@@ -42,16 +41,7 @@ namespace KR_Lib.DataStructures
             }
             return false;
         }
-        public object Clone()
-        {
-            Action Act = new Action();
-            Act.Name = Name;
-            Act.Id = Id;
-            Act.DurationTime = DurationTime;
-            Act.StartTime = StartTime;
 
-            return Act;
-        }
         public int GetEndTime()
         {
             int time = -1;
@@ -64,6 +54,7 @@ namespace KR_Lib.DataStructures
 
             return time;
         }
+
         public override string ToString()
         {
             //string description = "Action (" + Id + ", " + Duration + ") with start time: " + StartAt;
