@@ -5,8 +5,11 @@ namespace KR_Lib.Statements
 {
     public class ImpossibleAtStatement : Statement
     {
-        private int time;
+        //private int time; - czas w nodzie
 
-        public ImpossibleAtStatement(Action action, int time) : base(action, null, null) { this.time = time; }
+        public ImpossibleAtStatement(Action action) : base(action, null, null)
+        {
+            //this.time = time;
+        }
     }
 }

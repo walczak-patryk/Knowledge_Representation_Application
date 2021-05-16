@@ -3,11 +3,18 @@ using KR_Lib.Formulas;
 
 namespace KR_Lib.Statements
 {
-    public class ReleaseStatement : Statement
+    public class CauseStatement : Statement
     {
         private Formula formulaCaused;
 
-        public ReleaseStatement(Action action, Fluent fluent, Formula formula = null) : base(action, null, formula) { this.formulaCaused = formulaCaused; }
+        public CauseStatement(Action action, Fluent fluent, Formula formula, Formula formulaCaused) : base(action, null, formula)
+        {
+            if (formula.Evaluate())
+            {
+                this.formulaCaused = formulaCaused;
+            }
+        }
+
 
     }
 }
