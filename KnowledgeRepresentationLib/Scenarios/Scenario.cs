@@ -10,6 +10,8 @@ namespace KR_Lib.Scenarios
     {
         string Name { get; set; }
         Guid Id { get; set; }
+        int GetScenarioDuration();
+        (List<DataStructures.Observation>, List<DataStructures.Action>) GetScenarios(int time);
         //List<DataStructures.Observation> observations { get; set; }
         //List<DataStructures.Action> actions { get; set; }
     }
@@ -36,7 +38,7 @@ namespace KR_Lib.Scenarios
             DataStructures.Action ACS = new DataStructures.Action(name, startTime, durationTime);
             actions.Add(ACS);
         }
-        (List<DataStructures.Observation>, List<DataStructures.Action>) GetScenarios(int time)
+        public (List<DataStructures.Observation>, List<DataStructures.Action>) GetScenarios(int time)
         {
             List<DataStructures.Observation> reObservations = new List<DataStructures.Observation>();
             List<DataStructures.Action> retActions = new List<DataStructures.Action>();

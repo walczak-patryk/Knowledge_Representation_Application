@@ -1,9 +1,6 @@
 ﻿using System.Collections.Generic;
 using KR_Lib.Descriptions;
-<<<<<<< HEAD
 using KR_Lib.Structures;
-=======
->>>>>>> 367f09e6b8a815e136d6563fbb91bb29c47bb215
 using KR_Lib.Scenarios;
 using KR_Lib.Tree;
 using KR_Lib.DataStructures;
@@ -21,8 +18,11 @@ namespace KR_Lib
         /// <returns>Korzeń powstałego drzewa możliwości.</returns>
         public static Node GenerateTree(IDescription description, IScenario scenario, List<Fluent> fluents)
         {
+            List<DataStructures.Observation> reObservations;
+            List<DataStructures.Action> retActions;
+            (reObservations, retActions) = scenario.GetScenarios(0);
             int treeDepth = scenario.GetScenarioDuration();
-            Action startAction = scenario.GetScenarios(0)[1];
+            Action startAction = retActions[1];
             State startState = new State(startAction, fluents);
             Node root = new Node(null, startState);
 
