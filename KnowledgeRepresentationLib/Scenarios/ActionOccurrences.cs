@@ -2,7 +2,7 @@
 
 namespace KnowledgeRepresentationLib.Scenarios
 {
-    class ActionOccurrences
+    public class ActionOccurrences
     {
         public string Name { get; set; }
         public Guid Id { get; set; }
