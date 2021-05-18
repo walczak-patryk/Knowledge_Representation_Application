@@ -84,27 +84,25 @@ namespace KR_Lib
 
                 if (statement is CauseStatement)
                 {
-                    State newState = new State(parentState.currentAction, parentState.Fluents);
-                    newState.Fluents = statement.DoStatement(parentState.currentAction, parentState.Fluents);
+                    State newState = statement.DoStatement(parentState.currentAction, parentState.Fluents);
                     states.Add(newState);
                 }
                 else if (statement is InvokeStatement)
                 {
-                    State newState = new State(parentState.currentAction, parentState.Fluents);
-                    newState.currentAction = statement.DoStatement(parentState.currentAction, parentState.Fluents);
+                    State newState = statement.DoStatement(parentState.currentAction, parentState.Fluents);
                     states.Add(newState);
                 }
                 else if (statement is ReleaseStatement)
                 {
-                    // tutaj dodawać do listy wszystkie kombinacje
-                    State newState = new State(parentState.currentAction, parentState.Fluents);
-                    newState.Fluents = statement.DoStatement(parentState.currentAction, parentState.Fluents);
+                    // rozgałęzienie - po releasie może być stary stan albo zmieniony
+                    State oldState = new State(parentState.currentAction, parentState.Fluents);
+                    states.Add(oldState);
+                    State newState = statement.DoStatement(parentState.currentAction, parentState.Fluents);
                     states.Add(newState);
                 }
                 else if (statement is TriggerStatement)
                 {
-                    State newState = new State(parentState.currentAction, parentState.Fluents);
-                    newState.currentAction = statement.DoStatement(parentState.currentAction, parentState.Fluents);
+                    State newState = statement.DoStatement(parentState.currentAction, parentState.Fluents);
                     states.Add(newState);
                 }
                 else if (statement is ImpossibleAtStatement)
@@ -116,6 +114,12 @@ namespace KR_Lib
 
                 }
             }
+
+            // jeśli nic się nie zmieniło - dodajemy stan taki sam jak u rodzica
+            if (states.Count == 0)
+            {
+                states.Add(new State(parentState.currentAction, parentState.Fluents));
+            }    
 
             return states;
         }

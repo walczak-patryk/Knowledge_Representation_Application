@@ -12,7 +12,7 @@ namespace KR_Lib.Formulas {
 
     public class Formula : IFormula
     {
-        Fluent fluent;
+        public Fluent fluent { get; }
 
         public Formula(Fluent fluent)
         {

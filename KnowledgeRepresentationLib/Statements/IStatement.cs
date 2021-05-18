@@ -1,5 +1,6 @@
 ﻿using KR_Lib.DataStructures;
 using KR_Lib.Formulas;
+using KR_Lib.Tree;
 using System;
 using System.Collections.Generic;
 using Action = KR_Lib.DataStructures.Action;
@@ -26,6 +27,8 @@ namespace KR_Lib.Statements
         }
 
         public abstract bool CheckStatement(Action currentAction, List<Fluent> fluents, int time);
+
+        public abstract State DoStatement(Action currentAction, List<Fluent> fluents); 
 
         public Guid GetId()
         {

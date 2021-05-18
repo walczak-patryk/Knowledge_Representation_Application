@@ -1,5 +1,6 @@
 ﻿using KR_Lib.DataStructures;
 using KR_Lib.Formulas;
+using KR_Lib.Tree;
 using System.Collections.Generic;
 
 namespace KR_Lib.Statements
@@ -21,11 +22,11 @@ namespace KR_Lib.Statements
             return false;
         }
 
-        public List<Fluent> DoStatement(Action currentAction, List<Fluent> fluents)
+        public override State DoStatement(Action currentAction, List<Fluent> fluents)
         {
             // zmiana stanu fluentu na przeciwny
             fluents.Find(f => f.Name.Equals(fluent.Name)).State = !fluents.Find(f => f.Name.Equals(fluent.Name)).State;
-            return fluents;
+            return new State(currentAction, fluents);
         }
     }
 }
