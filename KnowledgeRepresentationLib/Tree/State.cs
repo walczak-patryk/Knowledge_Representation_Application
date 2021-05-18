@@ -14,10 +14,17 @@ namespace KR_Lib.Tree
             set;               
         }
 
-        public State(DataStructures.Action currentAction, List<Fluent> fluents)
+        public List<DataStructures.Action> impossibleActions
+        {
+            get;
+            set;
+        }
+
+        public State(DataStructures.Action currentAction, List<Fluent> fluents, List<DataStructures.Action> impossibleActions)
         {
             this.currentAction = currentAction;
             this.Fluents = fluents;
+            this.impossibleActions = impossibleActions;
         }
 
     }

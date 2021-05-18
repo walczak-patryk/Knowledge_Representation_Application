@@ -26,9 +26,9 @@ namespace KR_Lib.Statements
             this.formula = formula;
         }
 
-        public abstract bool CheckStatement(Action currentAction, List<Fluent> fluents, int time);
+        public abstract bool CheckStatement(Action currentAction, List<Fluent> fluents, List<Action> impossibleActions, int time);
 
-        public abstract State DoStatement(Action currentAction, List<Fluent> fluents); 
+        public abstract State DoStatement(Action currentAction, List<Fluent> fluents, List<Action> impossibleActions); 
 
         public Guid GetId()
         {
