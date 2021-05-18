@@ -50,8 +50,10 @@
     <Compile Include="DataStructures\Action.cs" />
     <Compile Include="DataStructures\Fluent.cs" />
     <Compile Include="DataStructures\Observation.cs" />
-    <Compile Include="DataStructures\ObservationElements.cs" />
+    <Compile Include="DataStructures\ObservationElement.cs" />
     <Compile Include="DataStructures\QueryEnumerables.cs" />
+    <Compile Include="DataStructures\ScenarioGUI.cs" />
+    <Compile Include="DataStructures\ScenarioItem.cs" />
     <Compile Include="Descriptions\Description.cs" />
     <Compile Include="Engine.cs" />
     <Compile Include="Formulas\AlternativeFormula.cs" />
@@ -61,6 +63,7 @@
     <Compile Include="Formulas\FormulaParser.cs" />
     <Compile Include="Formulas\ImplicationFormula.cs" />
     <Compile Include="Formulas\NegationFormula.cs" />
+    <Compile Include="Formulas\ParserFormula.cs" />
     <Compile Include="Queries\ActionQuery.cs" />
     <Compile Include="Structures\Model.cs" />
     <Compile Include="Queries\PossibleScenarioQuery.cs" />

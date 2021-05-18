@@ -5,9 +5,9 @@ namespace KR_Lib.Formulas
 {
     public static class FormulaParser
     {
-        public static IFormula ParseToFomrula(List<ObservationElements> observationElements)
+        public static IFormula ParseToFomrula(List<ObservationElement> observationElements)
         {
-            return new Formula();
+            return null;
         }
     }
 }

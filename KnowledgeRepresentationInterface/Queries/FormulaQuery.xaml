@@ -1,0 +1,76 @@
+﻿<UserControl x:Class="KnowledgeRepresentationInterface.Queries.FormulaQuery"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:local="clr-namespace:KnowledgeRepresentationInterface.Queries"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <!--Zapytanie użytkownika czy w chwili t ≥ 0 realizacji podanego scenariusza warunek γ zachodzi zawsze/kiedykolwiek?-->
+        <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Label Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" Content="Does the state" VerticalAlignment="Bottom" HorizontalAlignment="Center" />
+
+        <GroupBox  Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="6" Grid.RowSpan="3" Name="Observation_GroupBox" BorderThickness="0"/>
+        
+        <!--<RichTextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="4" IsEnabled="False" Margin="1,0,1,5" />
+        <Grid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="6">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Row="0" Grid.Column="0">Fluent</Label>
+            <ComboBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Name="Fluent_Observation_ScenarioTab" Margin="2,2,2,2"></ComboBox>
+            <Button Grid.Row="0" Grid.Column="4" Name="Add_Fluent_Observation_ScenarioTab" Margin="2,2,2,2">Add</Button>
+
+            <Button Name="And_Scenario" Grid.Row="0" Grid.Column="6" Margin="2,2,2,2">AND</Button>
+            <Button Name="Or_Scenario" Grid.Row="0" Grid.Column="7" Margin="2,2,2,2">OR</Button>
+            <Button Name="Not_Scenario" Grid.Row="0" Grid.Column="8" Margin="2,2,2,2">NOT</Button>
+            <Button Name="Im_Scenario" Grid.Row="0" Grid.Column="9" Margin="2,2,2,2">=&gt;</Button>
+            <Button Name="Eq_Scenario" Grid.Row="0" Grid.Column="10" Margin="2,2,2,2">&lt;=&gt;</Button>
+            <Button Name="Left_Scenario" Grid.Row="0" Grid.Column="11" Margin="2,2,2,2">(</Button>
+            <Button Name="Right_Scenario" Grid.Row="0" Grid.Column="12" Margin="2,2,2,2">)</Button>
+            <Button Name="Erase_Scenario" Grid.Row="0" Grid.Column="13" Margin="2,2,2,2">&lt;-</Button>
+        </Grid>-->
+
+        <Label Grid.Row="5" Grid.Column="2" Grid.ColumnSpan="2" Content="hold at the moment" VerticalAlignment="Bottom" HorizontalAlignment="Center" />
+        <xctk:UIntegerUpDown Name="Duration_UIntUpDown" Grid.Row="6" Grid.Column="2" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" Margin="3,3,3,3" />
+        <ComboBox Name="Type" Grid.Row="7" Grid.Column="2" Grid.ColumnSpan="2" SelectedIndex="0" HorizontalContentAlignment="Center" Margin="1,0,1,5">
+            <ComboBoxItem Content="Always" Margin="1,1,1,1" />
+            <ComboBoxItem Content="Ever" Margin="1,1,1,1" />
+        </ComboBox>
+    </Grid>
+</UserControl>

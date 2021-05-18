@@ -26,5 +26,10 @@ namespace KR_Lib.DataStructures
             this.State = initialState;
             this.Id = Guid.NewGuid();
         }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }
