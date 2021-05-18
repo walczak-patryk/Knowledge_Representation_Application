@@ -28,7 +28,8 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Label Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" Content="Is the state" VerticalAlignment="Bottom" HorizontalAlignment="Center" />
-        <RichTextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="4" IsEnabled="False" Margin="1,0,1,5" />
+        <GroupBox  Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="6" Grid.RowSpan="3" Name="Observation_GroupBox" BorderThickness="0"/>
+        <!--<RichTextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="4" IsEnabled="False" Margin="1,0,1,5" />
         <Grid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="6">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
@@ -59,7 +60,7 @@
             <Button Name="Left_Scenario" Grid.Row="0" Grid.Column="11" Margin="2,2,2,2">(</Button>
             <Button Name="Right_Scenario" Grid.Row="0" Grid.Column="12" Margin="2,2,2,2">)</Button>
             <Button Name="Erase_Scenario" Grid.Row="0" Grid.Column="13" Margin="2,2,2,2">&lt;-</Button>
-        </Grid>
+        </Grid>-->
 
         <Label Grid.Row="5" Grid.Column="2" Grid.ColumnSpan="2" Content="attainable" VerticalAlignment="Bottom" HorizontalAlignment="Center" />
         <ComboBox Name="Type" Grid.Row="6" Grid.Column="2" Grid.ColumnSpan="2" SelectedIndex="0" HorizontalContentAlignment="Center" Margin="1,0,1,5">

@@ -1,4 +1,5 @@
-﻿using KnowledgeRepresentationInterface.Queries;
+﻿using KnowledgeRepresentationInterface.General;
+using KnowledgeRepresentationInterface.Queries;
 using KR_Lib.DataStructures;
 using KR_Lib.Formulas;
 using System;
@@ -33,36 +34,21 @@ namespace KnowledgeRepresentationInterface
         List<Action> actions;
         List<Fluent> fluents;
         List<Scenario> scenarios;
-        List<ObservationElement> scenarioObservation;
+        ObservationCreator scenario_obs;
+        
 
         public MainWindow()
         {
-            Initialize_Query_Types();
             InitializeComponent();
             this.scenario = new Scenario();
             this.scenarios = new List<Scenario>();
             this.actions = new List<Action>();
             this.fluents = new List<Fluent>();
+            this.scenario_obs = new ObservationCreator(this.fluents);
+            Initialize_Query_Types();
             Scenario_ListView.ItemsSource = this.scenario.items;
             Query_GroupBox.Content = this.PSQ;
-            scenarioObservation = new List<ObservationElement>();
-            //List<ScenarioItem> test = new List<ScenarioItem>();
-            //Scenario_ListView.ItemsSource = test;
-            //TreeViewItem t = new TreeViewItem();
-            //t.Header = "Fluent II";
-            //TreeViewItem t2 = new TreeViewItem();
-            //t2.Header = "Option";
-            //t.Items.Add(t2);
-            //Fluents_TreeViewItem.Items.Add(t);
-            //for(int i=0;i<50;i++) 
-            //{
-            //    TreeViewItem t3 = new TreeViewItem();
-            //    t3.Header = "Fluent " + i.ToString();
-            //    ScenarioItem item = new ScenarioItem("1","2", "3", "4");
-            //    t3.Tag = item.Id;
-            //    Fluents_TreeViewItem.Items.Add(t3);
-            //    test.Add(item);
-            //}
+
             this.actions.Add(new Action("action1",0,2));
             this.actions.Add(new Action("action2",0,4));
             this.fluents.Add(new Fluent("fluent1", true));
@@ -82,16 +68,16 @@ namespace KnowledgeRepresentationInterface
                 Fluents_TreeViewItem.Items.Add(ele);
             }
             Action_Occurences_ComboBox.ItemsSource = this.actions;
-            Fluent_Observation_ScenarioTab.ItemsSource = this.fluents;
             Query_Scenario_ComboBox.ItemsSource = this.scenarios;
+            Observation_Scenario_GroupBox.Content = this.scenario_obs;
         }
 
         private void Initialize_Query_Types()
         {
             this.PSQ = new PossibleScenarioQuery();
             this.AQ = new ActionQuery();
-            this.FQ = new FormulaQuery();
-            this.TQ = new TargetQuery();
+            this.FQ = new FormulaQuery(this.fluents);
+            this.TQ = new TargetQuery(this.fluents);
         }
 
         private void Delete_TreeView_Click(object sender, RoutedEventArgs e)
@@ -113,9 +99,9 @@ namespace KnowledgeRepresentationInterface
                 {
                     Fluents_TreeViewItem.Items.Remove(item);
                     this.fluents.RemoveAll(x => x.Id.ToString() == item.Tag.ToString());
-                    Fluent_Observation_ScenarioTab.Items.Refresh();
-                    this.TQ.Set_Fluents(this.fluents);
-                    this.FQ.Set_Fluents(this.fluents);
+                    this.scenario_obs.RefreshControl();
+                    this.TQ.Refresh_Fluents();
+                    this.FQ.Refresh_Fluents();
                     return;
                 }
             }
@@ -143,14 +129,10 @@ namespace KnowledgeRepresentationInterface
 
         private void Delete_Scenario_ListView_Click(object sender, RoutedEventArgs e)
         {
-            //List<ScenarioItem> tmp_ListView = (List<ScenarioItem>)Scenario_ListView.ItemsSource;
             foreach(ScenarioItem item in Scenario_ListView.SelectedItems)
             {
                 this.scenario.items.RemoveAll(x => x.Id == item.Id);
-                //tmp_ListView.Remove(item);
             }
-            //Scenario_ListView.ItemsSource = tmp_ListView;
-            //Scenario_ListView.ItemsSource = this.scenario.items;
             Scenario_ListView.Items.Refresh();
 
         }
@@ -181,11 +163,11 @@ namespace KnowledgeRepresentationInterface
                     break;
                 case 2:
                     Query_GroupBox.Content = this.FQ;
-                    this.FQ.Set_Fluents(this.fluents);
+                    this.FQ.Refresh_Fluents();
                     break;
                 case 3:
                     Query_GroupBox.Content = this.TQ;
-                    this.TQ.Set_Fluents(this.fluents);
+                    this.TQ.Refresh_Fluents();
                     break;
             }
         }
@@ -246,102 +228,17 @@ namespace KnowledgeRepresentationInterface
 
         private void Observations_Button_Click(object sender, RoutedEventArgs e)
         {
-            if (scenarioObservation.Count==0)
+            if (scenario_obs.IsEmpty())
             {
                 MessageBox.Show("The observation is empty!");
                 return;
             }
             int moment = (int)Observations_UIntUpDown.Value;
 
-            this.scenario.items.Add(new ScenarioItem(moment.ToString(), "", Observations_TextBox.Text, ""));
-            List<ObservationElement> observation = infix_to_ONP(this.scenarioObservation);
+            this.scenario.items.Add(new ScenarioItem(moment.ToString(), "", this.scenario_obs.GetContent(), ""));
+            //List<ObservationElement> observation = infix_to_ONP(this.scenarioObservation);
             Scenario_ListView.Items.Refresh();
-        }
-
-        private void And_Scenario_Click(object sender, RoutedEventArgs e)
-        {
-            Observations_TextBox.Text += "AND ";
-            scenarioObservation.Add(new ObservationElement(false, null, 4,  "AND"));
-        }
-
-        private void Or_Scenario_Click(object sender, RoutedEventArgs e)
-        {
-            Observations_TextBox.Text += "OR ";
-            scenarioObservation.Add(new ObservationElement(false, null, 3, "OR"));
-        }
-
-        private void Not_Scenario_Click(object sender, RoutedEventArgs e)
-        {
-            Observations_TextBox.Text += "NOT ";
-            scenarioObservation.Add(new ObservationElement(false, null, 4, "NOT"));
-        }
-
-        private void Im_Scenario_Click(object sender, RoutedEventArgs e)
-        {
-            Observations_TextBox.Text += "=> ";
-            scenarioObservation.Add(new ObservationElement(false, null, 3, "=>"));
-        }
-
-        private void Eq_Scenario_Click(object sender, RoutedEventArgs e)
-        {
-            Observations_TextBox.Text += "<=> ";
-            scenarioObservation.Add(new ObservationElement(false, null, 4, "<=>"));
-        }
-
-        private void Left_Scenario_Click(object sender, RoutedEventArgs e)
-        {
-            Observations_TextBox.Text += "( ";
-            scenarioObservation.Add(new ObservationElement(false, null, 2, "("));
-        }
-
-        private void Right_Scenario_Click(object sender, RoutedEventArgs e)
-        {
-            Observations_TextBox.Text += ") ";
-            scenarioObservation.Add(new ObservationElement(false, null, 2, ")"));
-        }
-
-        private void Erase_Scenario_Click(object sender, RoutedEventArgs e)
-        {
-            if(scenarioObservation.Count==0)
-            {
-                return;
-            }
-            ObservationElement element = scenarioObservation[scenarioObservation.Count - 1];
-            Observations_TextBox.Text = Observations_TextBox.Text.Remove(Observations_TextBox.Text.Length - element.length, element.length);
-            scenarioObservation.RemoveAt(scenarioObservation.Count - 1);
-        }
-
-        private void Add_Fluent_Observation_ScenarioTab_Click(object sender, RoutedEventArgs e)
-        {
-            int index = (int)Fluent_Observation_ScenarioTab.SelectedIndex;
-            if (index < 0)
-            {
-                return;
-            }
-            
-            Observations_TextBox.Text += this.fluents[index].ToString() + " ";
-            scenarioObservation.Add(new ObservationElement(true, this.fluents[index], this.fluents[index].ToString().Length + 1, null));
-        }
-
-        void print_obs(List<ObservationElement> observation)
-        {
-            StringBuilder sb = new StringBuilder();
-            foreach(var elem in observation)
-            {
-                if(elem.isFluent)
-                {
-                    sb.Append(elem.fluent.Name + " ");
-                }
-                else
-                {
-                    sb.Append(elem.operator_ + " ");
-                }
-                
-            }
-            MessageBox.Show(sb.ToString());
-        }
-
-        
+        }        
     }
 
     public class ScenarioItem
@@ -381,19 +278,5 @@ namespace KnowledgeRepresentationInterface
         }
     }
 
-    public class ObservationElement
-    {
-        public bool isFluent { get; set; }
-        public Fluent fluent { get; set; }
-        public int length { get; set; }
-        public string operator_ { get; set; }
 
-        public ObservationElement(bool isFluent, Fluent fluent, int length, string operator_)
-        {
-            this.isFluent = isFluent;
-            this.fluent = fluent;
-            this.length = length;
-            this.operator_ = operator_;
-        }
-    }
 }
