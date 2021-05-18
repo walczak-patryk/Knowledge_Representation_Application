@@ -6,12 +6,15 @@ namespace KR_Lib.Statements
     public class InvokeStatement : Statement
     {
         private Action actionInvoked;
-        private int time;
+        //private int time; - time uwzględnić wyżej - jeżeli > to tworzymy ten statement TODO
 
-        public InvokeStatement(Action action, Fluent fluent, Formula formula = null) : base(action, null, formula)
+        public InvokeStatement(Action action, Fluent fluent, Formula formula, Action actionInvoked, int time) : base(action, null, formula)
         {
-            this.actionInvoked = actionInvoked;
-            this.time = time;
+            if (formula.Evaluate())
+            {
+                this.actionInvoked = actionInvoked;
+            }
+            //this.time = time;
         }
 
     }

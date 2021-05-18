@@ -49,10 +49,15 @@
   <ItemGroup>
     <Compile Include="DataStructures\Action.cs" />
     <Compile Include="DataStructures\Fluent.cs" />
+    <Compile Include="DataStructures\Observation.cs" />
     <Compile Include="DataStructures\QueryEnumerables.cs" />
     <Compile Include="Descriptions\Description.cs" />
     <Compile Include="Engine.cs" />
+    <Compile Include="Formulas\AlternativeFormula.cs" />
+    <Compile Include="Formulas\ConjunctionFormula.cs" />
+    <Compile Include="Formulas\EquivalenceFormula.cs" />
     <Compile Include="Formulas\Formula.cs" />
+    <Compile Include="Formulas\ImplicationFormula.cs" />
     <Compile Include="Formulas\NegationFormula.cs" />
     <Compile Include="Queries\ActionQuery.cs" />
     <Compile Include="Structures\Model.cs" />
@@ -78,7 +83,7 @@
     <Compile Include="Tree\Tree.cs" />
     <Compile Include="Tree\Extentions.cs" />
     <Compile Include="Queries\FormulaQuery.cs" />
-    <Compile Include="Exceptions\InconsistentException.cs" />
+    <Compile Include="Exceptions\ScenarioNoExistsException.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

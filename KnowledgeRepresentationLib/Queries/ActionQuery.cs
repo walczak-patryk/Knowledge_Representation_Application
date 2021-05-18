@@ -13,28 +13,24 @@ namespace KR_Lib.Queries
         int time;
         Action action;
 
-        public Action Action
-        {
-            get
-            {
-                return action;
-            }
+        public Guid ScenarioId 
+        { 
+            get; 
         }
-        public int Time
+
+        public ActionQuery(int time, Action action, Guid scenarioId)
         {
-            get
-            {
-                return time;
-            }
+            this.ScenarioId = scenarioId;
+            this.time = time;
+            this.action = action;
         }
 
         /// <summary>
         /// Odpowiedź na pytanie czy w chwili t realizacji scenariusza wykonywana jest akcja A
         /// </summary>
         /// <param name="modeledStructures">Lista modeli i niespójnych struktur, dla których sprawdzana będzie prawdziwość query</param>
-        /// <param name="scenario">Scenariusz</param>
         /// <returns>Prawda jeżeli akcja A jest wykonywana w chwili t w każdej stukturze z listy, fałsz w.p.p.<returns>
-        public bool GetAnswer(List<IStructure> modeledStructures, IScenario scenario)
+        public bool GetAnswer(List<IStructure> modeledStructures)
         {
             bool atLeastOneModel = false;
             foreach (var structure in modeledStructures)
@@ -42,7 +38,7 @@ namespace KR_Lib.Queries
                 if (structure is Model)
                 {
                     atLeastOneModel = true;
-                    if (structure.CheckActionBelongingToE(this.Action, this.Time) != 1)
+                    if (structure.CheckActionBelongingToE(this.action, this.time) != 1)
                         return false;
                 }
             }
