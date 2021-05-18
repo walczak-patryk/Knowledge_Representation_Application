@@ -19,13 +19,6 @@ namespace KR_Lib.Tree
             this.time = time;
         }
 
-        public Node(Node parent, State currentState, int time)
-        {
-            this.parent = parent;
-            this.currentState = currentState;
-            this.time = time;
-        }
-
         public void addChild(Node child)
         {
             this.children.Add(child);
