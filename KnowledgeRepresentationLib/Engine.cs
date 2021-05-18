@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Action = KR_Lib.DataStructures.Action;
+using KR_Lib.Formulas;
 
 namespace KR_Lib
 {
@@ -91,7 +92,7 @@ namespace KR_Lib
 
         private void GenerateModels(IScenario scenario) 
         {
-            var root = TreeMethods.GenerateTree(description, scenario, fluents); //Kacper, Kacper, Kornel
+            var root = TreeMethods.GenerateTree(description, scenario); //Kacper, Kacper, Kornel
             var structures = TreeMethods.GenerateStructues(root); //Kacper, Kacper, Kornel
             this.modeledStructures = structures.ToModels(); //Ala, Filip
         }
@@ -124,6 +125,17 @@ namespace KR_Lib
         {
             newChangesFlag = true;
             scenarios.Add(scenario);
+        }
+
+        /// <summary>
+        /// Adds scenario to list of scenarios
+        /// </summary>
+        /// <param IScenario="scenario"></param>
+        public void AddObservation(Guid scenarioId, List<ObservationElements> observationElements) 
+        {
+            newChangesFlag = true;
+            var observation = FormulaParser.ParseToFomrula(observationElements);
+            ////scenarios.Add(scenario);
         }
 
         /// <summary>

@@ -1,6 +1,8 @@
 ﻿using KR_Lib.DataStructures;
 using KR_Lib.Formulas;
+using KR_Lib.Tree;
 using System;
+using System.Collections.Generic;
 using Action = KR_Lib.DataStructures.Action;
 
 namespace KR_Lib.Statements
@@ -11,10 +13,10 @@ namespace KR_Lib.Statements
     }
     public abstract class Statement : IStatement
     {
-        private Guid guid;
-        private Action action;
-        private Fluent fluent;
-        private Formula formula;
+        public Guid guid;
+        public Action action;
+        public Fluent fluent;
+        public Formula formula;
 
         protected Statement(Action action, Fluent fluent = null, Formula formula = null)
         {
@@ -23,6 +25,10 @@ namespace KR_Lib.Statements
             this.fluent = fluent;
             this.formula = formula;
         }
+
+        public abstract bool CheckStatement(Action currentAction, List<Fluent> fluents, int time);
+
+        public abstract State DoStatement(Action currentAction, List<Fluent> fluents); 
 
         public Guid GetId()
         {

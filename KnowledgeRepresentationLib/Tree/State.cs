@@ -7,8 +7,8 @@ namespace KR_Lib.Tree
     public class State
     {
 
-        DataStructures.Action currentAction;
-        List<Fluent> Fluents
+        public DataStructures.Action currentAction;
+        public List<Fluent> Fluents
         {
             get;
             set;               
