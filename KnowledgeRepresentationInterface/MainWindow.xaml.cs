@@ -30,18 +30,18 @@ namespace KnowledgeRepresentationInterface
         ActionQuery AQ;
         FormulaQuery FQ;
         TargetQuery TQ;
-        Scenario scenario;
+        ScenarioGUI scenario;
         List<Action> actions;
         List<Fluent> fluents;
-        List<Scenario> scenarios;
+        List<ScenarioGUI> scenarios;
         ObservationCreator scenario_obs;
         
 
         public MainWindow()
         {
             InitializeComponent();
-            this.scenario = new Scenario();
-            this.scenarios = new List<Scenario>();
+            this.scenario = new ScenarioGUI();
+            this.scenarios = new List<ScenarioGUI>();
             this.actions = new List<Action>();
             this.fluents = new List<Fluent>();
             this.scenario_obs = new ObservationCreator(this.fluents);
@@ -204,7 +204,7 @@ namespace KnowledgeRepresentationInterface
                 new_subitem.Tag = item.Id;
                 new_scenario.Items.Add(new_subitem);
             }
-            this.scenario = new Scenario();
+            this.scenario = new ScenarioGUI();
             Scenario_ListView.ItemsSource = this.scenario.items;
             Scenario_ListView.Items.Refresh();
             Scenarios_TreeViewItem.Items.Add(new_scenario);
@@ -240,43 +240,4 @@ namespace KnowledgeRepresentationInterface
             Scenario_ListView.Items.Refresh();
         }        
     }
-
-    public class ScenarioItem
-    {
-        public Guid Id { get; set; }
-        public string Moment { get; set; }
-        public string ActionOccurence { get; set; }
-        public (Action,int) ActionDetails { get; set; }
-        public string Observation { get; set; }
-        public string Duration { get; set; }
-
-        public ScenarioItem(string Moment, string ActionOccurence, string Observation, string Duration)
-        {
-            this.Id = Guid.NewGuid();
-            this.Moment = Moment;
-            this.ActionOccurence = ActionOccurence;
-            this.Observation = Observation;
-            this.Duration = Duration;
-        }
-    }
-
-    public class Scenario
-    {
-        public Guid Id { get; set; }
-        public string name { get; set; }
-        public List<ScenarioItem> items { get; set; }
-
-        public Scenario()
-        {
-            this.Id = Guid.NewGuid();
-            this.items = new List<ScenarioItem>();
-        }
-
-        public override string ToString()
-        {
-            return name;
-        }
-    }
-
-
 }

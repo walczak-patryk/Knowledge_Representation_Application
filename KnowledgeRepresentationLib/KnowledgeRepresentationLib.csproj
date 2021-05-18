@@ -52,6 +52,8 @@
     <Compile Include="DataStructures\Observation.cs" />
     <Compile Include="DataStructures\ObservationElement.cs" />
     <Compile Include="DataStructures\QueryEnumerables.cs" />
+    <Compile Include="DataStructures\ScenarioGUI.cs" />
+    <Compile Include="DataStructures\ScenarioItem.cs" />
     <Compile Include="Descriptions\Description.cs" />
     <Compile Include="Engine.cs" />
     <Compile Include="Formulas\AlternativeFormula.cs" />
