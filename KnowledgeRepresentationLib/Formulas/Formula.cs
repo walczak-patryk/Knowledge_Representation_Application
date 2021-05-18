@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using KR_Lib.DataStructures;
+using System.Collections.Generic;
 
 namespace KR_Lib.Formulas {
     public interface IFormula
