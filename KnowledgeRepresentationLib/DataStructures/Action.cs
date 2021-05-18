@@ -19,5 +19,10 @@ namespace KR_Lib.DataStructures
             this.Name = name;
             this.Id = Guid.NewGuid();
         }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

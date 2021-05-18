@@ -1,4 +1,5 @@
 ﻿using KnowledgeRepresentationInterface.Queries;
+using KR_Lib.DataStructures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Media.Media3D;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Action = KR_Lib.DataStructures.Action;
 
 namespace KnowledgeRepresentationInterface
 {
@@ -26,29 +28,59 @@ namespace KnowledgeRepresentationInterface
         ActionQuery AQ;
         FormulaQuery FQ;
         TargetQuery TQ;
+        Scenario scenario;
+        List<Action> actions;
+        List<Fluent> fluents;
+        List<Scenario> scenarios;
 
         public MainWindow()
         {
             Initialize_Query_Types();
             InitializeComponent();
+            this.scenario = new Scenario();
+            this.scenarios = new List<Scenario>();
+            this.actions = new List<Action>();
+            this.fluents = new List<Fluent>();
+            Scenario_ListView.ItemsSource = this.scenario.items;
             Query_GroupBox.Content = this.PSQ;
-            List<ScenarioItem> test = new List<ScenarioItem>();
-            Scenario_ListView.ItemsSource = test;
-            TreeViewItem t = new TreeViewItem();
-            t.Header = "Fluent II";
-            TreeViewItem t2 = new TreeViewItem();
-            t2.Header = "Option";
-            t.Items.Add(t2);
-            Fluents_TreeViewItem.Items.Add(t);
-            for(int i=0;i<50;i++) 
+            //List<ScenarioItem> test = new List<ScenarioItem>();
+            //Scenario_ListView.ItemsSource = test;
+            //TreeViewItem t = new TreeViewItem();
+            //t.Header = "Fluent II";
+            //TreeViewItem t2 = new TreeViewItem();
+            //t2.Header = "Option";
+            //t.Items.Add(t2);
+            //Fluents_TreeViewItem.Items.Add(t);
+            //for(int i=0;i<50;i++) 
+            //{
+            //    TreeViewItem t3 = new TreeViewItem();
+            //    t3.Header = "Fluent " + i.ToString();
+            //    ScenarioItem item = new ScenarioItem("1","2", "3", "4");
+            //    t3.Tag = item.Id;
+            //    Fluents_TreeViewItem.Items.Add(t3);
+            //    test.Add(item);
+            //}
+            this.actions.Add(new Action("action1"));
+            this.actions.Add(new Action("action2"));
+            this.fluents.Add(new Fluent("fluent1", true));
+            this.fluents.Add(new Fluent("fluent2", true));
+            foreach(var elem in this.actions)
             {
-                TreeViewItem t3 = new TreeViewItem();
-                t3.Header = "Fluent " + i.ToString();
-                ScenarioItem item = new ScenarioItem("2", "3", "4");
-                t3.Tag = item.ID;
-                Fluents_TreeViewItem.Items.Add(t3);
-                test.Add(item);
+                TreeViewItem ele = new TreeViewItem();
+                ele.Header = elem.Name;
+                ele.Tag = elem.Id;
+                Actions_TreeViewItem.Items.Add(ele);
             }
+            foreach (var elem in this.fluents)
+            {
+                TreeViewItem ele = new TreeViewItem();
+                ele.Header = elem.Name;
+                ele.Tag = elem.Id;
+                Fluents_TreeViewItem.Items.Add(ele);
+            }
+            Action_Occurences_ComboBox.ItemsSource = this.actions;
+            Fluent_Observation_ScenarioTab.ItemsSource = this.fluents;
+            Query_Scenario_ComboBox.ItemsSource = this.scenarios;
         }
 
         private void Initialize_Query_Types()
@@ -66,6 +98,9 @@ namespace KnowledgeRepresentationInterface
                 if(item.IsSelected)
                 {
                     Actions_TreeViewItem.Items.Remove(item);
+                    this.actions.RemoveAll(x => x.Id.ToString() == item.Tag.ToString());
+                    Action_Occurences_ComboBox.Items.Refresh();
+                    this.AQ.Set_Actions(this.actions);
                     return;
                 }
             }
@@ -74,6 +109,10 @@ namespace KnowledgeRepresentationInterface
                 if (item.IsSelected)
                 {
                     Fluents_TreeViewItem.Items.Remove(item);
+                    this.fluents.RemoveAll(x => x.Id.ToString() == item.Tag.ToString());
+                    Fluent_Observation_ScenarioTab.Items.Refresh();
+                    this.TQ.Set_Fluents(this.fluents);
+                    this.FQ.Set_Fluents(this.fluents);
                     return;
                 }
             }
@@ -90,6 +129,9 @@ namespace KnowledgeRepresentationInterface
                 if (item.IsSelected)
                 {
                     Scenarios_TreeViewItem.Items.Remove(item);
+                    this.scenarios.RemoveAll(x => x.Id.ToString() == item.Tag.ToString());
+                    Query_Scenario_ComboBox.ItemsSource = this.scenarios;
+                    Query_Scenario_ComboBox.Items.Refresh();
                     return;
                 }
             }
@@ -98,19 +140,21 @@ namespace KnowledgeRepresentationInterface
 
         private void Delete_Scenario_ListView_Click(object sender, RoutedEventArgs e)
         {
-            List<ScenarioItem> tmp_ListView = (List<ScenarioItem>)Scenario_ListView.ItemsSource;
+            //List<ScenarioItem> tmp_ListView = (List<ScenarioItem>)Scenario_ListView.ItemsSource;
             foreach(ScenarioItem item in Scenario_ListView.SelectedItems)
             {
-                tmp_ListView.Remove(item);
+                this.scenario.items.RemoveAll(x => x.Id == item.Id);
+                //tmp_ListView.Remove(item);
             }
-            Scenario_ListView.ItemsSource = tmp_ListView;
+            //Scenario_ListView.ItemsSource = tmp_ListView;
+            //Scenario_ListView.ItemsSource = this.scenario.items;
             Scenario_ListView.Items.Refresh();
 
         }
 
         private void Panel_TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            //do actions on tab change
+
         }
 
         private void ExecuteQuery_Click(object sender, RoutedEventArgs e)
@@ -130,31 +174,113 @@ namespace KnowledgeRepresentationInterface
                     break;
                 case 1:
                     Query_GroupBox.Content = this.AQ;
+                    this.AQ.Set_Actions(this.actions);
                     break;
                 case 2:
                     Query_GroupBox.Content = this.FQ;
+                    this.FQ.Set_Fluents(this.fluents);
                     break;
                 case 3:
                     Query_GroupBox.Content = this.TQ;
+                    this.TQ.Set_Fluents(this.fluents);
                     break;
             }
+        }
+
+        private void Finish_Scenario_Click(object sender, RoutedEventArgs e)
+        {
+            if (ScenarioName_TextBox.Text.Length==0)
+            {
+                MessageBox.Show("The scenario name cannot be empty!");
+                return;
+            }
+            if (!ScenarioName_TextBox.Text.All(char.IsLetterOrDigit))
+            {
+                MessageBox.Show("The scenario name should contain only alphanumeric symbols!");
+                return;
+            }
+            foreach (var elem in this.scenarios)
+            {
+                if(elem.name == ScenarioName_TextBox.Text)
+                {
+                    MessageBox.Show("A scenario with this name already exists!");
+                    return;
+                }
+            }
+            this.scenario.name = ScenarioName_TextBox.Text;
+            this.scenarios.Add(this.scenario);
+            TreeViewItem new_scenario = new TreeViewItem();
+            new_scenario.Header = ScenarioName_TextBox.Text;
+            new_scenario.Tag = scenario.Id.ToString();
+            foreach(var item in this.scenario.items)
+            {
+                TreeViewItem new_subitem = new TreeViewItem();
+                new_subitem.Header = item.Id;
+                new_subitem.Tag = item.Id;
+                new_scenario.Items.Add(new_subitem);
+            }
+            this.scenario = new Scenario();
+            Scenario_ListView.ItemsSource = this.scenario.items;
+            Scenario_ListView.Items.Refresh();
+            Scenarios_TreeViewItem.Items.Add(new_scenario);
+            Query_Scenario_ComboBox.Items.Refresh();
+
+        }
+
+        private void Action_Occurences_Button_Click(object sender, RoutedEventArgs e)
+        {
+            Action action = (Action)Action_Occurences_ComboBox.SelectedItem;
+            if(action == null)
+            {
+                MessageBox.Show("You have to select an action to add!");
+                return;
+            }
+            int moment = (int)Action_Occurences_UIntUpDown.Value;
+
+            this.scenario.items.Add(new ScenarioItem(moment.ToString(),action.Name, "", ""));
+            Scenario_ListView.Items.Refresh();
+        }
+
+        private void Observations_Button_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("test");
         }
     }
 
     public class ScenarioItem
     {
-        public Guid ID { get; set; }
+        public Guid Id { get; set; }
+        public string Moment { get; set; }
         public string ActionOccurence { get; set; }
+        public (Action,int) ActionDetails { get; set; }
         public string Observation { get; set; }
         public string Duration { get; set; }
 
-        public ScenarioItem(string ActionOccurence, string Observation, string Duration)
+        public ScenarioItem(string Moment, string ActionOccurence, string Observation, string Duration)
         {
-            this.ID = new Guid();
+            this.Id = Guid.NewGuid();
+            this.Moment = Moment;
             this.ActionOccurence = ActionOccurence;
             this.Observation = Observation;
             this.Duration = Duration;
         }
+    }
 
+    public class Scenario
+    {
+        public Guid Id { get; set; }
+        public string name { get; set; }
+        public List<ScenarioItem> items { get; set; }
+
+        public Scenario()
+        {
+            this.Id = Guid.NewGuid();
+            this.items = new List<ScenarioItem>();
+        }
+
+        public override string ToString()
+        {
+            return name;
+        }
     }
 }

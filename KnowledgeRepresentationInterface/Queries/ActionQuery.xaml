@@ -30,7 +30,7 @@
         </Grid.ColumnDefinitions>
 
         <Label Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" Content="Is the action" HorizontalAlignment="Center" VerticalAlignment="Bottom" />
-        <ComboBox Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" SelectedIndex="0" Margin="1,0,1,5" />
+        <ComboBox Name="Actions_ComboBox" Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" SelectedIndex="0" Margin="1,0,1,5" />
 
         <Label Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2" Content="executed at the moment" VerticalAlignment="Bottom" HorizontalAlignment="Center" />
         <xctk:UIntegerUpDown Name="Duration_UIntUpDown" Grid.Row="4" Grid.Column="2" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" Margin="3,3,3,3" />

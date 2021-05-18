@@ -1,4 +1,5 @@
-﻿using System;
+﻿using KR_Lib.DataStructures;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,12 @@ namespace KnowledgeRepresentationInterface.Queries
         public TargetQuery()
         {
             InitializeComponent();
+        }
+
+        public void Set_Fluents(List<Fluent> fluents)
+        {
+            Fluent_Observation_ScenarioTab.ItemsSource = fluents;
+            Fluent_Observation_ScenarioTab.Items.Refresh();
         }
     }
 }
