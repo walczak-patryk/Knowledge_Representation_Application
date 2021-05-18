@@ -1,5 +1,6 @@
 ﻿using KR_Lib.DataStructures;
 using KR_Lib.Formulas;
+using System.Collections.Generic;
 
 namespace KR_Lib.Statements
 {
@@ -7,11 +8,24 @@ namespace KR_Lib.Statements
     {
         public ReleaseStatement(Action action, Fluent fluent, Formula formula) : base(action, fluent, formula)
         {
-            if (formula.Evaluate())
+            fluent.State = true;
+        }
+
+        public override bool CheckStatement(Action currentAction, List<Fluent> fluents, int time)
+        {
+            if (currentAction.GetEndTime() <= time && formula.Evaluate() == true)
             {
-                fluent.State = true;
+                return true;
             }
-            // TODO: uzupełnić logiki w Nodzie - jeżeli Akcja już zakończyła działanie to dopiero tworzony ten Statement
+
+            return false;
+        }
+
+        public List<Fluent> DoStatement(Action currentAction, List<Fluent> fluents)
+        {
+            // zmiana stanu fluentu na przeciwny
+            fluents.Find(f => f.Name.Equals(fluent.Name)).State = !fluents.Find(f => f.Name.Equals(fluent.Name)).State;
+            return fluents;
         }
     }
 }
