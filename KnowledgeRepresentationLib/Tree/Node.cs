@@ -12,10 +12,11 @@ namespace KR_Lib.Tree
         State currentState;
         int time;
         
-        public Node(Node parent, State currentState)
+        public Node(Node parent, State currentState, int time)
         {
             this.parent = parent;
             this.currentState = currentState;
+            this.time = time;
         }
 
         public Node(Node parent, State currentState, int time)

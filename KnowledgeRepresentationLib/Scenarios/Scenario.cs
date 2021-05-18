@@ -12,6 +12,8 @@ namespace KR_Lib.Scenarios
         Guid Id { get; }
         int GetScenarioDuration();
         (List<DataStructures.Observation>, List<DataStructures.Action>) GetScenarios(int time);
+        List<DataStructures.Observation> GetObservationsAtTime(int time);
+        DataStructures.Action GetActionAtTime(int time);
         //List<DataStructures.Observation> observations { get; set; }
         //List<DataStructures.Action> actions { get; set; }
     }
@@ -59,6 +61,35 @@ namespace KR_Lib.Scenarios
             }
             (List<DataStructures.Observation>, List<DataStructures.Action>) scenario = (reObservations, retActions);
             return scenario;
+        }
+
+        public List<DataStructures.Observation> GetObservationsAtTime(int time)
+        {
+            List<DataStructures.Observation> observations = new List<DataStructures.Observation>();
+            foreach (DataStructures.Observation obs in observations)
+            {
+                if (obs.Time == time)
+                {
+                    observations.Add(obs);
+                }
+            }
+
+            return observations;
+        }
+
+        public DataStructures.Action GetActionAtTime(int time)
+        {
+            DataStructures.Action action = null;
+            foreach (DataStructures.Action acs in actions)
+            {
+                if (acs.StartTime <= time && acs.StartTime + acs.DurationTime >= time)
+                {
+                    action = acs;
+                    break;
+                }
+            }
+
+            return action;
         }
 
         public List<DataStructures.Observation> GetObservations()
