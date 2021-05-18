@@ -4,6 +4,7 @@ using KR_Lib.Structures;
 using KR_Lib.Scenarios;
 using KR_Lib.Tree;
 using KR_Lib.DataStructures;
+using KR_Lib.Statements;
 
 namespace KR_Lib
 {
@@ -61,15 +62,62 @@ namespace KR_Lib
         /// <param name="time"></param>
         /// <returns></returns>
         public static List<Node> CreateNewNodes(IDescription description, IScenario scenario, Node parentNode, int time)
-        {
+        {   
+            List<State> newStates = CheckDescription(description.GetStatements(), parentNode.currentState, time);
             List<Node> newNodes = new List<Node>();
-
-            foreach (Node node in newNodes)
+            foreach (State state in newStates)
             {
+                Node node = new Node(parentNode, state, time);
                 parentNode.addChild(node);
+                newNodes.Add(node);
             }
 
             return newNodes;
+        }
+
+        public static List<State> CheckDescription(List<IStatement> statements, State parentState, int time)
+        {
+            List<State> states = new List<State>();
+            foreach (Statement statement in statements)
+            {
+                statement.CheckStatement(parentState.currentAction, parentState.Fluents, time);
+
+                if (statement is CauseStatement)
+                {
+                    State newState = new State(parentState.currentAction, parentState.Fluents);
+                    newState.Fluents = statement.DoStatement(parentState.currentAction, parentState.Fluents);
+                    states.Add(newState);
+                }
+                else if (statement is InvokeStatement)
+                {
+                    State newState = new State(parentState.currentAction, parentState.Fluents);
+                    newState.currentAction = statement.DoStatement(parentState.currentAction, parentState.Fluents);
+                    states.Add(newState);
+                }
+                else if (statement is ReleaseStatement)
+                {
+                    // tutaj dodawać do listy wszystkie kombinacje
+                    State newState = new State(parentState.currentAction, parentState.Fluents);
+                    newState.Fluents = statement.DoStatement(parentState.currentAction, parentState.Fluents);
+                    states.Add(newState);
+                }
+                else if (statement is TriggerStatement)
+                {
+                    State newState = new State(parentState.currentAction, parentState.Fluents);
+                    newState.currentAction = statement.DoStatement(parentState.currentAction, parentState.Fluents);
+                    states.Add(newState);
+                }
+                else if (statement is ImpossibleAtStatement)
+                {
+
+                }
+                else if (statement is ImpossibleIfStatement)
+                {
+
+                }
+            }
+
+            return states;
         }
 
         /// <summary>
