@@ -1,5 +1,6 @@
 ﻿using KR_Lib.DataStructures;
 using KR_Lib.Formulas;
+using KR_Lib.Tree;
 using System.Collections.Generic;
 
 namespace KR_Lib.Statements
@@ -26,9 +27,9 @@ namespace KR_Lib.Statements
             return false;
         }
 
-        public Action DoStatement(Action currentAction, List<Fluent> fluents)
+        public override State DoStatement(Action currentAction, List<Fluent> fluents)
         {
-            return actionInvoked;
+            return new State(actionInvoked, fluents);
         }
     }
 }
