@@ -1,9 +1,12 @@
 ﻿using KR_Lib.DataStructures;
+using System.Collections.Generic;
 
 namespace KR_Lib.Formulas {
     public interface IFormula
     {
         bool Evaluate();
+
+        List<Fluent> GetFluents();
     
     }
 
@@ -18,6 +21,11 @@ namespace KR_Lib.Formulas {
         public bool Evaluate()
         {
             return this.fluent.State;
+        }
+
+        public List<Fluent> GetFluents()
+        {
+            return new List<Fluent>() { fluent };
         }
     }
 }

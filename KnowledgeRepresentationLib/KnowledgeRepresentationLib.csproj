@@ -50,6 +50,7 @@
     <Compile Include="DataStructures\Action.cs" />
     <Compile Include="DataStructures\Fluent.cs" />
     <Compile Include="DataStructures\Observation.cs" />
+    <Compile Include="DataStructures\ObservationElements.cs" />
     <Compile Include="DataStructures\QueryEnumerables.cs" />
     <Compile Include="Descriptions\Description.cs" />
     <Compile Include="Engine.cs" />
@@ -57,6 +58,7 @@
     <Compile Include="Formulas\ConjunctionFormula.cs" />
     <Compile Include="Formulas\EquivalenceFormula.cs" />
     <Compile Include="Formulas\Formula.cs" />
+    <Compile Include="Formulas\FormulaParser.cs" />
     <Compile Include="Formulas\ImplicationFormula.cs" />
     <Compile Include="Formulas\NegationFormula.cs" />
     <Compile Include="Queries\ActionQuery.cs" />
