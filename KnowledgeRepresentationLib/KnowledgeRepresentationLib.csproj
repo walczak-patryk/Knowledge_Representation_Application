@@ -63,7 +63,6 @@
     <Compile Include="Formulas\FormulaParser.cs" />
     <Compile Include="Formulas\ImplicationFormula.cs" />
     <Compile Include="Formulas\NegationFormula.cs" />
-    <Compile Include="Formulas\ParserFormula.cs" />
     <Compile Include="Queries\ActionQuery.cs" />
     <Compile Include="Structures\Model.cs" />
     <Compile Include="Queries\PossibleScenarioQuery.cs" />

@@ -134,7 +134,7 @@ namespace KR_Lib
         public void AddObservation(Guid scenarioId, List<ObservationElement> observationElements) 
         {
             newChangesFlag = true;
-            var observation = FormulaParser.ParseToFomrula(observationElements);
+            var observation = FormulaParser.ParseToFormula(observationElements);
             ////scenarios.Add(scenario);
         }
 
