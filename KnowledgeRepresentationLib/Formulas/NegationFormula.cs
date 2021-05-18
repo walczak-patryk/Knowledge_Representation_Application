@@ -1,4 +1,7 @@
-﻿namespace KR_Lib.Formulas
+﻿using System.Collections.Generic;
+using KR_Lib.DataStructures;
+
+namespace KR_Lib.Formulas
 {
     public class NegationFormula : IFormula
     {
@@ -11,6 +14,10 @@
         public bool Evaluate()
         {
             return !this.formula.Evaluate();
+        }
+        public List<Fluent> GetFluents()
+        {
+            return this.formula.GetFluents();
         }
     }
 }
