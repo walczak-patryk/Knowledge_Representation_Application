@@ -1,4 +1,5 @@
-﻿using System;
+﻿using KR_Lib.Formulas;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,7 @@ namespace KR_Lib.DataStructures
         public Fluent fluent { get; set; }
         public int length { get; set; }
         public string operator_ { get; set; }
+        public IFormula formula { get;set;}
 
         public ObservationElement(bool isFluent, Fluent fluent, int length, string operator_)
         {

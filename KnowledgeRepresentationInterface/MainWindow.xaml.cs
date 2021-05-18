@@ -144,6 +144,26 @@ namespace KnowledgeRepresentationInterface
 
         private void ExecuteQuery_Click(object sender, RoutedEventArgs e)
         {
+            if(Query_Scenario_ComboBox.SelectedIndex<0)
+            {
+                MessageBox.Show("You have to select a scenario!");
+                return;
+            }
+            switch(Query_Type_ComboBox.SelectedIndex)
+            {
+                case 0:
+
+                    break;
+                case 1:
+
+                    break;
+                case 2:
+
+                    break;
+                case 3:
+
+                    break;
+            }
         }
 
         private void Query_Type_ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -200,7 +220,15 @@ namespace KnowledgeRepresentationInterface
             foreach(var item in this.scenario.items)
             {
                 TreeViewItem new_subitem = new TreeViewItem();
-                new_subitem.Header = item.Id;
+                if(item.ActionOccurence.Length==0)
+                {
+                    new_subitem.Header = "Observation: " + item.Observation;
+                }
+                else
+                {
+                    new_subitem.Header = "Action occurence: " + item.ActionOccurence;
+                }
+                
                 new_subitem.Tag = item.Id;
                 new_scenario.Items.Add(new_subitem);
             }
@@ -233,10 +261,18 @@ namespace KnowledgeRepresentationInterface
                 MessageBox.Show("The observation is empty!");
                 return;
             }
-            int moment = (int)Observations_UIntUpDown.Value;
 
+            List<ObservationElement> observation = this.scenario_obs.scenarioObservation;
+            observation = FormulaParser.infix_to_ONP(observation);
+            IFormula formula = FormulaParser.ParseToFormula(observation);
+            if(formula==null)
+            {
+                MessageBox.Show("The expression is not valid!");
+                return;
+            }
+
+            int moment = (int)Observations_UIntUpDown.Value;
             this.scenario.items.Add(new ScenarioItem(moment.ToString(), "", this.scenario_obs.GetContent(), ""));
-            //List<ObservationElement> observation = infix_to_ONP(this.scenarioObservation);
             Scenario_ListView.Items.Refresh();
         }        
     }

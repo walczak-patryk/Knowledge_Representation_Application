@@ -21,7 +21,7 @@ namespace KnowledgeRepresentationInterface.General
     /// </summary>
     public partial class ObservationCreator : UserControl
     {
-        List<ObservationElement> scenarioObservation;
+        public List<ObservationElement> scenarioObservation { get; set; }
         List<Fluent> fluents;
 
         public ObservationCreator(List<Fluent> fluents)
@@ -113,22 +113,5 @@ namespace KnowledgeRepresentationInterface.General
             return Observations_TextBox.Text;
         }
 
-        public void print_obs(List<ObservationElement> observation)
-        {
-            StringBuilder sb = new StringBuilder();
-            foreach (var elem in observation)
-            {
-                if (elem.isFluent)
-                {
-                    sb.Append(elem.fluent.Name + " ");
-                }
-                else
-                {
-                    sb.Append(elem.operator_ + " ");
-                }
-
-            }
-            MessageBox.Show(sb.ToString());
-        }
     }
 }
