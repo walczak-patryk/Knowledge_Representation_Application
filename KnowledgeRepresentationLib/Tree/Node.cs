@@ -9,7 +9,7 @@ namespace KR_Lib.Tree
     {
         Node parent;
         List<Node> children;
-        State currentState;
+        public State currentState { get; }
         int time;
         
         public Node(Node parent, State currentState, int time)

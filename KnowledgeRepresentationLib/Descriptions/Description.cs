@@ -18,6 +18,10 @@ namespace KR_Lib.Descriptions
         /// </summary>
         /// <param name="guid">Identyfikator zdania do usunięcia.</param>
         void DeleteStatement(Guid guid);
+        /// <summary>
+        /// Zwracanie listy wszystkich zdań z domeny
+        /// </summary>
+        List<IStatement> GetStatements();
     }
     public class Description : IDescription
     {
@@ -47,6 +51,11 @@ namespace KR_Lib.Descriptions
             var statementToRemove = statements.SingleOrDefault(statement => statement.GetId() == guid);
             if (statementToRemove != null)
                 statements.Remove(statementToRemove);
+        }
+
+        public List<IStatement> GetStatements()
+        {
+            return this.statements;
         }
 
         #endregion
