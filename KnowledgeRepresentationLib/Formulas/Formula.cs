@@ -1,4 +1,5 @@
-﻿using KR_Lib.DataStructures;
+﻿using System.Collections.Generic;
+using KR_Lib.DataStructures;
 using System.Collections.Generic;
 
 namespace KR_Lib.Formulas {
@@ -12,7 +13,7 @@ namespace KR_Lib.Formulas {
 
     public class Formula : IFormula
     {
-        Fluent fluent;
+        public Fluent fluent { get; }
 
         public Formula(Fluent fluent)
         {
@@ -25,7 +26,7 @@ namespace KR_Lib.Formulas {
 
         public List<Fluent> GetFluents()
         {
-            return new List<Fluent>() { fluent };
+            return new List<Fluent>() { this.fluent };
         }
     }
 }

@@ -1,21 +1,35 @@
 ﻿using KR_Lib.DataStructures;
 using KR_Lib.Formulas;
+using KR_Lib.Tree;
+using System.Collections.Generic;
 
 namespace KR_Lib.Statements
 {
     public class InvokeStatement : Statement
     {
         private Action actionInvoked;
-        //private int time; - time uwzględnić wyżej - jeżeli > to tworzymy ten statement TODO
+        private int time;
 
         public InvokeStatement(Action action, Fluent fluent, Formula formula, Action actionInvoked, int time) : base(action, null, formula)
         {
-            if (formula.Evaluate())
-            {
-                this.actionInvoked = actionInvoked;
-            }
-            //this.time = time;
+            this.actionInvoked = actionInvoked;
+            this.time = time;
         }
 
+        public override bool CheckStatement(Action currentAction, List<Fluent> fluents, int currentTime)
+        {
+            //chyba nie zalezy nam na aktualnej akcji, tylko wczesniejszej
+            if (currentAction == action && formula.Evaluate() == true && currentTime <= currentAction.GetEndTime() + time)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public override State DoStatement(Action currentAction, List<Fluent> fluents)
+        {
+            return new State(actionInvoked, fluents);
+        }
     }
 }
