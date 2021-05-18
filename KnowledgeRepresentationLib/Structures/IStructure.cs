@@ -2,6 +2,7 @@
 using KR_Lib.Formulas;
 using KR_Lib.Queries;
 using KR_Lib.Structures;
+using KnowledgeRepresentationLib.Scenarios;
 using System;
 using System.Collections.Generic;
 using Action = KR_Lib.DataStructures.Action;
@@ -19,7 +20,7 @@ namespace KR_Lib.Structures
         /// <summary>
         /// Akcje - potrzebne do wyliczenia E
         /// </summary>
-        List<Action> Actions { get; }
+        List<ActionOccurrences> Acs { get; }
 
         /// <summary>
         /// Stany fluentów w czasie t - potrzebne do funkcji historii
@@ -33,12 +34,16 @@ namespace KR_Lib.Structures
         /// </summary>
         List<(Fluent, Action, int)> OcclusionRegions { get; set; }
 
+        /// <summary>
+        /// Relacja E
+        /// </summary>
+        List<(Action, int, int)> E { get; set; }
+
 
         Structure ToModel();
         bool H(Formula formula, int time);
         List<Fluent> O(Action action, int time);
-        int E(Action action, int duration, int startTime);
-        int CheckActionBelongingToE(KR_Lib.DataStructures.Action action, int time);
+        bool CheckActionBelongingToE(KR_Lib.DataStructures.Action action, int time);
         bool EvaluateFormula(Formula formula, int time);
     }
 }
