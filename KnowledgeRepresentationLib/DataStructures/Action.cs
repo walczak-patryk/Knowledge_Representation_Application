@@ -31,6 +31,7 @@ namespace KR_Lib.DataStructures
             this.DurationTime = durationTime;
             this.Id = Guid.NewGuid();
         }
+
         public override bool Equals(object obj)
         {
             if (obj is Action)

@@ -8,28 +8,22 @@ namespace KR_Lib.Statements
     public class InvokeStatement : Statement
     {
         private Action actionInvoked;
-        private int time;
+        private int waitTime;
 
-        public InvokeStatement(Action action, Fluent fluent, Formula formula, Action actionInvoked, int time) : base(action, null, formula)
+        public InvokeStatement(Action action, Fluent fluent, Formula formula, Action actionInvoked, int waitTime) : base(action, null, formula)
         {
             this.actionInvoked = actionInvoked;
-            this.time = time;
+            this.waitTime = waitTime;
         }
 
-        public override bool CheckStatement(Action currentAction, List<Fluent> fluents, int currentTime)
+        public override bool CheckStatement(Action currentAction, List<Fluent> fluents, List<Action> impossibleActions, int currentTime)
         {
-            //chyba nie zalezy nam na aktualnej akcji, tylko wczesniejszej
-            if (currentAction == action && formula.Evaluate() == true && currentTime <= currentAction.GetEndTime() + time)
-            {
-                return true;
-            }
-
-            return false;
+            return formula.Evaluate() == true && currentTime == action.GetEndTime() + waitTime && !impossibleActions.Contains(actionInvoked);
         }
 
-        public override State DoStatement(Action currentAction, List<Fluent> fluents)
+        public override State DoStatement(Action currentAction, List<Fluent> fluents, List<Action> impossibleActions)
         {
-            return new State(actionInvoked, fluents);
+            return new State(actionInvoked, fluents, impossibleActions);
         }
     }
 }

@@ -131,10 +131,10 @@ namespace KR_Lib
         /// Adds scenario to list of scenarios
         /// </summary>
         /// <param IScenario="scenario"></param>
-        public void AddObservation(Guid scenarioId, List<ObservationElements> observationElements) 
+        public void AddObservation(Guid scenarioId, List<ObservationElement> observationElements) 
         {
             newChangesFlag = true;
-            var observation = FormulaParser.ParseToFomrula(observationElements);
+            var observation = FormulaParser.ParseToFormula(observationElements);
             ////scenarios.Add(scenario);
         }
 
