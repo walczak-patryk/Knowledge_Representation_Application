@@ -35,5 +35,28 @@ namespace KnowledgeRepresentationInterface.Queries
         {
             this.scenario_obs.RefreshControl();
         }
+
+        private void Duration_UIntUpDown_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            if (Duration_UIntUpDown.Text == "")
+            {
+                // Create an ImageBrush.
+                ImageBrush textImageBrush = new ImageBrush();
+                textImageBrush.ImageSource =
+                    new BitmapImage(
+                        new Uri(@"../../Backgrounds/Moment.bmp", UriKind.Relative)
+                    );
+                textImageBrush.AlignmentX = AlignmentX.Left;
+                textImageBrush.AlignmentY = AlignmentY.Top;
+                textImageBrush.Stretch = Stretch.Uniform;
+                // Use the brush to paint the button's background.
+                Duration_UIntUpDown.Background = textImageBrush;
+            }
+            else
+            {
+
+                Duration_UIntUpDown.Background = null;
+            }
+        }
     }
 }

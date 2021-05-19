@@ -152,7 +152,12 @@ namespace KnowledgeRepresentationInterface
             switch(Query_Type_ComboBox.SelectedIndex)
             {
                 case 0:
-
+                    QueryType qt = QueryType.Always;
+                    if (this.PSQ.Type_ComboBox.SelectedIndex==1)
+                    {
+                        qt = QueryType.Ever;
+                    }
+                    KR_Lib.Queries.PossibleScenarioQuery query = new KR_Lib.Queries.PossibleScenarioQuery(qt, Guid.NewGuid());
                     break;
                 case 1:
 
@@ -164,6 +169,7 @@ namespace KnowledgeRepresentationInterface
 
                     break;
             }
+            Query_Scenario_ComboBox.SelectedIndex = -1;
         }
 
         private void Query_Type_ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -248,7 +254,11 @@ namespace KnowledgeRepresentationInterface
                 MessageBox.Show("You have to select an action to add!");
                 return;
             }
-            int moment = (int)Action_Occurences_UIntUpDown.Value;
+            int moment = 0;
+            if(Action_Occurences_Moment_UIntUpDown.Value != null)
+            {
+                moment = (int)Action_Occurences_Moment_UIntUpDown.Value;
+            }
 
             this.scenario.items.Add(new ScenarioItem(moment.ToString(),action.Name, "", ""));
             Scenario_ListView.Items.Refresh();
@@ -270,10 +280,106 @@ namespace KnowledgeRepresentationInterface
                 MessageBox.Show("The expression is not valid!");
                 return;
             }
-
-            int moment = (int)Observations_UIntUpDown.Value;
+            int moment = 0;
+            if (Observations_UIntUpDown.Value != null)
+            {
+                moment = (int)Observations_UIntUpDown.Value;
+            }
             this.scenario.items.Add(new ScenarioItem(moment.ToString(), "", this.scenario_obs.GetContent(), ""));
             Scenario_ListView.Items.Refresh();
-        }        
+            this.scenario_obs.Clear_Control();
+        }
+
+        private void ScenarioName_TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (ScenarioName_TextBox.Text == "")
+            {
+                // Create an ImageBrush.
+                ImageBrush textImageBrush = new ImageBrush();
+                textImageBrush.ImageSource =
+                    new BitmapImage(
+                        new Uri(@"../../Backgrounds/Scenario.bmp", UriKind.Relative)
+                    );
+                textImageBrush.AlignmentX = AlignmentX.Left;
+                textImageBrush.AlignmentY = AlignmentY.Top;
+                textImageBrush.Stretch = Stretch.Uniform;
+                // Use the brush to paint the button's background.
+                ScenarioName_TextBox.Background = textImageBrush;
+            }
+            else
+            {
+
+                ScenarioName_TextBox.Background = null;
+            }
+        }
+
+        private void Observations_UIntUpDown_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            if (Observations_UIntUpDown.Text == "")
+            {
+                // Create an ImageBrush.
+                ImageBrush textImageBrush = new ImageBrush();
+                textImageBrush.ImageSource =
+                    new BitmapImage(
+                        new Uri(@"../../Backgrounds/Moment.bmp", UriKind.Relative)
+                    );
+                textImageBrush.AlignmentX = AlignmentX.Left;
+                textImageBrush.AlignmentY = AlignmentY.Top;
+                textImageBrush.Stretch = Stretch.Uniform;
+                // Use the brush to paint the button's background.
+                Observations_UIntUpDown.Background = textImageBrush;
+            }
+            else
+            {
+
+                Observations_UIntUpDown.Background = null;
+            }
+        }
+
+        private void Action_Occurences_Moment_UIntUpDown_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            if (Action_Occurences_Moment_UIntUpDown.Text == "")
+            {
+                // Create an ImageBrush.
+                ImageBrush textImageBrush = new ImageBrush();
+                textImageBrush.ImageSource =
+                    new BitmapImage(
+                        new Uri(@"../../Backgrounds/Moment.bmp", UriKind.Relative)
+                    );
+                textImageBrush.AlignmentX = AlignmentX.Left;
+                textImageBrush.AlignmentY = AlignmentY.Top;
+                textImageBrush.Stretch = Stretch.Uniform;
+                // Use the brush to paint the button's background.
+                Action_Occurences_Moment_UIntUpDown.Background = textImageBrush;
+            }
+            else
+            {
+
+                Action_Occurences_Moment_UIntUpDown.Background = null;
+            }
+        }
+
+        private void Action_Occurences_Duration_UIntUpDown_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            if (Action_Occurences_Duration_UIntUpDown.Text == "")
+            {
+                // Create an ImageBrush.
+                ImageBrush textImageBrush = new ImageBrush();
+                textImageBrush.ImageSource =
+                    new BitmapImage(
+                        new Uri(@"../../Backgrounds/Duration.bmp", UriKind.Relative)
+                    );
+                textImageBrush.AlignmentX = AlignmentX.Left;
+                textImageBrush.AlignmentY = AlignmentY.Top;
+                textImageBrush.Stretch = Stretch.Uniform;
+                // Use the brush to paint the button's background.
+                Action_Occurences_Duration_UIntUpDown.Background = textImageBrush;
+            }
+            else
+            {
+
+                Action_Occurences_Duration_UIntUpDown.Background = null;
+            }
+        }
     }
 }

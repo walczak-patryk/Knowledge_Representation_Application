@@ -218,14 +218,25 @@
                     <!--Action occurences label-->
                     <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">Action occurences</Label>
 
-                    <!--Action occurences - numeric up down control-->
-                    <xctk:UIntegerUpDown Name="Action_Occurences_UIntUpDown" Grid.Row="1" Grid.Column="0" Value="0" Margin="3,3,3,3" />
+                    <!--Action occurences - numeric up down control for moment-->
+                    <xctk:UIntegerUpDown Name="Action_Occurences_Moment_UIntUpDown" ValueChanged="Action_Occurences_Moment_UIntUpDown_ValueChanged" Grid.Row="1" Grid.Column="0" Margin="3,3,3,3" >
+                        <xctk:UIntegerUpDown.Background>
+                            <ImageBrush ImageSource="Backgrounds/Moment.bmp" AlignmentX="Left" Stretch="Uniform" AlignmentY="Top" />
+                        </xctk:UIntegerUpDown.Background>
+                    </xctk:UIntegerUpDown>
 
                     <!--Action occurences - actions combobox-->
                     <ComboBox Name="Action_Occurences_ComboBox" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" />
 
+                    <!--Action occurences - numeric up down control for duration-->
+                    <xctk:UIntegerUpDown Name="Action_Occurences_Duration_UIntUpDown" ValueChanged="Action_Occurences_Duration_UIntUpDown_ValueChanged" Grid.Row="1" Grid.Column="3" Margin="3,3,3,3" >
+                        <xctk:UIntegerUpDown.Background>
+                            <ImageBrush ImageSource="Backgrounds/Duration.bmp" AlignmentX="Left" Stretch="Uniform" AlignmentY="Top" />
+                        </xctk:UIntegerUpDown.Background>
+                    </xctk:UIntegerUpDown>
+
                     <!--Action occurences - add action button-->
-                    <Button Name="Action_Occurences_Button" Grid.Row="1" Grid.Column="3" Click="Action_Occurences_Button_Click" Margin="10,2,10,2" >Add</Button>
+                    <Button Name="Action_Occurences_Button" Grid.Row="1" Grid.Column="4" Click="Action_Occurences_Button_Click" Margin="10,2,10,2" >Add</Button>
 
                     <!--Observations label-->
                     <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">Observations</Label>
@@ -233,7 +244,11 @@
                     <GroupBox Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="6" Grid.RowSpan="3" BorderThickness="0" Name="Observation_Scenario_GroupBox" />
 
                     <!--Observations - numeric up down control-->
-                    <xctk:UIntegerUpDown Name="Observations_UIntUpDown" Grid.Row="6" Grid.Column="0" Value="0" Margin="3,3,3,3" />
+                    <xctk:UIntegerUpDown Name="Observations_UIntUpDown" ValueChanged="Observations_UIntUpDown_ValueChanged" Grid.Row="6" Grid.Column="0" Margin="3,3,3,3" >
+                        <xctk:UIntegerUpDown.Background>
+                            <ImageBrush ImageSource="Backgrounds/Moment.bmp" AlignmentX="Left" Stretch="Uniform" AlignmentY="Top" />
+                        </xctk:UIntegerUpDown.Background>
+                    </xctk:UIntegerUpDown>
 
                     <!--Observations - add observation button-->
                     <Button Name="Observations_Button" Grid.Row="6" Grid.Column="2" Click="Observations_Button_Click" Margin="10,2,10,2" >Add</Button>
@@ -259,7 +274,11 @@
                     <Label Grid.Row="9" Grid.Column="1" HorizontalContentAlignment="Right" Margin="1,1,1,1">Scenario</Label>
 
                     <!--Scenario name textbox-->
-                    <TextBox Name="ScenarioName_TextBox" Grid.Row="9" Grid.Column="2" Grid.ColumnSpan="2" Margin="3,3,3,3" />
+                    <TextBox Name="ScenarioName_TextBox" Grid.Row="9" Grid.Column="2" Grid.ColumnSpan="2" TextChanged="ScenarioName_TextBox_TextChanged" Margin="3,3,3,3" >
+                        <TextBox.Background>
+                            <ImageBrush ImageSource="Backgrounds/Scenario.bmp" AlignmentX="Left" Stretch="Uniform" AlignmentY="Top" />
+                        </TextBox.Background>
+                    </TextBox>
 
                     <!--Scenario add button-->
                     <Button Grid.Row="10" Grid.Column="1" Grid.ColumnSpan="4" Name="Finish_Scenario" Click="Finish_Scenario_Click">Finish scenario</Button>
@@ -291,7 +310,7 @@
                     </Grid.RowDefinitions>
                     
                     <!--Select query type label-->
-                    <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">Select query type</Label>
+                    <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">Query type</Label>
                     
                     <!--Query type combobox-->
                     <ComboBox Name="Query_Type_ComboBox" Grid.Row="3" Grid.Column="0" SelectionChanged="Query_Type_ComboBox_SelectionChanged" SelectedIndex="0" Grid.ColumnSpan="2" Margin="2,2,2,2" >

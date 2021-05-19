@@ -161,5 +161,14 @@
     <Folder Include="Scenarios\" />
     <Folder Include="Statements\" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Backgrounds\Scenario.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Backgrounds\Moment.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Backgrounds\Duration.bmp" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

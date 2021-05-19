@@ -33,6 +33,10 @@
         <ComboBox Name="Actions_ComboBox" Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" SelectedIndex="0" Margin="1,0,1,5" />
 
         <Label Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2" Content="executed at the moment" VerticalAlignment="Bottom" HorizontalAlignment="Center" />
-        <xctk:UIntegerUpDown Name="Duration_UIntUpDown" Grid.Row="4" Grid.Column="2" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" Margin="3,3,3,3" />
+        <xctk:UIntegerUpDown Name="Duration_UIntUpDown" ValueChanged="Duration_UIntUpDown_ValueChanged" Grid.Row="4" Grid.Column="2" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" Margin="3,3,3,3" >
+            <xctk:UIntegerUpDown.Background>
+                <ImageBrush ImageSource="../Backgrounds/Moment.bmp" AlignmentX="Left" Stretch="Uniform" AlignmentY="Top" />
+            </xctk:UIntegerUpDown.Background>
+        </xctk:UIntegerUpDown>
     </Grid>
 </UserControl>
