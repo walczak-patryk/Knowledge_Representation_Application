@@ -7,11 +7,18 @@ namespace KR_Lib.Statements
 {
     public class CauseStatement : Statement
     {
-        private Formula formulaCaused;
+        private IFormula formulaCaused;
+        private IFormula formulaIf;
+        bool ifFlag = false;
 
-        public CauseStatement(Action action, Fluent fluent, Formula formulaCaused, Formula formula = null) : base(action, null, formula)
+        public CauseStatement(Action action, IFormula formulaCaused, IFormula formulaIf = null) : base(action)
         {
             this.formulaCaused = formulaCaused;
+            if(formulaIf != null)
+            {
+                ifFlag = true;
+                this.formulaIf = formulaIf;
+            }
         }
 
         public override bool CheckStatement(Action currentAction, List<Fluent> fluents, List<Action> impossibleActions, int time)
