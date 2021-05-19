@@ -1,20 +1,42 @@
 ﻿using KR_Lib.DataStructures;
 using KR_Lib.Formulas;
 using KR_Lib.Tree;
+using Action = KR_Lib.DataStructures.Action;
+using System;
 using System.Collections.Generic;
 
 namespace KR_Lib.Statements
 {
     public class ReleaseStatement : Statement
     {
-        public ReleaseStatement(Action action, Fluent fluent, Formula formula) : base(action, fluent, formula)
+        private Fluent fluent;
+        private IFormula formulaIf;
+        bool ifFlag = false;
+
+        public ReleaseStatement(Action action, Fluent fluent, IFormula formulaIf) : base(action)
         {
-            fluent.State = true;
+            this.fluent = fluent;
+            if (formulaIf != null)
+            {
+                ifFlag = true;
+                this.formulaIf = formulaIf;
+            }
         }
 
         public override bool CheckStatement(Action currentAction, List<Fluent> fluents, List<Action> impossibleActions, int currentTime)
         {
-            return (currentAction.GetEndTime() == currentTime && formula.Evaluate() == true) ;
+            if (!(currentAction is ActionWithTimes))
+            {
+                throw new Exception("Niewłaściwy typ w ReleaseStatement: potrzebny ActionWithTimes");
+            }
+            var actionWithTimes = (currentAction as ActionWithTimes);
+
+            if (ifFlag)
+            {
+                return actionWithTimes.GetEndTime() == currentTime && formulaIf.Evaluate() == true;
+            }
+
+            return actionWithTimes.GetEndTime() == currentTime;
         }
 
         public override State DoStatement(Action currentAction, List<Fluent> fluents, List<Action> impossibleActions)

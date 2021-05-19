@@ -82,36 +82,15 @@ namespace KR_Lib
             foreach (Statement statement in statements)
             {
                 statement.CheckStatement(parentState.currentAction, parentState.Fluents, parentState.impossibleActions, time);
-
-                if (statement is CauseStatement)
-                {
-                    State newState = statement.DoStatement(parentState.currentAction, parentState.Fluents, parentState.impossibleActions);
-                    states.Add(newState);
-                }
-                else if (statement is InvokeStatement)
-                {
-                    State newState = statement.DoStatement(parentState.currentAction, parentState.Fluents, parentState.impossibleActions);
-                    states.Add(newState);
-                }
-                else if (statement is ReleaseStatement)
+                
+                if (statement is ReleaseStatement)
                 {
                     // rozgałęzienie - po releasie może być stary stan albo zmieniony
                     State oldState = new State(parentState.currentAction, parentState.Fluents, parentState.impossibleActions);
                     states.Add(oldState);
                     State newState = statement.DoStatement(parentState.currentAction, parentState.Fluents, parentState.impossibleActions);
                     states.Add(newState);
-                }
-                else if (statement is TriggerStatement)
-                {
-                    State newState = statement.DoStatement(parentState.currentAction, parentState.Fluents, parentState.impossibleActions);
-                    states.Add(newState);
-                }
-                else if (statement is ImpossibleAtStatement)
-                {
-                    State newState = statement.DoStatement(parentState.currentAction, parentState.Fluents, parentState.impossibleActions);
-                    states.Add(newState);
-                }
-                else if (statement is ImpossibleIfStatement)
+                } else 
                 {
                     State newState = statement.DoStatement(parentState.currentAction, parentState.Fluents, parentState.impossibleActions);
                     states.Add(newState);
