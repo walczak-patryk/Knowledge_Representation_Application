@@ -12,21 +12,16 @@ namespace KR_Lib.Statements
             fluent.State = true;
         }
 
-        public override bool CheckStatement(Action currentAction, List<Fluent> fluents, int time)
+        public override bool CheckStatement(Action currentAction, List<Fluent> fluents, List<Action> impossibleActions, int currentTime)
         {
-            if (currentAction.GetEndTime() <= time && formula.Evaluate() == true)
-            {
-                return true;
-            }
-
-            return false;
+            return (currentAction.GetEndTime() == currentTime && formula.Evaluate() == true) ;
         }
 
-        public override State DoStatement(Action currentAction, List<Fluent> fluents)
+        public override State DoStatement(Action currentAction, List<Fluent> fluents, List<Action> impossibleActions)
         {
             // zmiana stanu fluentu na przeciwny
             fluents.Find(f => f.Name.Equals(fluent.Name)).State = !fluents.Find(f => f.Name.Equals(fluent.Name)).State;
-            return new State(currentAction, fluents);
+            return new State(currentAction, fluents, impossibleActions);
         }
     }
 }

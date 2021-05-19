@@ -46,11 +46,12 @@ namespace KR_Lib
             Action action = scenario.GetActionAtTime(0);
             List<Observation> observations = scenario.GetObservationsAtTime(0);
             List<Fluent> fluents = new List<Fluent>();
+            List<Action> impossibleActions = new List<Action>();
             foreach(Observation observation in observations)
             {
                 fluents.AddRange(observation.Form.GetFluents());
             }
-            return new Node(null, new State(action, fluents), 0);
+            return new Node(null, new State(action, fluents, impossibleActions), 0);
         }
 
         /// <summary>
@@ -80,45 +81,47 @@ namespace KR_Lib
             List<State> states = new List<State>();
             foreach (Statement statement in statements)
             {
-                statement.CheckStatement(parentState.currentAction, parentState.Fluents, time);
+                statement.CheckStatement(parentState.currentAction, parentState.Fluents, parentState.impossibleActions, time);
 
                 if (statement is CauseStatement)
                 {
-                    State newState = statement.DoStatement(parentState.currentAction, parentState.Fluents);
+                    State newState = statement.DoStatement(parentState.currentAction, parentState.Fluents, parentState.impossibleActions);
                     states.Add(newState);
                 }
                 else if (statement is InvokeStatement)
                 {
-                    State newState = statement.DoStatement(parentState.currentAction, parentState.Fluents);
+                    State newState = statement.DoStatement(parentState.currentAction, parentState.Fluents, parentState.impossibleActions);
                     states.Add(newState);
                 }
                 else if (statement is ReleaseStatement)
                 {
                     // rozgałęzienie - po releasie może być stary stan albo zmieniony
-                    State oldState = new State(parentState.currentAction, parentState.Fluents);
+                    State oldState = new State(parentState.currentAction, parentState.Fluents, parentState.impossibleActions);
                     states.Add(oldState);
-                    State newState = statement.DoStatement(parentState.currentAction, parentState.Fluents);
+                    State newState = statement.DoStatement(parentState.currentAction, parentState.Fluents, parentState.impossibleActions);
                     states.Add(newState);
                 }
                 else if (statement is TriggerStatement)
                 {
-                    State newState = statement.DoStatement(parentState.currentAction, parentState.Fluents);
+                    State newState = statement.DoStatement(parentState.currentAction, parentState.Fluents, parentState.impossibleActions);
                     states.Add(newState);
                 }
                 else if (statement is ImpossibleAtStatement)
                 {
-
+                    State newState = statement.DoStatement(parentState.currentAction, parentState.Fluents, parentState.impossibleActions);
+                    states.Add(newState);
                 }
                 else if (statement is ImpossibleIfStatement)
                 {
-
+                    State newState = statement.DoStatement(parentState.currentAction, parentState.Fluents, parentState.impossibleActions);
+                    states.Add(newState);
                 }
             }
 
             // jeśli nic się nie zmieniło - dodajemy stan taki sam jak u rodzica
             if (states.Count == 0)
             {
-                states.Add(new State(parentState.currentAction, parentState.Fluents));
+                states.Add(new State(parentState.currentAction, parentState.Fluents, parentState.impossibleActions));
             }    
 
             return states;

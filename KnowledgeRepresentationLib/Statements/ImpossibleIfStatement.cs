@@ -9,14 +9,15 @@ namespace KR_Lib.Statements
     {
         public ImpossibleIfStatement(Action action, Formula formula = null) : base(action, null, formula) { }
 
-        public override bool CheckStatement(Action currentAction, List<Fluent> fluents, int time)
+        public override bool CheckStatement(Action currentAction, List<Fluent> fluents, List<Action> impossibleActions, int time)
         {
             return formula.Evaluate();
         }
 
-        public override State DoStatement(Action currentAction, List<Fluent> fluents)
+        public override State DoStatement(Action currentAction, List<Fluent> fluents, List<Action> impossibleActions)
         {
-            throw new System.NotImplementedException();
+            impossibleActions.Add(action);
+            return new State(currentAction, fluents, impossibleActions);
         }
     }
 }
