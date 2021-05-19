@@ -22,7 +22,7 @@ namespace KR_Lib.Scenarios
         public string Name { get; set; }
         public Guid Id { get; }
         public List<DataStructures.Observation> observations { get; set; }
-        public List<DataStructures.Action> actions { get; set; }
+        public List<ActionOccurrences> actions { get; set; }
         public Scenario() { }
         public Scenario(string name)
         {

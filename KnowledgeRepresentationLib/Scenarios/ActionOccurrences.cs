@@ -1,20 +1,11 @@
-﻿using System;
+﻿using KR_Lib.DataStructures;
 
 namespace KnowledgeRepresentationLib.Scenarios
 {
-    public class ActionOccurrences
+    public class ActionOccurrences : ActionWithTimes
     {
-        public string Name { get; set; }
-        public Guid Id { get; set; }
-        public KR_Lib.DataStructures.Action Act { get; set; }
-        public int Time { get; set; }
-        public ActionOccurrences(string name, KR_Lib.DataStructures.Action act, int time) : base()
-        {
-            this.Id = Guid.NewGuid();
-            this.Name = name;
-            this.Act = act;
-            this.Time = time;
-        }
+        public ActionOccurrences(string name, int durationTime, int startTime) : base(name, durationTime, startTime)
+        { }
 
         /// <summary>
         /// Checks if Action in this object takes place in given time

@@ -47,7 +47,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataStructures\ActionTime.cs" />
     <Compile Include="DataStructures\Action.cs" />
+    <Compile Include="DataStructures\ActionWithTimes.cs" />
     <Compile Include="DataStructures\Fluent.cs" />
     <Compile Include="DataStructures\Observation.cs" />
     <Compile Include="DataStructures\ObservationElement.cs" />
