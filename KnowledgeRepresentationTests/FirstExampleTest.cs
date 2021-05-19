@@ -29,6 +29,8 @@ namespace KR_Tests
          * (shopping,1) causes laptop if bonus
          */
 
+        #region Variables
+
         IEngine engine;
 
         Action hardWorking;
@@ -44,6 +46,8 @@ namespace KR_Tests
         IFormula negWorkFormula;
         IFormula negBonusFormula;
         IFormula negLaptopFormula;
+
+        #endregion
 
         [TestInitialize()]
         public void MyTestInitialize()
@@ -93,7 +97,6 @@ namespace KR_Tests
 
             #endregion
         }
-
 
         [TestMethod]
         public void TestScenario1()
@@ -158,16 +161,6 @@ namespace KR_Tests
 
             IFormula observationFormula1 = new ConjunctionFormula(workFormula, negBonusFormula, negLaptopFormula);
             IFormula observationFormula2 = new ConjunctionFormula(negWorkFormula, negBonusFormula, negLaptopFormula);
-
-            #endregion
-
-            #region Add domain
-
-            IDescription description = new Description();
-
-            description.AddStatement(new CauseStatement(new ActionTime(hardWorking, 8), negWorkFormula));
-            description.AddStatement(new CauseStatement(new ActionTime(hardWorking, 8), bonusFormula));
-            description.AddStatement(new CauseStatement(new ActionTime(shopping, 1), laptopFormula, bonusFormula));
 
             #endregion
 

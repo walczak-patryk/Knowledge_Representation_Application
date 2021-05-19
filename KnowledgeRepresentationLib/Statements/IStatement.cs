@@ -15,15 +15,11 @@ namespace KR_Lib.Statements
     {
         public Guid guid;
         public Action action;
-        public Fluent fluent;
-        public Formula formula;
 
-        protected Statement(Action action, Fluent fluent = null, Formula formula = null)
+        protected Statement(Action action)
         {
             this.guid = Guid.NewGuid();
             this.action = action;
-            this.fluent = fluent;
-            this.formula = formula;
         }
 
         public abstract bool CheckStatement(Action currentAction, List<Fluent> fluents, List<Action> impossibleActions, int time);
