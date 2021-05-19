@@ -1,4 +1,4 @@
-﻿using KR_Lib.Scenarios;
+﻿using Action = KR_Lib.DataStructures.Action;
 using KR_Lib.Structures;
 using System;
 using System.Collections.Generic;

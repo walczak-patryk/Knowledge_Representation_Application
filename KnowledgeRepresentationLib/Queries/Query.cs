@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace KR_Lib.Queries
 {
-    interface IQuery
+    public interface IQuery
     {
         /// <summary>
         /// Odpowiedź na pytanie użytkownika, działanie zależy od typu obiektu query

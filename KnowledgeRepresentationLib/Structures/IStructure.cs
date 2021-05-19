@@ -1,8 +1,6 @@
 ﻿using KR_Lib.Formulas;
-using KR_Lib.Queries;
-using KR_Lib.Structures;
-using System;
 using System.Collections.Generic;
+using Action = KR_Lib.DataStructures.Action;
 
 namespace KR_Lib.Structures
 {

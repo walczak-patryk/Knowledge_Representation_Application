@@ -24,7 +24,7 @@ namespace KR_Lib.DataStructures
             set;
         }
         public Action() { }
-        public Action(string name, int startTime, int durationTime)
+        public Action(string name, int durationTime, int startTime)
         {
             this.Name = name;
             this.StartTime = startTime;
