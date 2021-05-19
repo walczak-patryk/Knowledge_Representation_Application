@@ -20,7 +20,7 @@ namespace KR_Lib.Structures
         /// <summary>
         /// Akcje - potrzebne do wyliczenia E
         /// </summary>
-        List<ActionOccurrences> Acs { get; }
+        List<ActionOccurrence> Acs { get; }
 
         /// <summary>
         /// Stany fluentów w czasie t - potrzebne do funkcji historii

@@ -12,7 +12,7 @@ namespace KR_Lib.Structures
     {
         public int EndTime { get; }
 
-        public List<ActionOccurrences> Acs { get; }
+        public List<ActionOccurrence> Acs { get; }
 
         public List<(int, List<Fluent>)> TimeFluents1 { get; set; }
         //or
@@ -22,7 +22,7 @@ namespace KR_Lib.Structures
 
         public List<(Action, int, int)> E { get; set; }
 
-        public Structure(int endTime, List<ActionOccurrences> acs, List<(Action, int, int)> actions, List<(int, List<Fluent>)> timeFluents1 /*or Dictionary<int, List<Fluent>> TimeFluents2*/)
+        public Structure(int endTime, List<ActionOccurrence> acs, List<(Action, int, int)> actions, List<(int, List<Fluent>)> timeFluents1 /*or Dictionary<int, List<Fluent>> TimeFluents2*/)
         {
             EndTime = endTime;
             Acs = acs;

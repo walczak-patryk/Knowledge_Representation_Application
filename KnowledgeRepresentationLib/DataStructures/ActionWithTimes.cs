@@ -32,6 +32,14 @@ namespace KR_Lib.DataStructures
             this.Id = Guid.NewGuid();
         }
 
+        protected ActionWithTimes(Action action, int durationTime, int startTime)
+        {
+            this.Name = action.Name;
+            this.StartTime = startTime;
+            this.DurationTime = durationTime;
+            this.Id = action.Id;
+        }
+
         public override bool Equals(object obj)
         {
             if (obj is ActionWithTimes)

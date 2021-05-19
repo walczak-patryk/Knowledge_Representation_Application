@@ -20,7 +20,7 @@ namespace KR_Lib.DataStructures
             get;
         }
 
-        public Fluent(string name, bool initialState)
+        public Fluent(string name, bool initialState = false)
         {
             this.Name = name;
             this.State = initialState;
