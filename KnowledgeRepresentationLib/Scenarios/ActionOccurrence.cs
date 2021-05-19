@@ -2,9 +2,12 @@
 
 namespace KnowledgeRepresentationLib.Scenarios
 {
-    public class ActionOccurrences : ActionWithTimes
+    public class ActionOccurrence : ActionWithTimes
     {
-        public ActionOccurrences(string name, int durationTime, int startTime) : base(name, durationTime, startTime)
+        public ActionOccurrence(string name, int durationTime, int startTime) : base(name, durationTime, startTime)
+        { }
+
+        public ActionOccurrence(Action action, int durationTime, int startTime) : base(action, durationTime, startTime)
         { }
 
         /// <summary>

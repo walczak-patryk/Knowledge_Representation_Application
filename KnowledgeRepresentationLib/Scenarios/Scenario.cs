@@ -21,20 +21,28 @@ namespace KR_Lib.Scenarios
     {
         public string Name { get; set; }
         public Guid Id { get; }
-        public List<DataStructures.Observation> observations { get; set; }
-        public List<ActionOccurrences> actions { get; set; }
+        public List<DataStructures.Observation> Observations 
+        { 
+            get; 
+            set; 
+        }
+        public List<ActionOccurrence> ActionOccurrencens
+        { 
+            get; 
+            set; 
+        }
         public Scenario() { }
         public Scenario(string name)
         {
             this.Name = name;
             this.Id = Guid.NewGuid();
-            this.observations = new List<DataStructures.Observation>();
-            this.actions = new List<DataStructures.Action>();
+            this.Observations = new List<DataStructures.Observation>();
+            this.ActionOccurrences = new List<DataStructures.Action>();
         }
         public void addObservation(string name, IFormula formula, int time)
         {
             DataStructures.Observation OBS = new DataStructures.Observation(name, formula, time);
-            observations.Add(OBS);
+            Observations.Add(OBS);
         }
         public void addAction(string name, int startTime, int durationTime)
         {
@@ -45,7 +53,7 @@ namespace KR_Lib.Scenarios
         {
             List<DataStructures.Observation> reObservations = new List<DataStructures.Observation>();
             List<DataStructures.Action> retActions = new List<DataStructures.Action>();
-            foreach (DataStructures.Observation obs in observations)
+            foreach (DataStructures.Observation obs in Observations)
             {
                 if (obs.Time == time)
                 {
@@ -94,7 +102,7 @@ namespace KR_Lib.Scenarios
 
         public List<DataStructures.Observation> GetObservations()
         {
-            return observations;
+            return Observations;
         }
         public int GetScenarioDuration()
         {
@@ -104,7 +112,7 @@ namespace KR_Lib.Scenarios
             {
                 durationAcs += acs.DurationTime;
             }
-            foreach (DataStructures.Observation obs in observations)
+            foreach (DataStructures.Observation obs in Observations)
             {
                 durationObs = Math.Max(durationObs, obs.Time);
             }
