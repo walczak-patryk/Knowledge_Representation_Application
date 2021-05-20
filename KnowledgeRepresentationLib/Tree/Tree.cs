@@ -53,6 +53,8 @@ namespace KR_Lib
 
         }
 
+        //public static GoToDeeper()
+
         /// <summary>
         /// Zwraca listę wszystkich powstałych struktur na podstawie drzewa możliwości.
         /// </summary>
@@ -60,7 +62,22 @@ namespace KR_Lib
         /// <returns>Lista struktur</returns>
         public static List<IStructure> GenerateStructues(Node root)
         {
-            return new List<IStructure>();
+            List<IStructure> structures = new List<IStructure>();
+            foreach (Node child in root.children)
+            {
+                Structure structure = new Structure();
+                structure.TimeFluents1.Add((child.time, child.currentState.Fluents));
+                //structure.TimeFluents2.Add(child.time, child.currentState.Fluents);
+                List<(Fluent, Action, int)> OcclusionRegions = new List<(Fluent, Action, int)>();
+                foreach (var item in child.currentState.Fluents)
+                    structure.OcclusionRegions.Add((item, child.currentState.currentAction, child.time));
+                structure.E.Add(child.currentState.currentAction);
+                structure.Acs.Add(child.currentState.currentAction);
+                structures.Add(structure);
+                if (child.children.Count != 0)
+                    GenerateStructues(child);
+            }
+            return structures;
         }
     }
 }

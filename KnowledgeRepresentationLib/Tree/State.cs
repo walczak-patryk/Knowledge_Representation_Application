@@ -7,17 +7,24 @@ namespace KR_Lib.Tree
     public class State
     {
 
-        DataStructures.Action currentAction;
-        List<Fluent> Fluents
+        public DataStructures.ActionWithTimes currentAction;
+        public List<Fluent> Fluents
         {
             get;
             set;               
         }
 
-        public State(DataStructures.Action currentAction, List<Fluent> fluents)
+        public List<DataStructures.ActionWithTimes> impossibleActions
+        {
+            get;
+            set;
+        }
+
+        public State(DataStructures.ActionWithTimes currentAction, List<Fluent> fluents, List<DataStructures.ActionWithTimes> impossibleActions)
         {
             this.currentAction = currentAction;
             this.Fluents = fluents;
+            this.impossibleActions = impossibleActions;
         }
 
     }
