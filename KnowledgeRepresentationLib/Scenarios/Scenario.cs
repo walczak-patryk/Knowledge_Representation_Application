@@ -12,7 +12,7 @@ namespace KR_Lib.Scenarios
         int GetScenarioDuration();
         (List<DataStructures.Observation>, List<DataStructures.Action>) GetScenarios(int time);
         List<DataStructures.Observation> GetObservationsAtTime(int time);
-        DataStructures.Action GetActionAtTime(int time);
+        List<DataStructures.Action> GetStartingActions(int time);
         //List<DataStructures.Observation> observations { get; set; }
         //List<DataStructures.Action> actions { get; set; }
     }
@@ -84,21 +84,6 @@ namespace KR_Lib.Scenarios
             return observations;
         }
 
-        public DataStructures.Action GetActionAtTime(int time)
-        {
-            DataStructures.Action action = null;
-            foreach (DataStructures.ActionWithTimes acs in ActionsWithTimes)
-            {
-                if (acs.StartTime <= time && acs.StartTime + acs.DurationTime >= time)
-                {
-                    action = acs;
-                    break;
-                }
-            }
-
-            return action;
-        }
-
         public List<DataStructures.Observation> GetObservations()
         {
             return Observations;
@@ -116,6 +101,21 @@ namespace KR_Lib.Scenarios
                 durationObs = Math.Max(durationObs, obs.Time);
             }
             return Math.Max(durationAcs, durationObs);
+        }
+
+        public List<DataStructures.Action> GetStartingActions(int time)
+        {
+            List<DataStructures.Action> startingActions = new List<DataStructures.Action>();
+            foreach (DataStructures.Action action in ActionsWithTimes)
+            {
+                var actionT = (action as ActionWithTimes);
+                if (actionT.StartTime == time)
+                {
+                    startingActions.Add(actionT);
+                }
+            }
+
+            return startingActions;
         }
     }
 }

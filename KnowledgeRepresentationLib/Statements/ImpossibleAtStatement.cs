@@ -19,10 +19,10 @@ namespace KR_Lib.Statements
             return time == currentTime;
         }
 
-        public override State DoStatement(Action currentAction, List<Fluent> fluents, List<Action> impossibleActions)
+        public override State DoStatement(List<Action> currentActions, List<Fluent> fluents, List<Action> impossibleActions)
         {
             impossibleActions.Add(action);
-            return new State(currentAction, fluents, impossibleActions);
+            return new State(currentActions, fluents, impossibleActions);
         }
     }
 }
