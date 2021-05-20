@@ -54,9 +54,10 @@ namespace KR_Lib.Statements
             return !impossibleActions.Contains(actionInvoked);
         }
 
-        public override State DoStatement(Action currentAction, List<Fluent> fluents, List<Action> impossibleActions)
+        public override State DoStatement(List<Action> currentActions, List<Fluent> fluents, List<Action> impossibleActions)
         {
-            return new State(actionInvoked, fluents, impossibleActions);
+            currentActions.Add(actionInvoked);
+            return new State(currentActions, fluents, impossibleActions);
         }
     }
 }
