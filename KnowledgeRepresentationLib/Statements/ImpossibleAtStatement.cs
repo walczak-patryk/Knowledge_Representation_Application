@@ -9,7 +9,7 @@ namespace KR_Lib.Statements
     {
         private int time;
 
-        public ImpossibleAtStatement(Action action, int time) : base(action, null, null)
+        public ImpossibleAtStatement(Action action, int time) : base(action)
         {
             this.time = time;
         }

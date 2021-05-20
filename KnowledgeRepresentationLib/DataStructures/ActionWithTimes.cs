@@ -2,17 +2,8 @@
 
 namespace KR_Lib.DataStructures
 {
-    public class ActionWithTimes 
+    public class ActionWithTimes : Action
     {
-        public Guid Id
-        {
-            get;
-        }
-        public string Name
-        {
-            get;
-            set;
-        }
         public int StartTime
         {
             get;
@@ -24,20 +15,16 @@ namespace KR_Lib.DataStructures
             set;
         }
         private ActionWithTimes() { }
-        public ActionWithTimes(string name, int durationTime, int startTime)
+        public ActionWithTimes(string name, int durationTime, int startTime) : base(name)
         {
-            this.Name = name;
             this.StartTime = startTime;
             this.DurationTime = durationTime;
-            this.Id = Guid.NewGuid();
         }
 
-        protected ActionWithTimes(Action action, int durationTime, int startTime)
+        protected ActionWithTimes(Action action, int durationTime, int startTime) : base(action)
         {
-            this.Name = action.Name;
             this.StartTime = startTime;
             this.DurationTime = durationTime;
-            this.Id = action.Id;
         }
 
         public override bool Equals(object obj)
