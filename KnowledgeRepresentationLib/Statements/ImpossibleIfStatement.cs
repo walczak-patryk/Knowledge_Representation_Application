@@ -1,13 +1,28 @@
 ﻿using KR_Lib.DataStructures;
 using KR_Lib.Formulas;
+using KR_Lib.Tree;
+using System.Collections.Generic;
 
 namespace KR_Lib.Statements
 {
     public class ImpossibleIfStatement : Statement
     {
-        public ImpossibleIfStatement(Action action, Formula formula = null) : base(action, null, formula)
+        IFormula formulaIf;
+
+        public ImpossibleIfStatement(Action action, IFormula formulaIf = null) : base(action)
         {
-            // logika chyba w nodzie? TODO
+            this.formulaIf = formulaIf;
+        }
+
+        public override bool CheckStatement(Action currentAction, List<Fluent> fluents, List<Action> impossibleActions, int time)
+        {
+            return formulaIf.Evaluate();
+        }
+
+        public override State DoStatement(Action currentAction, List<Fluent> fluents, List<Action> impossibleActions)
+        {
+            impossibleActions.Add(action);
+            return new State(currentAction, fluents, impossibleActions);
         }
     }
 }

@@ -47,16 +47,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataStructures\ActionTime.cs" />
     <Compile Include="DataStructures\Action.cs" />
+    <Compile Include="DataStructures\ActionWithTimes.cs" />
     <Compile Include="DataStructures\Fluent.cs" />
     <Compile Include="DataStructures\Observation.cs" />
+    <Compile Include="DataStructures\ObservationElement.cs" />
     <Compile Include="DataStructures\QueryEnumerables.cs" />
+    <Compile Include="DataStructures\ScenarioGUI.cs" />
+    <Compile Include="DataStructures\ScenarioItem.cs" />
     <Compile Include="Descriptions\Description.cs" />
     <Compile Include="Engine.cs" />
     <Compile Include="Formulas\AlternativeFormula.cs" />
     <Compile Include="Formulas\ConjunctionFormula.cs" />
     <Compile Include="Formulas\EquivalenceFormula.cs" />
     <Compile Include="Formulas\Formula.cs" />
+    <Compile Include="Formulas\FormulaParser.cs" />
     <Compile Include="Formulas\ImplicationFormula.cs" />
     <Compile Include="Formulas\NegationFormula.cs" />
     <Compile Include="Queries\ActionQuery.cs" />
@@ -68,7 +74,7 @@
     <Compile Include="Structures\Structure.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\Query.cs" />
-    <Compile Include="Scenarios\ActionOccurrences.cs" />
+    <Compile Include="Scenarios\ActionOccurrence.cs" />
     <Compile Include="Scenarios\Observations.cs" />
     <Compile Include="Scenarios\Scenario.cs" />
     <Compile Include="Statements\ImpossibleIfStatement.cs" />
@@ -83,7 +89,7 @@
     <Compile Include="Tree\Tree.cs" />
     <Compile Include="Tree\Extentions.cs" />
     <Compile Include="Queries\FormulaQuery.cs" />
-    <Compile Include="Exceptions\InconsistentException.cs" />
+    <Compile Include="Exceptions\ScenarioNoExistsException.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

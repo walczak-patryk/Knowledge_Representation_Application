@@ -19,6 +19,8 @@ namespace KR_Lib.Structures
 
         public List<(Fluent, ActionWithTimes, int)> OcclusionRegions { get; set; }
 
+        public List<(Action, int, int)> E { get; set; }
+
         public Structure() { }
         public Structure(int endTime, List<ActionWithTimes> acs, List<(int, List<Fluent>)> timeFluents1 /*or Dictionary<int, List<Fluent>> TimeFluents2*/)
         {

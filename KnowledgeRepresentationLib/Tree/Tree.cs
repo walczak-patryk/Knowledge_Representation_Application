@@ -4,6 +4,7 @@ using KR_Lib.Structures;
 using KR_Lib.Scenarios;
 using KR_Lib.Tree;
 using KR_Lib.DataStructures;
+using KR_Lib.Statements;
 
 namespace KR_Lib
 {
@@ -14,43 +15,95 @@ namespace KR_Lib
         /// </summary>
         /// <param name="description"></param>
         /// <param name="scenario"></param>
-        /// <param name="fluents"></param>
         /// <returns>Korzeń powstałego drzewa możliwości.</returns>
-        public static Node GenerateTree(IDescription description, IScenario scenario, List<Fluent> fluents)
+        public static Node GenerateTree(IDescription description, IScenario scenario)
         {
-            List<DataStructures.Observation> reObservations;
-            List<DataStructures.Action> retActions;
-            (reObservations, retActions) = scenario.GetScenarios(0);
             int treeDepth = scenario.GetScenarioDuration();
-            Action startAction = retActions[1];
-            State startState = new State(startAction, fluents);
-            Node root = new Node(null, startState);
+            Node root = CreateRoot(description, scenario);
+            List<Node> lastLevelNodes = new List<Node>() { root };
+            List<Node> nextLevelNodes = new List<Node>();
+            for (int i = 1; i <= treeDepth; i++)
+            {
+                foreach (Node node in lastLevelNodes)
+                {
+                    nextLevelNodes.AddRange(CreateNewNodes(description, scenario, node, i));
+                }
+                lastLevelNodes = nextLevelNodes;
+                nextLevelNodes = new List<Node>();
+            }
 
             return root;
         }
 
         /// <summary>
-        /// Metoda tworzy nowe liście drzewa z danego liścia-rodzica dla danego czasu
+        /// Tworzy korzeń drzewa możliwości na podstawie domeny i scenariusza
         /// </summary>
-        /// <param name="time"></param>
-        /// <param name="parentNode"></param>
-        /// <param name="scenario"></param>
         /// <param name="description"></param>
-        public static void CreateNodesAtTime(int time, Node parentNode, IScenario scenario, IDescription description)
+        /// <param name="scenario"></param>
+        /// <returns></returns>
+        public static Node CreateRoot(IDescription description, IScenario scenario)
         {
-
+            Action action = scenario.GetActionAtTime(0);
+            List<Observation> observations = scenario.GetObservationsAtTime(0);
+            List<Fluent> fluents = new List<Fluent>();
+            List<Action> impossibleActions = new List<Action>();
+            foreach(Observation observation in observations)
+            {
+                fluents.AddRange(observation.Form.GetFluents());
+            }
+            return new Node(null, new State(action, fluents, impossibleActions), 0);
         }
 
         /// <summary>
-        /// Metoda znajduje wszystkie stany w danym czasie na podstawie scenariusza i 
+        /// Tworzy dzieci danego liścia na podstawie domeny, scenariusza i aktualnego czasu
         /// </summary>
-        /// <param name="time"></param>
-        /// <param name="lastState"></param>
-        /// <param name="scenario"></param>
         /// <param name="description"></param>
-        public static void GetAllPossibleStates(int time, State lastState, IScenario scenario, IDescription description)
-        {
+        /// <param name="scenario"></param>
+        /// <param name="parentNode"></param>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        public static List<Node> CreateNewNodes(IDescription description, IScenario scenario, Node parentNode, int time)
+        {   
+            List<State> newStates = CheckDescription(description.GetStatements(), parentNode.currentState, time);
+            List<Node> newNodes = new List<Node>();
+            foreach (State state in newStates)
+            {
+                Node node = new Node(parentNode, state, time);
+                parentNode.addChild(node);
+                newNodes.Add(node);
+            }
 
+            return newNodes;
+        }
+
+        public static List<State> CheckDescription(List<IStatement> statements, State parentState, int time)
+        {
+            List<State> states = new List<State>();
+            foreach (Statement statement in statements)
+            {
+                statement.CheckStatement(parentState.currentAction, parentState.Fluents, parentState.impossibleActions, time);
+                
+                if (statement is ReleaseStatement)
+                {
+                    // rozgałęzienie - po releasie może być stary stan albo zmieniony
+                    State oldState = new State(parentState.currentAction, parentState.Fluents, parentState.impossibleActions);
+                    states.Add(oldState);
+                    State newState = statement.DoStatement(parentState.currentAction, parentState.Fluents, parentState.impossibleActions);
+                    states.Add(newState);
+                } else 
+                {
+                    State newState = statement.DoStatement(parentState.currentAction, parentState.Fluents, parentState.impossibleActions);
+                    states.Add(newState);
+                }
+            }
+
+            // jeśli nic się nie zmieniło - dodajemy stan taki sam jak u rodzica
+            if (states.Count == 0)
+            {
+                states.Add(new State(parentState.currentAction, parentState.Fluents, parentState.impossibleActions));
+            }    
+
+            return states;
         }
 
         //public static GoToDeeper()
