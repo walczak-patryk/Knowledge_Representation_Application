@@ -17,12 +17,14 @@ namespace KR_Lib.DataStructures
         private ActionWithTimes() { }
         public ActionWithTimes(string name, int durationTime, int startTime) : base(name)
         {
+            this.Name = name;
             this.StartTime = startTime;
             this.DurationTime = durationTime;
         }
 
-        protected ActionWithTimes(Action action, int durationTime, int startTime) : base(action)
+        protected ActionWithTimes(Action action, int durationTime, int startTime) : base(name)
         {
+            this.Name = action.Name;
             this.StartTime = startTime;
             this.DurationTime = durationTime;
         }
@@ -49,6 +51,23 @@ namespace KR_Lib.DataStructures
             }
 
             return time;
+        }
+
+        /// <summary>
+        /// Checks if Action in this object takes place in given time
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        public bool CheckIfActiveAt(int time)
+        {
+            if (time >= this.StartTime && time < this.GetEndTime())
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public override string ToString()
