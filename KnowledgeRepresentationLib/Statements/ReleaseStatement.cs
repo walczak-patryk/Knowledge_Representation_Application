@@ -39,11 +39,11 @@ namespace KR_Lib.Statements
             return actionWithTimes.GetEndTime() == currentTime;
         }
 
-        public override State DoStatement(Action currentAction, List<Fluent> fluents, List<Action> impossibleActions)
+        public override State DoStatement(List<Action> currentActions, List<Fluent> fluents, List<Action> impossibleActions)
         {
             // zmiana stanu fluentu na przeciwny
             fluents.Find(f => f.Name.Equals(fluent.Name)).State = !fluents.Find(f => f.Name.Equals(fluent.Name)).State;
-            return new State(currentAction, fluents, impossibleActions);
+            return new State(currentActions, fluents, impossibleActions);
         }
     }
 }

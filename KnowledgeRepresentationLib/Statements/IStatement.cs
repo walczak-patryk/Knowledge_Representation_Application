@@ -24,7 +24,7 @@ namespace KR_Lib.Statements
 
         public abstract bool CheckStatement(Action currentAction, List<Fluent> fluents, List<Action> impossibleActions, int time);
 
-        public abstract State DoStatement(Action currentAction, List<Fluent> fluents, List<Action> impossibleActions); 
+        public abstract State DoStatement(List<Action> currentActions, List<Fluent> fluents, List<Action> impossibleActions); 
 
         public Guid GetId()
         {

@@ -8,9 +8,9 @@ namespace KR_Lib.Tree
     public class Node
     {
         Node parent;
-        List<Node> children;
+        public List<Node> children;
         public State currentState { get; }
-        int time;
+        public int time;
         
         public Node(Node parent, State currentState, int time)
         {

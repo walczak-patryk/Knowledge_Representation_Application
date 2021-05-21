@@ -39,8 +39,9 @@ namespace KR_Lib.Statements
             return actionTime == action;
         }
 
-        public override State DoStatement(Action currentAction, List<Fluent> fluents, List<Action> impossibleActions)
+        public override State DoStatement(List<Action> currentActions, List<Fluent> fluents, List<Action> impossibleActions)
         {
+            var currentAction = currentActions[0];
             // zmiana stanu fluentu na przeciwny
             if (!(currentAction is ActionTime))
             {
@@ -50,7 +51,7 @@ namespace KR_Lib.Statements
             {
                 fluents.Find(f => f.Name.Equals(fluent.Name)).State = !fluents.Find(f => f.Name.Equals(fluent.Name)).State;
             }
-            return new State(currentAction, fluents, impossibleActions);
+            return new State(currentActions, fluents, impossibleActions);
         }
 
     }
