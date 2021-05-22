@@ -8,7 +8,7 @@ namespace KR_Lib.Tree
     public class State
     {
 
-        public List<Action> CurrentActions
+        public List<ActionWithTimes> CurrentActions
         {
             get;
             set;
@@ -19,13 +19,13 @@ namespace KR_Lib.Tree
             set;               
         }
 
-        public List<Action> ImpossibleActions
+        public List<ActionWithTimes> ImpossibleActions
         {
             get;
             set;
         }
 
-        public State(List<Action> currentActions, List<Fluent> fluents, List<Action> impossibleActions)
+        public State(List<ActionWithTimes> currentActions, List<Fluent> fluents, List<ActionWithTimes> impossibleActions)
         {
             this.CurrentActions = currentActions;
             this.Fluents = fluents;
