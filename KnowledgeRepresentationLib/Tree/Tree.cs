@@ -147,7 +147,7 @@ namespace KR_Lib
         /// <returns>Lista struktur</returns>
         public static List<IStructure> GenerateStructues(Node node)
         {          
-            var structure = new Structure();
+            var structure = new Structure(-1);
             var structures = new List<IStructure>() { structure };
             TreeToStructures(node, structure, structures);
             return structures;
@@ -175,13 +175,10 @@ namespace KR_Lib
             }
 
             //dodanie elementów
-            structure.TimeFluents1.Add((node.Time, node.CurrentState.Fluents));
+            structure.TimeFluents[node.Time] = node.CurrentState.Fluents;
             //structure.TimeFluents2.Add(child.time, child.currentState.Fluents);
             List<(Fluent, Action, int)> OcclusionRegions = new List<(Fluent, Action, int)>();
-            foreach (var item in node.CurrentState.Fluents)
-                structure.OcclusionRegions.Add((item, node.CurrentState.CurrentActions[0], node.Time));
-            structure.E.Add(node.CurrentState.CurrentActions[0]);
-            structure.Acs.Add(node.CurrentState.CurrentActions[0]);
+            structure.E.Add(curAction);
             structures.Add(structure);
             //koniec dodawania elementów
 

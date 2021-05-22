@@ -8,7 +8,7 @@ namespace KR_Lib.Structures
 {
     public class InconsistentStructure : Structure
     {
-        public InconsistentStructure(int endTime) : base(endTime)
+        public InconsistentStructure() : base(-1)
         {
 
         }
