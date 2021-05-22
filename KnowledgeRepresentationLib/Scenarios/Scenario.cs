@@ -37,7 +37,7 @@ namespace KR_Lib.Scenarios
             this.Name = name;
             this.Id = Guid.NewGuid();
             this.Observations = new List<DataStructures.Observation>();
-            this.ActionOccurrences = new List<ActionWithTimes>();
+            this.ActionOccurrences = new List<ActionOccurrence>();
         }
         public void addObservation(string name, IFormula formula, int time)
         {
@@ -46,8 +46,8 @@ namespace KR_Lib.Scenarios
         }
         public void addAction(string name, int startTime, int durationTime)
         {
-            DataStructures.ActionWithTimes ACS = new DataStructures.ActionWithTimes(name, startTime, durationTime);
-            ActionOccurrence.Add(ACS);
+            var actionOccurrence = new ActionOccurrence(name, startTime, durationTime);
+            ActionOccurrences.Add(actionOccurrence);
         }
         public (List<DataStructures.Observation>, List<DataStructures.Action>) GetScenarios(int time)
         {
@@ -60,7 +60,7 @@ namespace KR_Lib.Scenarios
                     reObservations.Add(obs);
                 }
             }
-            foreach (DataStructures.ActionWithTimes acs in ActionOccurrence)
+            foreach (DataStructures.ActionWithTimes acs in ActionOccurrences)
             {
                 if (acs.StartTime <= time && acs.StartTime + acs.DurationTime >= time)
                 {
@@ -93,7 +93,7 @@ namespace KR_Lib.Scenarios
         {
             int durationObs = 0;
             int durationAcs = 0;
-            foreach (DataStructures.ActionWithTimes acs in ActionOccurrence)
+            foreach (DataStructures.ActionWithTimes acs in ActionOccurrences)
             {
                 durationAcs += acs.DurationTime;
             }
@@ -104,12 +104,12 @@ namespace KR_Lib.Scenarios
             return Math.Max(durationAcs, durationObs);
         }
 
-        public List<DataStructures.Action> GetStartingActions(int time)
+        public List<ActionWithTimes> GetStartingActions(int time)
         {
-            List<DataStructures.Action> startingActions = new List<DataStructures.Action>();
-            foreach (DataStructures.Action action in ActionOccurrence)
+            List<ActionWithTimes> startingActions = new List<ActionWithTimes>();
+            foreach (var action in ActionOccurrences)
             {
-                var actionT = (action as ActionWithTimes);
+                var actionT = new ActionWithTimes(action);
                 if (actionT.StartTime == time)
                 {
                     startingActions.Add(actionT);
