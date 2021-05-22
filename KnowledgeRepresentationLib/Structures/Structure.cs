@@ -21,11 +21,11 @@ namespace KR_Lib.Structures
 
         public List<(Action, int, int)> E { get; set; }
 
-        public Structure() { }
-        public Structure(int endTime, List<ActionWithTimes> acs, List<(int, List<Fluent>)> timeFluents1 /*or Dictionary<int, List<Fluent>> TimeFluents2*/)
+        public Structure(int endTime, List<ActionOccurrence> acs, List<ActionWithTimes> actions, List<(int, List<Fluent>)> timeFluents1 /*or Dictionary<int, List<Fluent>> TimeFluents2*/)
         {
             EndTime = endTime;
             Acs = acs;
+			E = actions;
             TimeFluents1 = timeFluents1;
             //TimeFluents2 = timeFluents2;
             OcclusionRegions = new List<(Fluent, ActionWithTimes, int)>();
@@ -36,7 +36,11 @@ namespace KR_Lib.Structures
                     continue;
                 else
                 {
+<<<<<<<<< Temporary merge branch 1
+                    var action = E.Find(x => x.StartTime <= i && x.GetEndTime() > i);
+=========
                     var action = Acs.Find(x => x.StartTime <= i && x.DurationTime + x.StartTime > i);
+>>>>>>>>> Temporary merge branch 2
                     foreach (var item in fluents)
                         OcclusionRegions.Add((item, action, i));
                 }
