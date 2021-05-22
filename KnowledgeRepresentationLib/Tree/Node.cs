@@ -14,6 +14,7 @@ namespace KR_Lib.Tree
             this.parent = parent;
             this.CurrentState = currentState;
             this.Time = time;
+            Children = new List<Node>();
         }
 
         public void addChild(Node child)

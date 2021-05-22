@@ -3,6 +3,7 @@ using KR_Lib.DataStructures;
 using KR_Lib.Formulas;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace KR_Lib.Scenarios
 {
@@ -73,16 +74,7 @@ namespace KR_Lib.Scenarios
 
         public List<Observation> GetObservationsAtTime(int time)
         {
-            List<Observation> observations = new List<Observation>();
-            foreach (Observation obs in observations)
-            {
-                if (obs.Time == time)
-                {
-                    observations.Add(obs);
-                }
-            }
-
-            return observations;
+            return Observations.Where(obs => obs.Time == time).ToList();
         }
 
         public List<Observation> GetObservations()

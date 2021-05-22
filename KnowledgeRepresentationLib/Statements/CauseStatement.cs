@@ -37,11 +37,6 @@ namespace KR_Lib.Statements
         public override State DoStatement(List<ActionWithTimes> currentActions, List<Fluent> fluents, List<ActionWithTimes> impossibleActions)
         {
             var currentAction = currentActions[0];
-            // zmiana stanu fluentu na przeciwny
-            if (!(currentAction is ActionTime))
-            {
-                throw new Exception("Niewłaściwy typ w CauseStatement: potrzebny ActionTime");
-            }
             foreach (Fluent fluent in formulaCaused.GetFluents())
             {
                 fluents.Find(f => f.Name.Equals(fluent.Name)).State = !fluents.Find(f => f.Name.Equals(fluent.Name)).State;

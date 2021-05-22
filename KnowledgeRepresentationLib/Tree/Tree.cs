@@ -145,11 +145,11 @@ namespace KR_Lib
         /// </summary>
         /// <param name="node"></param>
         /// <returns>Lista struktur</returns>
-        public static List<IStructure> GenerateStructues(Node node)
+        public static List<IStructure> GenerateStructues(Node node, IScenario scenario)
         {          
             var structure = new Structure(-1);
             var structures = new List<IStructure>() { structure };
-            TreeToStructures(node, structure, structures);
+            TreeToStructures(node, structure, structures, scenario);
             return structures;
         }
 
@@ -160,7 +160,7 @@ namespace KR_Lib
         /// <param name="node"></param>
         /// <param name="structure"></param>
         /// <param name="structures"></param>
-        public static void TreeToStructures(Node node, Structure structure, List<IStructure> structures)
+        public static void TreeToStructures(Node node, Structure structure, List<IStructure> structures, IScenario scenario)
         {
             if (node == null || node.CurrentState.CurrentActions.Count > 1)
             {
@@ -173,6 +173,15 @@ namespace KR_Lib
                 structure = new InconsistentStructure();
                 return;
             }
+            var obs = scenario.GetObservationsAtTime(node.Time);
+            foreach (var o in obs)
+            {
+                if (!o.Form.Evaluate())
+                {
+                    structure = new InconsistentStructure();
+                    return;
+                }
+            }
 
             //dodanie elementów
 
@@ -184,14 +193,14 @@ namespace KR_Lib
             //koniec dodawania elementów
 
             if (node.Children.Count == 1)
-                TreeToStructures(node.Children.FirstOrDefault(), structure, structures);
+                TreeToStructures(node.Children.FirstOrDefault(), structure, structures, scenario);
             else
             {
                 foreach (Node child in node.Children)
                 {
                     var newStructure = new Structure(structure);
                     structures.Add(newStructure);
-                    TreeToStructures(child, newStructure, structures);
+                    TreeToStructures(child, newStructure, structures, scenario);
                 }
             }
         }
