@@ -11,20 +11,18 @@ namespace KR_Lib.Structures
         /// <summary>
         /// Czas trwania - do zakończenia działania ostatniej akcji
         /// </summary>
-        int EndTime { get; }
+        int EndTime { get; set; }
 
         //?
         /// <summary>
         /// Akcje - potrzebne do wyliczenia E
         /// </summary>
-        List<ActionOccurrence> Acs { get; }
+        List<ActionOccurrence> Acs { get; set; }
 
         /// <summary>
         /// Stany fluentów w czasie t - potrzebne do funkcji historii
         /// </summary>
-        List<(int, List<Fluent>)> TimeFluents1 { get; set; }
-        //or
-        Dictionary<int, List<Fluent>> TimeFluents2 { get; set; }
+        Dictionary<int, List<Fluent>> TimeFluents { get; set; }
 
         /// <summary>
         /// Regiony okluzji dla struktury
@@ -42,5 +40,6 @@ namespace KR_Lib.Structures
         List<Fluent> O(Action action, int time);
         bool CheckActionBelongingToE(KR_Lib.DataStructures.Action action, int time);
         bool EvaluateFormula(Formula formula, int time);
+        void FinishStructure();
     }
 }

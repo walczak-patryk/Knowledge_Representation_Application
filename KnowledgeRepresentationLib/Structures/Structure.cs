@@ -10,58 +10,48 @@ namespace KR_Lib.Structures
 {
     public class Structure : IStructure
     {
-        public int EndTime { get; }
+        #region Properties
+        public int EndTime { get; set; }
 
-        public List<ActionOccurrence> Acs { get; }
+        public List<ActionOccurrence> Acs { get; set; }
 
-        public List<(int, List<Fluent>)> TimeFluents1 { get; set; }
-        //or
-        public Dictionary<int, List<Fluent>> TimeFluents2 { get; set; }
+        public Dictionary<int, List<Fluent>> TimeFluents { get; set; }
 
         public List<(Fluent, ActionWithTimes, int)> OcclusionRegions { get; set; }
 
         public List<ActionWithTimes> E { get; set; }
 
-        public Structure(int endTime, List<ActionOccurrence> acs, List<ActionWithTimes> actions, List<(int, List<Fluent>)> timeFluents1)
+        #endregion
+
+        #region Methods
+
+        public Structure(int endTime)
         {
-            EndTime = endTime;
-            Acs = acs;
-			E = actions;
-            TimeFluents1 = timeFluents1;
-            //TimeFluents2 = timeFluents2;
-            OcclusionRegions = new List<(Fluent, ActionWithTimes, int)>();
-            for(int i = 0; i < EndTime; i++)
-            {
-                var fluents = O(null, i);
-                if (fluents.Count == 0)
-                    continue;
-                else
-                {
-                    var action = E.Find(x => x.StartTime <= i && x.GetEndTime() > i);
-                    foreach (var item in fluents)
-                        OcclusionRegions.Add((item, action, i));
-                }
-            }
+            this.EndTime = endTime;
+            Acs = new List<ActionOccurrence>();
+            E = new List<ActionWithTimes>();
+            TimeFluents = new Dictionary<int, List<Fluent>>();
+        }
+
+        public void FinishStructure()
+        {
+
         }
 
         public Structure ToModel()
         {
-            return new Model(EndTime, Acs, E, TimeFluents1);
+            return new Model(EndTime);
         }
 
         public bool H(Formula formula, int time)
-        {
-            var timefluents = TimeFluents1.Find(x => x.Item1 < time);
-
-            //or            
-
-            //var timefluents = TimeFluents2[time];
+        {           
+            var timefluents = TimeFluents[time];
 
             var formFluents = formula.GetFluents();
 
             foreach(var fl in formFluents)
             {
-                var fluent = timefluents.Item2.Find(x => x.Id == fl.Id);
+                var fluent = timefluents.Find(x => x.Id == fl.Id);
                 fl.State = fluent.State;
             }
             
@@ -73,28 +63,14 @@ namespace KR_Lib.Structures
         {
             var result = new List<Fluent>();
 
-            var startFluents = TimeFluents1.Find(x => x.Item1 < time);
-            var endFluents = TimeFluents1[TimeFluents1.IndexOf(startFluents) + 1];
-            if (endFluents.Item1 != time)
-                return null;
-            else
+            var startFluents = TimeFluents[time - 1];
+            var endFluents = TimeFluents[time];
+
+            for (int i = 0; i < endFluents.Count; i++)
             {
-                for(int i = 0; i < endFluents.Item2.Count; i++)
-                {
-                    if (endFluents.Item2[i].State != startFluents.Item2[i].State)
-                        result.Add(endFluents.Item2[i]);
-                }
+                if (endFluents[i].State != startFluents[i].State)
+                    result.Add(endFluents[i]);
             }
-
-            //or
-
-            //var endFluents = TimeFluents2[time];
-            //var startFluents = TimeFluents2[time - 1];
-            //for(int i = 0; i < endFluents.Count; i++)
-            //{
-            //    if (endFluents[i].State != startFluents[i].State)
-            //        result.Add(endFluents[i]);
-            //}
 
             return result;
         }
@@ -109,5 +85,7 @@ namespace KR_Lib.Structures
         {
             return this.H(formula, time);
         }
+
+        #endregion
     }
 }
