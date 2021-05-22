@@ -39,19 +39,29 @@ namespace KR_Lib.Statements
             }
 
             var actionWithTimes = (currentAction as ActionWithTimes);
-
-            if(ifFlag)
+            bool result = false;
+            int? startTime = actionWithTimes.GetEndTime() + waitTime;
+            bool containsAction = !impossibleActions.Contains(actionInvoked);
+            if (ifFlag)
             {
                 if (waitTimeFlag)
                 {
-                    return formulaIf.Evaluate() == true && currentTime == actionWithTimes.GetEndTime() + waitTime && !impossibleActions.Contains(actionInvoked);
+                    result = formulaIf.Evaluate() && currentTime == startTime && containsAction;
                 } else
                 {
-                    return formulaIf.Evaluate() == true && !impossibleActions.Contains(actionInvoked);
+                    result =  formulaIf.Evaluate() && containsAction;
                 }
             }
+            else
+            {
+                result = containsAction;
+            }
 
-            return !impossibleActions.Contains(actionInvoked);
+            if (result)
+            {
+                this.actionInvoked = new ActionWithTimes(actionInvoked, (actionInvoked as ActionTime).Time, startTime.Value);
+            }
+            return result;
         }
 
         public override State DoStatement(List<Action> currentActions, List<Fluent> fluents, List<Action> impossibleActions)

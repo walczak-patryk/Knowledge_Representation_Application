@@ -84,12 +84,12 @@ namespace KR_Lib
     {
         private IDescription description = new Description();
         private List<IScenario> scenarios = new List<IScenario>();
-        private int maxTime;
         private List<Action> actions = new List<Action>();
         private List<Fluent> fluents = new List<Fluent>();
         private List<IStructure> modeledStructures;
         private bool newChangesFlag = true;
         private Guid currentScenarioId;
+        private int maxTime;
 
         private void GenerateModels(IScenario scenario) 
         {
@@ -211,6 +211,7 @@ namespace KR_Lib
             if (newChangesFlag || currentScenarioId != selectedScenario.Id )
             {
                 GenerateModels(selectedScenario);
+                currentScenarioId = selectedScenario.Id;
                 newChangesFlag = false;
             }
 
