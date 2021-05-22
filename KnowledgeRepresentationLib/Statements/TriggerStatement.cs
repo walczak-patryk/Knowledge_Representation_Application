@@ -7,16 +7,22 @@ namespace KR_Lib.Statements
 {
     public class TriggerStatement : Statement
     {
-        public TriggerStatement(Action action, Fluent fluent, Formula formula) : base(action, null, formula) { }
+        IFormula formulaIf;
+
+        public TriggerStatement(Action action, IFormula formulaIf) : base(action)
+        {
+            this.formulaIf = formulaIf;
+        }
 
         public override bool CheckStatement(Action currentAction, List<Fluent> fluents, List<Action> impossibleActions, int time)
         {
-            return formula.Evaluate();
+            return formulaIf.Evaluate();
         }
 
-        public override State DoStatement(Action currentAction, List<Fluent> fluents, List<Action> impossibleActions)
+        public override State DoStatement(List<Action> currentActions, List<Fluent> fluents, List<Action> impossibleActions)
         {
-            return new State(action, fluents, impossibleActions);
+            currentActions.Add(action);
+            return new State(currentActions, fluents, impossibleActions);
         }
     }
 }

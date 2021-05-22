@@ -15,6 +15,12 @@ namespace KR_Lib.DataStructures
         }
       
         public Action() { }
+
+        public Action(Action action)
+        {
+            Id = action.Id;
+            Name = action.Name;
+        }
         public Action(string name)
         {
             this.Name = name;

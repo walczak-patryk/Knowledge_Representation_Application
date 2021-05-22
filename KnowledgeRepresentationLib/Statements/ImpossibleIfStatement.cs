@@ -7,17 +7,22 @@ namespace KR_Lib.Statements
 {
     public class ImpossibleIfStatement : Statement
     {
-        public ImpossibleIfStatement(Action action, Formula formula = null) : base(action, null, formula) { }
+        IFormula formulaIf;
+
+        public ImpossibleIfStatement(Action action, IFormula formulaIf = null) : base(action)
+        {
+            this.formulaIf = formulaIf;
+        }
 
         public override bool CheckStatement(Action currentAction, List<Fluent> fluents, List<Action> impossibleActions, int time)
         {
-            return formula.Evaluate();
+            return formulaIf.Evaluate();
         }
 
-        public override State DoStatement(Action currentAction, List<Fluent> fluents, List<Action> impossibleActions)
+        public override State DoStatement(List<Action> currentActions, List<Fluent> fluents, List<Action> impossibleActions)
         {
             impossibleActions.Add(action);
-            return new State(currentAction, fluents, impossibleActions);
+            return new State(currentActions, fluents, impossibleActions);
         }
     }
 }
