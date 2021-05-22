@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using KnowledgeRepresentationLib.Scenarios;
 using KR_Lib.DataStructures;
 using KR_Lib.Formulas;
 using KR_Lib.Queries;
@@ -11,7 +12,7 @@ namespace KR_Lib.Structures
     {
         public int EndTime { get; }
 
-        public List<ActionWithTimes> Acs { get; }
+        public List<ActionOccurrence> Acs { get; }
 
         public List<(int, List<Fluent>)> TimeFluents1 { get; set; }
         //or
@@ -21,7 +22,7 @@ namespace KR_Lib.Structures
 
         public List<ActionWithTimes> E { get; set; }
 
-        public Structure(int endTime, List<ActionOccurrence> acs, List<ActionWithTimes> actions, List<(int, List<Fluent>)> timeFluents1 /*or Dictionary<int, List<Fluent>> TimeFluents2*/)
+        public Structure(int endTime, List<ActionOccurrence> acs, List<ActionWithTimes> actions, List<(int, List<Fluent>)> timeFluents1)
         {
             EndTime = endTime;
             Acs = acs;

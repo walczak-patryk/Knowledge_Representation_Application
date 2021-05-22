@@ -1,9 +1,6 @@
 ﻿using KR_Lib.DataStructures;
 using KR_Lib.Formulas;
-using KR_Lib.Queries;
-using KR_Lib.Structures;
 using KnowledgeRepresentationLib.Scenarios;
-using System;
 using System.Collections.Generic;
 using Action = KR_Lib.DataStructures.Action;
 
