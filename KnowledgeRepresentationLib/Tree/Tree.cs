@@ -175,11 +175,12 @@ namespace KR_Lib
             }
 
             //dodanie elementów
+
             structure.TimeFluents[node.Time] = node.CurrentState.Fluents;
-            //structure.TimeFluents2.Add(child.time, child.currentState.Fluents);
-            List<(Fluent, Action, int)> OcclusionRegions = new List<(Fluent, Action, int)>();
-            structure.E.Add(curAction);
+            if (!structure.E.Contains(curAction))
+                structure.E.Add(curAction);
             structures.Add(structure);
+
             //koniec dodawania elementów
 
             if (node.Children.Count == 1)
