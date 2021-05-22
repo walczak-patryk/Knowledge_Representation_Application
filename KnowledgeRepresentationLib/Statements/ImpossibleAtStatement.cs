@@ -9,23 +9,20 @@ namespace KR_Lib.Statements
     {
         private int time;
 
-        public ImpossibleAtStatement(Action action, int time) : base(action, null, null)
+        public ImpossibleAtStatement(Action action, int time) : base(action)
         {
             this.time = time;
         }
 
-        public override bool CheckStatement(Action currentAction, List<Fluent> fluents, int currentTime)
+        public override bool CheckStatement(Action currentAction, List<Fluent> fluents, List<Action> impossibleActions, int currentTime)
         {
-            if (time == currentTime)
-            {
-                return true;
-            }
-            return false;
+            return time == currentTime;
         }
 
-        public override State DoStatement(Action currentAction, List<Fluent> fluents)
+        public override State DoStatement(List<Action> currentActions, List<Fluent> fluents, List<Action> impossibleActions)
         {
-            throw new System.NotImplementedException();
+            impossibleActions.Add(action);
+            return new State(currentActions, fluents, impossibleActions);
         }
     }
 }

@@ -47,7 +47,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataStructures\ActionTime.cs" />
     <Compile Include="DataStructures\Action.cs" />
+    <Compile Include="DataStructures\ActionWithTimes.cs" />
     <Compile Include="DataStructures\Fluent.cs" />
     <Compile Include="DataStructures\Observation.cs" />
     <Compile Include="DataStructures\ObservationElement.cs" />
@@ -72,7 +74,7 @@
     <Compile Include="Structures\Structure.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\Query.cs" />
-    <Compile Include="Scenarios\ActionOccurrences.cs" />
+    <Compile Include="Scenarios\ActionOccurrence.cs" />
     <Compile Include="Scenarios\Observations.cs" />
     <Compile Include="Scenarios\Scenario.cs" />
     <Compile Include="Statements\ImpossibleIfStatement.cs" />

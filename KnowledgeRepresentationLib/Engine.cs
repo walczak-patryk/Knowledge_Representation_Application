@@ -14,7 +14,7 @@ using KR_Lib.Formulas;
 
 namespace KR_Lib
 {
-    interface IEngine
+    public interface IEngine
     {
         /// <summary>
         /// Adds fluent to list of fluents
@@ -80,19 +80,20 @@ namespace KR_Lib
         // constructor for scenario (string scenarioName, ActionOccurance actionOccurance, List<IlogicExpression> logicExpressions) 
         // constructor for query ([enum]? question type, [enum]? query type)
     }
-    class Engine : IEngine
+    public class Engine : IEngine
     {
-        IDescription description = new Description();
-        List<IScenario> scenarios = new List<IScenario>();
-        List<Action> actions = new List<Action>();
-        List<Fluent> fluents = new List<Fluent>();
-        List<IStructure> modeledStructures;
+        private IDescription description = new Description();
+        private List<IScenario> scenarios = new List<IScenario>();
+        private int maxTime;
+        private List<Action> actions = new List<Action>();
+        private List<Fluent> fluents = new List<Fluent>();
+        private List<IStructure> modeledStructures;
         private bool newChangesFlag = true;
         private Guid currentScenarioId;
 
         private void GenerateModels(IScenario scenario) 
         {
-            var root = TreeMethods.GenerateTree(description, scenario); //Kacper, Kacper, Kornel
+            var root = TreeMethods.GenerateTree(description, scenario, maxTime); //Kacper, Kacper, Kornel
             var structures = TreeMethods.GenerateStructues(root); //Kacper, Kacper, Kornel
             this.modeledStructures = structures.ToModels(); //Ala, Filip
         }

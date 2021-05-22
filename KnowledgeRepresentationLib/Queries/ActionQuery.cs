@@ -1,7 +1,8 @@
-﻿using KR_Lib.Scenarios;
+﻿using Action = KR_Lib.DataStructures.Action;
 using KR_Lib.Structures;
 using System;
 using System.Collections.Generic;
+using Action = KR_Lib.DataStructures.Action;
 
 namespace KR_Lib.Queries
 {
@@ -38,7 +39,7 @@ namespace KR_Lib.Queries
                 if (structure is Model)
                 {
                     atLeastOneModel = true;
-                    if (structure.CheckActionBelongingToE(this.action, this.time) != 1)
+                    if (structure.CheckActionBelongingToE(this.action, this.time) != true)
                         return false;
                 }
             }
