@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using KnowledgeRepresentationLib.Scenarios;
 using KR_Lib.DataStructures;
 using KR_Lib.Formulas;
 using KR_Lib.Queries;
@@ -11,7 +12,7 @@ namespace KR_Lib.Structures
     {
         public int EndTime { get; }
 
-        public List<ActionWithTimes> Acs { get; }
+        public List<ActionOccurrence> Acs { get; }
 
         public List<(int, List<Fluent>)> TimeFluents1 { get; set; }
         //or
@@ -19,9 +20,9 @@ namespace KR_Lib.Structures
 
         public List<(Fluent, ActionWithTimes, int)> OcclusionRegions { get; set; }
 
-        public List<(Action, int, int)> E { get; set; }
+        public List<ActionWithTimes> E { get; set; }
 
-        public Structure(int endTime, List<ActionOccurrence> acs, List<ActionWithTimes> actions, List<(int, List<Fluent>)> timeFluents1 /*or Dictionary<int, List<Fluent>> TimeFluents2*/)
+        public Structure(int endTime, List<ActionOccurrence> acs, List<ActionWithTimes> actions, List<(int, List<Fluent>)> timeFluents1)
         {
             EndTime = endTime;
             Acs = acs;
@@ -36,11 +37,7 @@ namespace KR_Lib.Structures
                     continue;
                 else
                 {
-<<<<<<<<< Temporary merge branch 1
                     var action = E.Find(x => x.StartTime <= i && x.GetEndTime() > i);
-=========
-                    var action = Acs.Find(x => x.StartTime <= i && x.DurationTime + x.StartTime > i);
->>>>>>>>> Temporary merge branch 2
                     foreach (var item in fluents)
                         OcclusionRegions.Add((item, action, i));
                 }
@@ -49,7 +46,7 @@ namespace KR_Lib.Structures
 
         public Structure ToModel()
         {
-            return new Model();
+            return new Model(EndTime, Acs, E, TimeFluents1);
         }
 
         public bool H(Formula formula, int time)
@@ -104,7 +101,8 @@ namespace KR_Lib.Structures
 
         public bool CheckActionBelongingToE(Action action, int time)
         {
-            return E.Contains((action, action.DurationTime, time));
+            var result = E.FindAll(x => x.Id == action.Id);
+            return result.Count > 0;
         }
 
         public bool EvaluateFormula(Formula formula, int time) // = H

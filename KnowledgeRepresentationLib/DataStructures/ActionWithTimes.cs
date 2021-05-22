@@ -22,7 +22,7 @@ namespace KR_Lib.DataStructures
             this.DurationTime = durationTime;
         }
 
-        protected ActionWithTimes(Action action, int durationTime, int startTime) : base(name)
+        protected ActionWithTimes(Action action, int durationTime, int startTime) : base(action.Name)
         {
             this.Name = action.Name;
             this.StartTime = startTime;

@@ -5,6 +5,7 @@ using KR_Lib.Scenarios;
 using KR_Lib.Tree;
 using KR_Lib.DataStructures;
 using KR_Lib.Statements;
+using System.Linq;
 
 namespace KR_Lib
 {
@@ -64,7 +65,7 @@ namespace KR_Lib
         /// <returns></returns>
         public static List<Node> CreateNewNodes(IDescription description, IScenario scenario, Node parentNode, int time)
         {   
-            List<State> newStates = CheckDescription(scenario, description.GetStatements(), parentNode.currentState, time);
+            List<State> newStates = CheckDescription(scenario, description.GetStatements(), parentNode.CurrentState, time);
             List<Node> newNodes = new List<Node>();
             foreach (State state in newStates)
             {
@@ -80,30 +81,30 @@ namespace KR_Lib
         {
             List<State> states = new List<State>();
             List<DataStructures.Action> newActions = GetAllActionsAtTime(scenario, parentState, time);
-            State newState = new State(newActions, parentState.Fluents, parentState.impossibleActions);
+            State newState = new State(newActions, parentState.Fluents, parentState.ImpossibleActions);
             foreach (Statement statement in statements)
             {
-                statement.CheckStatement(newActions[0], newState.Fluents, newState.impossibleActions, time);
+                statement.CheckStatement(newActions[0], newState.Fluents, newState.ImpossibleActions, time);
                 if (statement is ReleaseStatement)
                 {
                     if (states.Count == 0)
                     {
                         states.Add(newState);
                         // rozgałęzienie - po releasie może być stary stan albo zmieniony
-                        states.Add(statement.DoStatement(newState.currentActions, newState.Fluents, newState.impossibleActions));
+                        states.Add(statement.DoStatement(newState.CurrentActions, newState.Fluents, newState.ImpossibleActions));
                     }
                     else
                     {
                         foreach (State state in states)
                         { 
                             // tworzenie rozgałęzień po releasie
-                            states.Add(statement.DoStatement(newState.currentActions, parentState.Fluents, parentState.impossibleActions));
+                            states.Add(statement.DoStatement(newState.CurrentActions, parentState.Fluents, parentState.ImpossibleActions));
                         }
                     }
                 }
                 else
                 { 
-                    states.Add(statement.DoStatement(newState.currentActions, newState.Fluents, newState.impossibleActions));
+                    states.Add(statement.DoStatement(newState.CurrentActions, newState.Fluents, newState.ImpossibleActions));
                 }
             }
 
@@ -126,7 +127,7 @@ namespace KR_Lib
         public static List<DataStructures.Action> GetAllActionsAtTime(IScenario scenario, State parentState, int time)
         {
             List<DataStructures.Action> actions = new List<DataStructures.Action>();
-            foreach (DataStructures.Action action in parentState.currentActions)
+            foreach (DataStructures.Action action in parentState.CurrentActions)
             {
                 var actionWTime = (action as ActionWithTimes);
                 if (actionWTime.GetEndTime() >= time)
@@ -139,31 +140,56 @@ namespace KR_Lib
             return actions;
         }
 
-        //public static GoToDeeper()
-
         /// <summary>
         /// Zwraca listę wszystkich powstałych struktur na podstawie drzewa możliwości.
         /// </summary>
-        /// <param name="root"></param>
+        /// <param name="node"></param>
         /// <returns>Lista struktur</returns>
-        public static List<IStructure> GenerateStructues(Node root)
-        {
-            List<IStructure> structures = new List<IStructure>();
-            foreach (Node child in root.children)
-            {
-                Structure structure = new Structure();
-                structure.TimeFluents1.Add((child.time, child.currentState.Fluents));
-                //structure.TimeFluents2.Add(child.time, child.currentState.Fluents);
-                List<(Fluent, Action, int)> OcclusionRegions = new List<(Fluent, Action, int)>();
-                foreach (var item in child.currentState.Fluents)
-                    structure.OcclusionRegions.Add((item, child.currentState.currentAction, child.time));
-                structure.E.Add(child.currentState.currentAction);
-                structure.Acs.Add(child.currentState.currentAction);
-                structures.Add(structure);
-                if (child.children.Count != 0)
-                    GenerateStructues(child);
-            }
+        public static List<IStructure> GenerateStructues(Node node)
+        {          
+            var structure = new Structure();
+            var structures = new List<IStructure>() { structure };
+            TreeToStructures(node, structure, structures);
             return structures;
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="structure"></param>
+        /// <param name="structures"></param>
+        public static void TreeToStructures(Node node, Structure structure, List<IStructure> structures)
+        {
+            if (node == null || node.CurrentState.CurrentActions.Count > 1)
+            {
+                structure = new InconsistentStructure();
+                return;
+            }
+
+            //dodanie elementów
+            structure.TimeFluents1.Add((node.Time, node.CurrentState.Fluents));
+            //structure.TimeFluents2.Add(child.time, child.currentState.Fluents);
+            List<(Fluent, Action, int)> OcclusionRegions = new List<(Fluent, Action, int)>();
+            foreach (var item in node.CurrentState.Fluents)
+                structure.OcclusionRegions.Add((item, node.CurrentState.CurrentActions[0], node.Time));
+            structure.E.Add(node.CurrentState.CurrentActions[0]);
+            structure.Acs.Add(node.CurrentState.CurrentActions[0]);
+            structures.Add(structure);
+            //koniec dodawania elementów
+
+            if (node.Children.Count == 1)
+                TreeToStructures(node.Children.FirstOrDefault(), structure, structures);
+            else
+            {
+                foreach (Node child in node.Children)
+                {
+                    var newStructure = new Structure(structure);
+                    structures.Add(newStructure);
+                    TreeToStructures(child, newStructure, structures);
+                }
+            }
         }
     }
 }

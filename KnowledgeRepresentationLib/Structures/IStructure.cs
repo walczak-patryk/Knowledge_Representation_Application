@@ -1,9 +1,6 @@
 ﻿using KR_Lib.DataStructures;
 using KR_Lib.Formulas;
-using KR_Lib.Queries;
-using KR_Lib.Structures;
 using KnowledgeRepresentationLib.Scenarios;
-using System;
 using System.Collections.Generic;
 using Action = KR_Lib.DataStructures.Action;
 
@@ -32,12 +29,12 @@ namespace KR_Lib.Structures
         /// <summary>
         /// Regiony okluzji dla struktury
         /// </summary>
-        List<(Fluent, Action, int)> OcclusionRegions { get; set; }
+        List<(Fluent, ActionWithTimes, int)> OcclusionRegions { get; set; }
 
         /// <summary>
         /// Relacja E
         /// </summary>
-        List<(Action, int, int)> E { get; set; }
+        List<ActionWithTimes> E { get; set; }
 
 
         Structure ToModel();
