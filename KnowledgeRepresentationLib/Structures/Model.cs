@@ -8,7 +8,7 @@ namespace KR_Lib.Queries
 {
     public class Model : Structure
     {
-        public Model(int endTime, List<ActionOccurrence> acs, List<(Action, int, int)> actions, List<(int, List<Fluent>)> timeFluents1) : base(endTime, acs, actions, timeFluents1)
+        public Model(int endTime, List<ActionOccurrence> acs, List<ActionWithTimes> actions, List<(int, List<Fluent>)> timeFluents1) : base(endTime, acs, actions, timeFluents1)
         {
 
         }

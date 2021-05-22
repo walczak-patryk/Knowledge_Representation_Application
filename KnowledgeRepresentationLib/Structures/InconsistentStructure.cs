@@ -8,7 +8,7 @@ namespace KR_Lib.Structures
 {
     public class InconsistentStructure : Structure
     {
-        public InconsistentStructure(int endTime, List<ActionOccurrence> acs, List<(Action, int, int)> actions, List<(int, List<Fluent>)> timeFluents1) : base(endTime, acs, actions, timeFluents1)
+        public InconsistentStructure(int endTime, List<ActionOccurrence> acs, List<ActionWithTimes> actions, List<(int, List<Fluent>)> timeFluents1) : base(endTime, acs, actions, timeFluents1)
         {
 
         }

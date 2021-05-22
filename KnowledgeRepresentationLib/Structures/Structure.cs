@@ -19,13 +19,13 @@ namespace KR_Lib.Structures
 
         public List<(Fluent, ActionWithTimes, int)> OcclusionRegions { get; set; }
 
-        public List<(Action, int, int)> E { get; set; }
+        public List<ActionWithTimes> E { get; set; }
 
-        public Structure() { }
-        public Structure(int endTime, List<ActionWithTimes> acs, List<(int, List<Fluent>)> timeFluents1 /*or Dictionary<int, List<Fluent>> TimeFluents2*/)
+        public Structure(int endTime, List<ActionOccurrence> acs, List<ActionWithTimes> actions, List<(int, List<Fluent>)> timeFluents1 /*or Dictionary<int, List<Fluent>> TimeFluents2*/)
         {
             EndTime = endTime;
             Acs = acs;
+			E = actions;
             TimeFluents1 = timeFluents1;
             //TimeFluents2 = timeFluents2;
             OcclusionRegions = new List<(Fluent, ActionWithTimes, int)>();
@@ -36,7 +36,7 @@ namespace KR_Lib.Structures
                     continue;
                 else
                 {
-                    var action = Acs.Find(x => x.StartTime <= i && x.DurationTime + x.StartTime > i);
+                    var action = E.Find(x => x.StartTime <= i && x.GetEndTime() > i);
                     foreach (var item in fluents)
                         OcclusionRegions.Add((item, action, i));
                 }
@@ -45,7 +45,7 @@ namespace KR_Lib.Structures
 
         public Structure ToModel()
         {
-            return new Model();
+            return new Model(EndTime, Acs, E, TimeFluents1);
         }
 
         public bool H(Formula formula, int time)
@@ -100,7 +100,8 @@ namespace KR_Lib.Structures
 
         public bool CheckActionBelongingToE(Action action, int time)
         {
-            return E.Contains((action, action.DurationTime, time));
+            var result = E.FindAll(x => x.Id == action.Id);
+            return result.Count > 0;
         }
 
         public bool EvaluateFormula(Formula formula, int time) // = H
