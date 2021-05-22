@@ -23,7 +23,7 @@ namespace KR_Lib.Statements
             }
         }
 
-        public override bool CheckStatement(Action currentAction, List<Fluent> fluents, List<Action> impossibleActions, int currentTime)
+        public override bool CheckStatement(ActionWithTimes currentAction, List<Fluent> fluents, List<ActionWithTimes> impossibleActions, int currentTime)
         {
             if (!(currentAction is ActionWithTimes))
             {
@@ -39,7 +39,7 @@ namespace KR_Lib.Statements
             return actionWithTimes.GetEndTime() == currentTime;
         }
 
-        public override State DoStatement(List<Action> currentActions, List<Fluent> fluents, List<Action> impossibleActions)
+        public override State DoStatement(List<ActionWithTimes> currentActions, List<Fluent> fluents, List<ActionWithTimes> impossibleActions)
         {
             // zmiana stanu fluentu na przeciwny
             fluents.Find(f => f.Name.Equals(fluent.Name)).State = !fluents.Find(f => f.Name.Equals(fluent.Name)).State;

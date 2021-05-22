@@ -44,10 +44,10 @@ namespace KR_Lib
         /// <returns></returns>
         public static Node CreateRoot(IDescription description, IScenario scenario)
         {
-            List<DataStructures.Action> actions = scenario.GetStartingActions(0);
+            List<DataStructures.ActionWithTimes> actions = scenario.GetStartingActions(0);
             List<Observation> observations = scenario.GetObservationsAtTime(0);
             List<Fluent> fluents = new List<Fluent>();
-            List<Action> impossibleActions = new List<Action>();
+            List<ActionWithTimes> impossibleActions = new List<ActionWithTimes>();
             foreach(Observation observation in observations)
             {
                 fluents.AddRange(observation.Form.GetFluents());
@@ -80,7 +80,7 @@ namespace KR_Lib
         public static List<State> CheckDescription(IScenario scenario, List<IStatement> statements, State parentState, int time)
         {
             List<State> states = new List<State>();
-            List<DataStructures.Action> newActions = GetAllActionsAtTime(scenario, parentState, time);
+            List<DataStructures.ActionWithTimes> newActions = GetAllActionsAtTime(scenario, parentState, time);
             State newState = new State(newActions, parentState.Fluents, parentState.ImpossibleActions);
             foreach (Statement statement in statements)
             {
@@ -124,10 +124,10 @@ namespace KR_Lib
         /// <param name="scenario"></param>
         /// <param name="parentState"></param>
         /// <param name="time"></param>
-        public static List<DataStructures.Action> GetAllActionsAtTime(IScenario scenario, State parentState, int time)
+        public static List<DataStructures.ActionWithTimes> GetAllActionsAtTime(IScenario scenario, State parentState, int time)
         {
-            List<DataStructures.Action> actions = new List<DataStructures.Action>();
-            foreach (DataStructures.Action action in parentState.CurrentActions)
+            List<DataStructures.ActionWithTimes> actions = new List<DataStructures.ActionWithTimes>();
+            foreach (DataStructures.ActionWithTimes action in parentState.CurrentActions)
             {
                 var actionWTime = (action as ActionWithTimes);
                 if (actionWTime.GetEndTime() >= time)

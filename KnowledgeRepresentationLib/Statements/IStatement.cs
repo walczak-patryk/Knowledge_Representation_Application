@@ -22,9 +22,9 @@ namespace KR_Lib.Statements
             this.action = action;
         }
 
-        public abstract bool CheckStatement(Action currentAction, List<Fluent> fluents, List<Action> impossibleActions, int time);
+        public abstract bool CheckStatement(ActionWithTimes currentAction, List<Fluent> fluents, List<ActionWithTimes> impossibleActions, int time);
 
-        public abstract State DoStatement(List<Action> currentActions, List<Fluent> fluents, List<Action> impossibleActions); 
+        public abstract State DoStatement(List<ActionWithTimes> currentActions, List<Fluent> fluents, List<ActionWithTimes> impossibleActions); 
 
         public Guid GetId()
         {

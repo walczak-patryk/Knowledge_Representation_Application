@@ -14,14 +14,15 @@ namespace KR_Lib.Statements
             this.formulaIf = formulaIf;
         }
 
-        public override bool CheckStatement(Action currentAction, List<Fluent> fluents, List<Action> impossibleActions, int time)
+        public override bool CheckStatement(ActionWithTimes currentAction, List<Fluent> fluents, List<ActionWithTimes> impossibleActions, int time)
         {
             return formulaIf.Evaluate();
         }
 
-        public override State DoStatement(List<Action> currentActions, List<Fluent> fluents, List<Action> impossibleActions)
+        public override State DoStatement(List<ActionWithTimes> currentActions, List<Fluent> fluents, List<ActionWithTimes> impossibleActions)
         {
-            impossibleActions.Add(action);
+            var actionWTime = (action as ActionWithTimes);
+            impossibleActions.Add(actionWTime);
             return new State(currentActions, fluents, impossibleActions);
         }
     }
