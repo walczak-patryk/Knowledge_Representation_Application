@@ -2,7 +2,7 @@
 
 namespace KR_Lib.DataStructures
 {
-    public class ActionWithTimes : Action
+    public class ActionWithTimes : Action, ICloneable
     {
         public int StartTime
         {
@@ -75,6 +75,11 @@ namespace KR_Lib.DataStructures
             //string description = "Action (" + Id + ", " + Duration + ") with start time: " + StartAt;
             //return description;
             return "(" + this.Name + ", " + this.DurationTime + ")";
+        }
+
+        public object Clone()
+        {
+            return new ActionWithTimes(this.Name, this.DurationTime, this.StartTime);
         }
     }
 }
