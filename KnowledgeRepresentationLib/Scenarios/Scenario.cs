@@ -104,12 +104,12 @@ namespace KR_Lib.Scenarios
             return Math.Max(durationAcs, durationObs);
         }
 
-        public List<DataStructures.Action> GetStartingActions(int time)
+        public List<ActionWithTimes> GetStartingActions(int time)
         {
-            List<DataStructures.Action> startingActions = new List<DataStructures.Action>();
-            foreach (DataStructures.Action action in ActionOccurrences)
+            List<ActionWithTimes> startingActions = new List<ActionWithTimes>();
+            foreach (var action in ActionOccurrences)
             {
-                var actionT = (action as ActionWithTimes);
+                var actionT = new ActionWithTimes(action);
                 if (actionT.StartTime == time)
                 {
                     startingActions.Add(actionT);
