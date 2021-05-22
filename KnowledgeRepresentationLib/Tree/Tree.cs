@@ -167,6 +167,12 @@ namespace KR_Lib
                 structure = new InconsistentStructure();
                 return;
             }
+            var curAction = node.CurrentState.CurrentActions.FirstOrDefault();
+            if (curAction != null && node.CurrentState.ImpossibleActions.Contains(curAction))
+            {
+                structure = new InconsistentStructure();
+                return;
+            }
 
             //dodanie elementów
             structure.TimeFluents1.Add((node.Time, node.CurrentState.Fluents));
