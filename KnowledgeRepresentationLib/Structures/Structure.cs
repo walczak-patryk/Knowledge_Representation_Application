@@ -33,9 +33,45 @@ namespace KR_Lib.Structures
             TimeFluents = new Dictionary<int, List<Fluent>>();
         }
 
+        public Structure(Structure original)
+        {
+            this.EndTime = original.EndTime;
+
+            Acs = new List<ActionOccurrence>();
+            foreach (var ac in original.Acs)
+                Acs.Add((ActionOccurrence)ac.Clone());
+
+            E = new List<ActionWithTimes>();
+            foreach (var e in original.E)
+                E.Add((ActionWithTimes)e.Clone());
+
+            TimeFluents = new Dictionary<int, List<Fluent>>();
+            foreach(KeyValuePair<int, List<Fluent>> entry in original.TimeFluents)
+            {
+                var list = new List<Fluent>();
+                foreach (var fluent in entry.Value)
+                    list.Add((Fluent)fluent.Clone());
+                TimeFluents[entry.Key] = list;
+            }
+        }
+
         public void FinishStructure()
         {
-
+            OcclusionRegions = new List<(Fluent, ActionWithTimes, int)>();
+            for (int i = 0; i < EndTime; i++)
+            {
+                foreach(var actionE in E)
+                {
+                    var fluents = O(actionE, i);
+                    if (fluents.Count == 0)
+                        continue;
+                    else
+                    {
+                        foreach (var item in fluents)
+                            OcclusionRegions.Add((item, actionE, i));
+                    }
+                }
+            }
         }
 
         public Structure ToModel()
@@ -59,8 +95,11 @@ namespace KR_Lib.Structures
             
         }
 
-        public List<Fluent> O(Action action, int time)
+        public List<Fluent> O(ActionWithTimes action, int time)
         {
+            if (action.StartTime > time || action.GetEndTime() < time)
+                return null;
+
             var result = new List<Fluent>();
 
             var startFluents = TimeFluents[time - 1];

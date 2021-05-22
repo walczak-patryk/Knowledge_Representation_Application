@@ -37,8 +37,8 @@ namespace KR_Lib.Structures
 
         Structure ToModel();
         bool H(Formula formula, int time);
-        List<Fluent> O(Action action, int time);
-        bool CheckActionBelongingToE(KR_Lib.DataStructures.Action action, int time);
+        List<Fluent> O(ActionWithTimes action, int time);
+        bool CheckActionBelongingToE(Action action, int time);
         bool EvaluateFormula(Formula formula, int time);
         void FinishStructure();
     }
