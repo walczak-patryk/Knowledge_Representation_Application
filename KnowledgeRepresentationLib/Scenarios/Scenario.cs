@@ -1,4 +1,5 @@
-﻿using KR_Lib.DataStructures;
+﻿using KnowledgeRepresentationLib.Scenarios;
+using KR_Lib.DataStructures;
 using KR_Lib.Formulas;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,7 @@ namespace KR_Lib.Scenarios
             get; 
             set; 
         }
-        public List<ActionWithTimes> ActionsWithTimes
+        public List<ActionOccurrence> ActionOccurrences
         { 
             get; 
             set; 
@@ -36,7 +37,7 @@ namespace KR_Lib.Scenarios
             this.Name = name;
             this.Id = Guid.NewGuid();
             this.Observations = new List<DataStructures.Observation>();
-            this.ActionsWithTimes = new List<ActionWithTimes>();
+            this.ActionOccurrences = new List<ActionWithTimes>();
         }
         public void addObservation(string name, IFormula formula, int time)
         {
@@ -46,7 +47,7 @@ namespace KR_Lib.Scenarios
         public void addAction(string name, int startTime, int durationTime)
         {
             DataStructures.ActionWithTimes ACS = new DataStructures.ActionWithTimes(name, startTime, durationTime);
-            ActionsWithTimes.Add(ACS);
+            ActionOccurrence.Add(ACS);
         }
         public (List<DataStructures.Observation>, List<DataStructures.Action>) GetScenarios(int time)
         {
@@ -59,7 +60,7 @@ namespace KR_Lib.Scenarios
                     reObservations.Add(obs);
                 }
             }
-            foreach (DataStructures.ActionWithTimes acs in ActionsWithTimes)
+            foreach (DataStructures.ActionWithTimes acs in ActionOccurrence)
             {
                 if (acs.StartTime <= time && acs.StartTime + acs.DurationTime >= time)
                 {
@@ -92,7 +93,7 @@ namespace KR_Lib.Scenarios
         {
             int durationObs = 0;
             int durationAcs = 0;
-            foreach (DataStructures.ActionWithTimes acs in ActionsWithTimes)
+            foreach (DataStructures.ActionWithTimes acs in ActionOccurrence)
             {
                 durationAcs += acs.DurationTime;
             }
@@ -106,7 +107,7 @@ namespace KR_Lib.Scenarios
         public List<DataStructures.Action> GetStartingActions(int time)
         {
             List<DataStructures.Action> startingActions = new List<DataStructures.Action>();
-            foreach (DataStructures.Action action in ActionsWithTimes)
+            foreach (DataStructures.Action action in ActionOccurrence)
             {
                 var actionT = (action as ActionWithTimes);
                 if (actionT.StartTime == time)

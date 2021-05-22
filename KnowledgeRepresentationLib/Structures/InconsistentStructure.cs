@@ -10,7 +10,6 @@ namespace KR_Lib.Structures
     {
         public InconsistentStructure() : base(-1)
         {
-
         }
 
         public new Structure ToModel()
