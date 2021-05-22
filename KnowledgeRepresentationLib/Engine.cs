@@ -93,8 +93,8 @@ namespace KR_Lib
 
         private void GenerateModels(IScenario scenario) 
         {
-            var root = TreeMethods.GenerateTree(description, scenario, maxTime); //Kacper, Kacper, Kornel
-            var structures = TreeMethods.GenerateStructues(root); //Kacper, Kacper, Kornel
+            var root = TreeMethods.GenerateTree(description, scenario, 10); //Kacper, Kacper, Kornel
+            var structures = TreeMethods.GenerateStructues(root, scenario); //Kacper, Kacper, Kornel
             this.modeledStructures = structures.ToModels(); //Ala, Filip
         }
 
