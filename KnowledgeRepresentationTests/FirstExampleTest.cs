@@ -124,7 +124,7 @@ namespace KR_Tests
             IScenario scenario = new Scenario()
             {
                 Observations = new List<Observation>() { new Observation(observationFormula1, 0), new Observation(observationFormula2, 9) },
-                ActionOccurrencens = new List<ActionOccurrence> { new ActionOccurrence(hardWorking, 8, 0), new ActionOccurrence(shopping, 2, 8) }
+                ActionOccurrences = new List<ActionOccurrence> { new ActionOccurrence(hardWorking, 8, 0), new ActionOccurrence(shopping, 2, 8) }
             };
 
             #endregion
@@ -170,7 +170,7 @@ namespace KR_Tests
             IScenario scenario = new Scenario()
             {
                 Observations = new List<Observation>() { new Observation(observationFormula1, 0), new Observation(observationFormula2, 9) },
-                ActionOccurrencens = new List<ActionOccurrence> { new ActionOccurrence(hardWorking, 8, 0) }
+                ActionOccurrences = new List<ActionOccurrence> { new ActionOccurrence(hardWorking, 8, 0) }
             };
 
             #endregion
@@ -218,7 +218,7 @@ namespace KR_Tests
             IScenario scenario = new Scenario()
             {
                 Observations = new List<Observation>() { new Observation(observationFormula1, 0), new Observation(observationFormula2, 3) },
-                ActionOccurrencens = new List<ActionOccurrence> { new ActionOccurrence(hardWorking, 8, 0), new ActionOccurrence(shopping, 2, 8) }
+                ActionOccurrences = new List<ActionOccurrence> { new ActionOccurrence(hardWorking, 8, 0), new ActionOccurrence(shopping, 2, 8) }
             };
 
             #endregion
