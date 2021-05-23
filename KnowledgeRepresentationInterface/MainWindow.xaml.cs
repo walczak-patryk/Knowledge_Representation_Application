@@ -1,4 +1,5 @@
 ﻿using KnowledgeRepresentationInterface.Queries;
+using KnowledgeRepresentationInterface.Statements;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,9 +28,19 @@ namespace KnowledgeRepresentationInterface
         FormulaQuery FQ;
         TargetQuery TQ;
 
+        //statements
+        CauseStatement CS;
+        ImpossibleAtStatement IAS;
+        ImpossibleIfStatement IIS;
+        InvokeStatement IS;
+        ReleaseStatement RS;
+        TriggerStatement TS;
+
         public MainWindow()
         {
             Initialize_Query_Types();
+            Initialize_Statement_Types();
+
             InitializeComponent();
             Query_GroupBox.Content = this.PSQ;
             List<ScenarioItem> test = new List<ScenarioItem>();
@@ -57,6 +68,16 @@ namespace KnowledgeRepresentationInterface
             this.AQ = new ActionQuery();
             this.FQ = new FormulaQuery();
             this.TQ = new TargetQuery();
+        }
+
+        private void Initialize_Statement_Types()
+        {
+            this.CS = new CauseStatement();
+            this.IAS = new ImpossibleAtStatement();
+            this.IIS = new ImpossibleIfStatement();
+            this.IS = new InvokeStatement();
+            this.RS = new ReleaseStatement();
+            this.TS = new TriggerStatement();
         }
 
         private void Delete_TreeView_Click(object sender, RoutedEventArgs e)
@@ -137,6 +158,37 @@ namespace KnowledgeRepresentationInterface
                 case 3:
                     Query_GroupBox.Content = this.TQ;
                     break;
+            }
+        }
+
+        private void Statement_Type_ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (Statement_GroupBox == null)
+            {
+                return;
+            }
+            switch (Statement_Type_ComboBox.SelectedIndex)
+            {
+                case 0:
+                    Statement_GroupBox.Content = this.CS;
+                    break;
+                case 1:
+                    Statement_GroupBox.Content = this.IAS;
+                    break;
+                case 2:
+                    Statement_GroupBox.Content = this.IIS;
+                    break;
+                case 3:
+                    Statement_GroupBox.Content = this.IS;
+                    break;
+                case 4:
+                    Statement_GroupBox.Content = this.RS;
+                    break;
+                case 5:
+                    Statement_GroupBox.Content = this.TS;
+                    break;
+                
+                
             }
         }
     }

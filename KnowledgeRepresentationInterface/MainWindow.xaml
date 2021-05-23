@@ -140,7 +140,7 @@
                 <DockPanel>
                     <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="50"/>
+                            <RowDefinition Height="30"/>
                             <RowDefinition Height="30"/>
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="*"/>
@@ -148,12 +148,12 @@
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="0.5*"/>
-                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="0.5*"/>
                             
                         </Grid.RowDefinitions>
 
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="50"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
@@ -162,15 +162,22 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="50"/>
                         </Grid.ColumnDefinitions>
 
-                        <ComboBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="7"/>
-                        
-                        <GroupBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="7"
-                                  Grid.RowSpan="5"/>
-                        <Button Grid.Row="7" Grid.Column="3" Content="Add statement" 
-                                Grid.ColumnSpan="3" Margin="3"/>
+                        <ComboBox Name="Statement_Type_ComboBox" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" SelectionChanged="Statement_Type_ComboBox_SelectionChanged"  >
+                            <ComboBoxItem Content="Cause" Margin="1,1,1,1" />
+                            <ComboBoxItem Content="ImpossibleAt" Margin="1,1,1,1" />
+                            <ComboBoxItem Content="ImpossibleIf" Margin="1,1,1,1" />
+                            <ComboBoxItem Content="Invoke" Margin="1,1,1,1" />
+                            <ComboBoxItem Content="Release" Margin="1,1,1,1" />
+                            <ComboBoxItem Content="Trigger" Margin="1,1,1,1" />
+                        </ComboBox>
+                                  
+                        <GroupBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="8"
+                                  Grid.RowSpan="5" Name="Statement_GroupBox"/>
+                        <Button Grid.Row="7" Grid.Column="4" Content="Add statement" 
+                                Grid.ColumnSpan="2" Margin="3"/>
                     </Grid>
                 </DockPanel>
                 

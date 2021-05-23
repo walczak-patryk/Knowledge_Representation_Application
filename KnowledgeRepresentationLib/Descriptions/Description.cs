@@ -34,7 +34,7 @@ namespace KR_Lib.Descriptions
         public Guid AddStatement(IStatement statement)
         {
             statements.Add(statement);
-            return statement.Id;
+            return new Guid(); 
         }
 
         public void DeleteStatement(Guid guid)
