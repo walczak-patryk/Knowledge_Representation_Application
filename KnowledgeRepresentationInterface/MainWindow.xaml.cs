@@ -1,5 +1,6 @@
+﻿using KnowledgeRepresentationInterface.Queries;
+using KnowledgeRepresentationInterface.Statements;
 ﻿using KnowledgeRepresentationInterface.General;
-using KnowledgeRepresentationInterface.Queries;
 using KR_Lib.DataStructures;
 using KR_Lib.Formulas;
 using System;
@@ -37,6 +38,14 @@ namespace KnowledgeRepresentationInterface
         ObservationCreator scenario_obs;
         
 
+        //statements
+        CauseStatement CS;
+        ImpossibleAtStatement IAS;
+        ImpossibleIfStatement IIS;
+        InvokeStatement IS;
+        ReleaseStatement RS;
+        TriggerStatement TS;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -46,11 +55,12 @@ namespace KnowledgeRepresentationInterface
             this.fluents = new List<Fluent>();
             this.scenario_obs = new ObservationCreator(this.fluents);
             Initialize_Query_Types();
+            Initialize_Statement_Types();
             Scenario_ListView.ItemsSource = this.scenario.items;
             Query_GroupBox.Content = this.PSQ;
 
-            this.actions.Add(new Action("action1",0,2));
-            this.actions.Add(new Action("action2",0,4));
+            this.actions.Add(new Action("action1"));
+            this.actions.Add(new Action("action2"));
             this.fluents.Add(new Fluent("fluent1", true));
             this.fluents.Add(new Fluent("fluent2", true));
             foreach(var elem in this.actions)
@@ -78,6 +88,16 @@ namespace KnowledgeRepresentationInterface
             this.AQ = new ActionQuery();
             this.FQ = new FormulaQuery(this.fluents);
             this.TQ = new TargetQuery(this.fluents);
+        }
+
+        private void Initialize_Statement_Types()
+        {
+            this.CS = new CauseStatement();
+            this.IAS = new ImpossibleAtStatement();
+            this.IIS = new ImpossibleIfStatement();
+            this.IS = new InvokeStatement();
+            this.RS = new ReleaseStatement();
+            this.TS = new TriggerStatement();
         }
 
         private void Delete_TreeView_Click(object sender, RoutedEventArgs e)
@@ -197,6 +217,38 @@ namespace KnowledgeRepresentationInterface
                     break;
             }
         }
+
+        private void Statement_Type_ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (Statement_GroupBox == null)
+            {
+                return;
+            }
+            switch (Statement_Type_ComboBox.SelectedIndex)
+            {
+                case 0:
+                    Statement_GroupBox.Content = this.CS;
+                    break;
+                case 1:
+                    Statement_GroupBox.Content = this.IAS;
+                    break;
+                case 2:
+                    Statement_GroupBox.Content = this.IIS;
+                    break;
+                case 3:
+                    Statement_GroupBox.Content = this.IS;
+                    break;
+                case 4:
+                    Statement_GroupBox.Content = this.RS;
+                    break;
+                case 5:
+                    Statement_GroupBox.Content = this.TS;
+                    break;
+                
+                
+            }
+        }
+    
 
         private void Finish_Scenario_Click(object sender, RoutedEventArgs e)
         {
