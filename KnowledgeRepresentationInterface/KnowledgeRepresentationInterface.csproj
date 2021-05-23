@@ -76,6 +76,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Helpers\ExpressionView.xaml.cs">
+      <DependentUpon>ExpressionView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Queries\ActionQuery.xaml.cs">
       <DependentUpon>ActionQuery.xaml</DependentUpon>
     </Compile>
@@ -88,6 +91,28 @@
     <Compile Include="Queries\TargetQuery.xaml.cs">
       <DependentUpon>TargetQuery.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Statements\CauseStatement.xaml.cs">
+      <DependentUpon>CauseStatement.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Statements\ImpossibleAtStatement.xaml.cs">
+      <DependentUpon>ImpossibleAtStatement.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Statements\ImpossibleIfStatement.xaml.cs">
+      <DependentUpon>ImpossibleIfStatement.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Statements\InvokeStatement.xaml.cs">
+      <DependentUpon>InvokeStatement.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Statements\ReleaseStatement.xaml.cs">
+      <DependentUpon>ReleaseStatement.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Statements\TriggerStatement.xaml.cs">
+      <DependentUpon>TriggerStatement.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Helpers\ExpressionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -113,6 +138,30 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Queries\TargetQuery.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Statements\CauseStatement.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Statements\ImpossibleAtStatement.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Statements\ImpossibleIfStatement.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Statements\InvokeStatement.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Statements\ReleaseStatement.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Statements\TriggerStatement.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -150,8 +199,6 @@
       <Name>KnowledgeRepresentationLib</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Statements\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
