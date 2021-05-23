@@ -12,7 +12,7 @@ namespace KR_Lib.Queries
     public class TargetQuery : IQuery
     {
 
-        private Formula formula;
+        private IFormula formula;
         private QueryType queryType;
 
         public Guid ScenarioId
@@ -20,7 +20,7 @@ namespace KR_Lib.Queries
             get;
         }
 
-        public TargetQuery(Formula formula, QueryType queryType, Guid scenarioId)
+        public TargetQuery(IFormula formula, QueryType queryType, Guid scenarioId)
         {
             this.ScenarioId = scenarioId;
             this.formula = formula;

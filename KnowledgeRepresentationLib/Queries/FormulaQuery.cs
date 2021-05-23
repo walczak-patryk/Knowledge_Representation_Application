@@ -14,7 +14,7 @@ namespace KR_Lib.Queries
     {
         
         private int time;
-        private Formula formula;
+        private IFormula formula;
         public QueryType queryType;
 
         public Guid ScenarioId
@@ -22,7 +22,7 @@ namespace KR_Lib.Queries
             get;
         }
 
-        public FormulaQuery(int time, Formula formula, Guid scenarioId)
+        public FormulaQuery(int time, IFormula formula, Guid scenarioId)
         {
             this.ScenarioId = scenarioId;
             this.time = time;

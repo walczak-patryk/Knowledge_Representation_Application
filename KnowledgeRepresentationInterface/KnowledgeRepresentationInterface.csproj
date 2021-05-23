@@ -79,17 +79,17 @@
     <Compile Include="General\ObservationCreator.xaml.cs">
       <DependentUpon>ObservationCreator.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Queries\ActionQuery.xaml.cs">
-      <DependentUpon>ActionQuery.xaml</DependentUpon>
+    <Compile Include="Queries\ActionQueryView.xaml.cs">
+      <DependentUpon>ActionQueryView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Queries\FormulaQuery.xaml.cs">
-      <DependentUpon>FormulaQuery.xaml</DependentUpon>
+    <Compile Include="Queries\FormulaQueryView.xaml.cs">
+      <DependentUpon>FormulaQueryView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Queries\PossibleScenarioQuery.xaml.cs">
-      <DependentUpon>PossibleScenarioQuery.xaml</DependentUpon>
+    <Compile Include="Queries\PossibleScenarioQueryView.xaml.cs">
+      <DependentUpon>PossibleScenarioQueryView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Queries\TargetQuery.xaml.cs">
-      <DependentUpon>TargetQuery.xaml</DependentUpon>
+    <Compile Include="Queries\TargetQueryView.xaml.cs">
+      <DependentUpon>TargetQueryView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Statements\CauseStatement.xaml.cs">
       <DependentUpon>CauseStatement.xaml</DependentUpon>
@@ -125,19 +125,19 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Queries\ActionQuery.xaml">
+    <Page Include="Queries\ActionQueryView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Queries\FormulaQuery.xaml">
+    <Page Include="Queries\FormulaQueryView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Queries\PossibleScenarioQuery.xaml">
+    <Page Include="Queries\PossibleScenarioQueryView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Queries\TargetQuery.xaml">
+    <Page Include="Queries\TargetQueryView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -201,7 +201,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Scenarios\" />
-    <Folder Include="Statements\" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Backgrounds\Scenario.bmp" />
