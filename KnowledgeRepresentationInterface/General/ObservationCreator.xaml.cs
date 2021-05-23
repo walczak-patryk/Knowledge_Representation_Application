@@ -113,5 +113,12 @@ namespace KnowledgeRepresentationInterface.General
             return Observations_TextBox.Text;
         }
 
+        public void Clear_Control()
+        {
+            Observations_TextBox.Text = "";
+            Fluent_Observation_ScenarioTab.SelectedIndex = -1;
+            this.scenarioObservation.Clear();
+        }
+
     }
 }

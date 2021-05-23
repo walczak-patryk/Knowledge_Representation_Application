@@ -34,7 +34,11 @@
         <GroupBox  Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="6" Grid.RowSpan="3" Name="Observation_GroupBox" BorderThickness="0"/>
 
         <Label Grid.Row="5" Grid.Column="2" Grid.ColumnSpan="2" Content="hold at the moment" VerticalAlignment="Bottom" HorizontalAlignment="Center" />
-        <xctk:UIntegerUpDown Name="Duration_UIntUpDown" Grid.Row="6" Grid.Column="2" Grid.ColumnSpan="2" Value="0" HorizontalContentAlignment="Center" Margin="3,3,3,3" />
+        <xctk:UIntegerUpDown Name="Duration_UIntUpDown" Grid.Row="6" Grid.Column="2" Grid.ColumnSpan="2" ValueChanged="Duration_UIntUpDown_ValueChanged" HorizontalContentAlignment="Center" Margin="3,3,3,3" >
+            <xctk:UIntegerUpDown.Background>
+                <ImageBrush ImageSource="../Backgrounds/Moment.bmp" AlignmentX="Left" Stretch="Uniform" AlignmentY="Top" />
+            </xctk:UIntegerUpDown.Background>
+        </xctk:UIntegerUpDown>
         <ComboBox Name="Type" Grid.Row="7" Grid.Column="2" Grid.ColumnSpan="2" SelectedIndex="0" HorizontalContentAlignment="Center" Margin="1,0,1,5">
             <ComboBoxItem Content="Always" Margin="1,1,1,1" />
             <ComboBoxItem Content="Ever" Margin="1,1,1,1" />
