@@ -437,16 +437,20 @@ namespace KnowledgeRepresentationInterface
 
         private void AddFluentButton_Click(object sender, RoutedEventArgs e)
         {
-            string name = fluentName.Content;
-            fluents.add(new Fluent(name));
+            string name = fluentName.Text;
+            Fluent fluent = new Fluent(name);
+            fluents.Add(fluent);
+
+            engine.AddFluent(fluent);
         }
 
         private void AddActionButton_Click(object sender, RoutedEventArgs e)
         {
-            string Name = actionNameTextBox.Content;
-            //int actionTime = Action_Duration_UIntUpDown.Content;
+            string name = actionNameTextBox.Text;
+            Action action = new Action(name);
 
-            actions.add(new Action)
+            actions.Add(action);
+            engine.AddAction(action);
         }
     }
 }
