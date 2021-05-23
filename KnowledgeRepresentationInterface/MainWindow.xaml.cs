@@ -1,24 +1,17 @@
 ﻿using KnowledgeRepresentationInterface.Queries;
 using KnowledgeRepresentationInterface.Statements;
-﻿using KnowledgeRepresentationInterface.General;
+using KnowledgeRepresentationInterface.General;
 using KR_Lib.DataStructures;
 using KR_Lib.Formulas;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Media.Media3D;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Action = KR_Lib.DataStructures.Action;
+using KR_Lib;
 
 namespace KnowledgeRepresentationInterface
 {
@@ -27,6 +20,8 @@ namespace KnowledgeRepresentationInterface
     /// </summary>
     public partial class MainWindow : Window
     {
+        IEngine engine;
+
         PossibleScenarioQuery PSQ;
         ActionQuery AQ;
         FormulaQuery FQ;
@@ -48,7 +43,9 @@ namespace KnowledgeRepresentationInterface
 
         public MainWindow()
         {
+            this.engine = new Engine();
             InitializeComponent();
+        
             this.scenario = new ScenarioGUI();
             this.scenarios = new List<ScenarioGUI>();
             this.actions = new List<Action>();
@@ -406,7 +403,6 @@ namespace KnowledgeRepresentationInterface
             }
             else
             {
-
                 Action_Occurences_Moment_UIntUpDown.Background = null;
             }
         }
@@ -432,6 +428,25 @@ namespace KnowledgeRepresentationInterface
 
                 Action_Occurences_Duration_UIntUpDown.Background = null;
             }
+        }
+
+        private void TimeInfinity_UpDown_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            engine.SetMaxTime((int)TimeInfinity_UpDown.Value);
+        }
+
+        private void AddFluentButton_Click(object sender, RoutedEventArgs e)
+        {
+            string name = fluentName.Content;
+            fluents.add(new Fluent(name));
+        }
+
+        private void AddActionButton_Click(object sender, RoutedEventArgs e)
+        {
+            string Name = actionNameTextBox.Content;
+            //int actionTime = Action_Duration_UIntUpDown.Content;
+
+            actions.add(new Action)
         }
     }
 }
