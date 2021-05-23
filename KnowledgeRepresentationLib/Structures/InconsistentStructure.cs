@@ -1,20 +1,20 @@
-﻿using System;
+﻿using KnowledgeRepresentationLib.Scenarios;
+using KR_Lib.DataStructures;
+using KR_Lib.Structures;
 using System.Collections.Generic;
-using KR_Lib.Exceptions;
-using KR_Lib.Formulas;
+using Action = KR_Lib.DataStructures.Action;
 
 namespace KR_Lib.Structures
 {
     public class InconsistentStructure : Structure
     {
-        //new public Structure ToModel()
-        //{
-        //    throw new InconsistentException();
-        //}
+        public InconsistentStructure() : base(-1)
+        {
+        }
 
-        //new public bool H(Formula formula, int time)
-        //{
-        //    throw new InconsistentException();
-        //}
+        public new Structure ToModel()
+        {
+            return this as InconsistentStructure;
+        }
     }
 }

@@ -10,10 +10,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Action = KR_Lib.DataStructures.Action;
+using KR_Lib.Formulas;
 
 namespace KR_Lib
 {
-    interface IEngine
+    public interface IEngine
     {
         /// <summary>
         /// Adds fluent to list of fluents
@@ -79,19 +80,21 @@ namespace KR_Lib
         // constructor for scenario (string scenarioName, ActionOccurance actionOccurance, List<IlogicExpression> logicExpressions) 
         // constructor for query ([enum]? question type, [enum]? query type)
     }
-    class Engine : IEngine
+    public class Engine : IEngine
     {
-        IDescription description = new Description();
-        IScenario scenario = new Scenario();
-        List<Action> actions = new List<Action>();
-        List<Fluent> fluents = new List<Fluent>();
-        List<IStructure> modeledStructures;
+        private IDescription description = new Description();
+        private List<IScenario> scenarios = new List<IScenario>();
+        private List<Action> actions = new List<Action>();
+        private List<Fluent> fluents = new List<Fluent>();
+        private List<IStructure> modeledStructures;
         private bool newChangesFlag = true;
+        private Guid currentScenarioId;
+        private int maxTime;
 
-        private void GenerateModels() 
+        private void GenerateModels(IScenario scenario) 
         {
-            var root = TreeMethods.GenerateTree(description, scenario); //Kacper, Kacper, Kornel
-            var structures = TreeMethods.GenerateStructues(root); //Kacper, Kacper, Kornel
+            var root = TreeMethods.GenerateTree(description, scenario, 10); //Kacper, Kacper, Kornel
+            var structures = TreeMethods.GenerateStructues(root, scenario); //Kacper, Kacper, Kornel
             this.modeledStructures = structures.ToModels(); //Ala, Filip
         }
 
@@ -122,7 +125,18 @@ namespace KR_Lib
         public void AddScenario(IScenario scenario)
         {
             newChangesFlag = true;
-            throw new NotImplementedException();
+            scenarios.Add(scenario);
+        }
+
+        /// <summary>
+        /// Adds scenario to list of scenarios
+        /// </summary>
+        /// <param IScenario="scenario"></param>
+        public void AddObservation(Guid scenarioId, List<ObservationElement> observationElements) 
+        {
+            newChangesFlag = true;
+            var observation = FormulaParser.ParseToFormula(observationElements);
+            ////scenarios.Add(scenario);
         }
 
         /// <summary>
@@ -167,9 +181,9 @@ namespace KR_Lib
         public void RemoveScenario(Guid id)
         {
             newChangesFlag = true;
-            var fluentToRemove = fluents.SingleOrDefault(fluent => fluent.Id == id);
-            if (fluentToRemove != null)
-                fluents.Remove(fluentToRemove);
+            var scenarioToRemove = scenarios.SingleOrDefault(scenario => scenario.Id == id);
+            if (scenarioToRemove != null)
+                scenarios.Remove(scenarioToRemove);
         }
 
         /// <summary>
@@ -189,14 +203,19 @@ namespace KR_Lib
         /// <returns></returns>
         public bool ExecuteQuery(IQuery query)
         {
-            if (newChangesFlag)
+            var selectedScenario = scenarios.SingleOrDefault(scenario => scenario.Id == query.ScenarioId);
+            if (selectedScenario == null)
+                throw new ScenarioNoExistsException("Scenariusz nie istnieje");
+
+
+            if (newChangesFlag || currentScenarioId != selectedScenario.Id )
             {
-                GenerateModels();
+                GenerateModels(selectedScenario);
+                currentScenarioId = selectedScenario.Id;
                 newChangesFlag = false;
             }
 
-            return query.GetAnswer(modeledStructures, scenario);           
-
+            return query.GetAnswer(modeledStructures);           
         }
     }
 }

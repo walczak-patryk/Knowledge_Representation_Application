@@ -1,4 +1,6 @@
-﻿using System;
+﻿using KnowledgeRepresentationInterface.General;
+using KR_Lib.DataStructures;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +22,18 @@ namespace KnowledgeRepresentationInterface.Queries
     /// </summary>
     public partial class TargetQuery : UserControl
     {
-        public TargetQuery()
+        public ObservationCreator scenario_obs { get; set; }
+
+        public TargetQuery(List<Fluent> fluents)
         {
+            this.scenario_obs = new ObservationCreator(fluents);
             InitializeComponent();
+            Observation_GroupBox.Content = this.scenario_obs;
+        }
+
+        public void Refresh_Fluents()
+        {
+            this.scenario_obs.RefreshControl();
         }
     }
 }

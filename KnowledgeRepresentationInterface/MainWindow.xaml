@@ -6,7 +6,7 @@
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:local="clr-namespace:KnowledgeRepresentationInterface" xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
         mc:Ignorable="d"
-        Title="RW" Height="600" Width="900"
+        Title="RW" Height="600" Width="950"
         MinWidth="403" MinHeight="270"
         WindowStartupLocation="CenterScreen">
     <!--<Window.Resources>
@@ -17,6 +17,7 @@
         </DataTemplate>
     </Window.Resources>-->
     <Grid>
+        <!--Main grid-->
         <Grid.RowDefinitions>
             <RowDefinition Height="20" />
             <RowDefinition Height="*" />
@@ -26,6 +27,8 @@
             <ColumnDefinition Width="3" />
             <ColumnDefinition Width="2*" MinWidth="300"/>
         </Grid.ColumnDefinitions>
+        
+        <!--Menubar-->
         <DockPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
             <Menu DockPanel.Dock="Top">
                 <MenuItem Header="_File">
@@ -35,6 +38,8 @@
                 <MenuItem Header="About" />
             </Menu>
         </DockPanel>
+        
+        <!--Left panel-->
         <Grid Grid.Column="0" Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="30" />
@@ -45,8 +50,11 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
+            
             <Label Grid.Column="0" Grid.Row="0">Time Infinity:</Label>
             <Label Grid.Column="1" Grid.Row="0" Name="TimeInfinity_Label" HorizontalContentAlignment="Left">100</Label>
+            
+            <!--Tree view-->
             <TreeView Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Name="Panel_TreeView" Margin="5,5,5,5" >
                 <TreeViewItem Name="Actions_TreeViewItem" Header="Actions" Focusable="False">
                     <TreeViewItem.ContextMenu>
@@ -54,7 +62,6 @@
                             <MenuItem Header="Delete" Click="Delete_TreeView_Click" />
                         </ContextMenu>
                     </TreeViewItem.ContextMenu>
-                    <TreeViewItem Header="Action I" />
                 </TreeViewItem>
                 <TreeViewItem Name="Fluents_TreeViewItem" Header="Fluents" Focusable="False">
                     <TreeViewItem.ContextMenu>
@@ -62,7 +69,6 @@
                             <MenuItem Header="Delete" Click="Delete_TreeView_Click" />
                         </ContextMenu>
                     </TreeViewItem.ContextMenu>
-                    <TreeViewItem Header="Fluent I" />
                 </TreeViewItem>
                 <TreeViewItem Name="Statements_TreeViewItem" Header="Statements" Focusable="False">
                     <TreeViewItem.ContextMenu>
@@ -70,7 +76,6 @@
                             <MenuItem Header="Delete" Click="Delete_TreeView_Click" />
                         </ContextMenu>
                     </TreeViewItem.ContextMenu>
-                    <TreeViewItem Header="Statement I"  />
                 </TreeViewItem>
                 <TreeViewItem Name="Scenarios_TreeViewItem" Header="Scenarios" Focusable="False">
                     <TreeViewItem.ContextMenu>
@@ -78,15 +83,21 @@
                             <MenuItem Header="Delete" Click="Delete_TreeView_Click" />
                         </ContextMenu>
                     </TreeViewItem.ContextMenu>
-                    <TreeViewItem Header="Scenario I" />
                 </TreeViewItem>
             </TreeView>
+            
+            <!--Remove button in tree view-->
             <Button Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Name="Remove_Button" Margin="70,0,70,5" Click="Delete_TreeView_Click">Remove</Button>
         </Grid>
+        
+        <!--Panel splitter-->
         <GridSplitter Grid.Column="1" Grid.Row="1" Width="3" HorizontalAlignment="Stretch" />
+        
+        <!--Left panel - tabs-->
         <TabControl Name="Panel_TabControl" Grid.Column="2" Grid.Row="1" Margin="5,5,5,5" SelectionChanged="Panel_TabControl_SelectionChanged">
+            
+            <!--Actions and fluents tab-->
             <TabItem Name="Actions_Fluents_Tab" Header="Actions and Fluents" Width="{c:Binding ElementName=Panel_TabControl, Path=ActualWidth/4 - 1}">
-                <!--Label>Actions and Fluents...</-->
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="50"/>
@@ -134,9 +145,11 @@
                             Margin="3"/>
 
                 </Grid>
+                
             </TabItem>
+
+            <!--Statements tab-->
             <TabItem Name="Statements_Tab" Header="Statements" Width="{c:Binding ElementName=Panel_TabControl, Path=ActualWidth/4 - 1}">
-                <!--<Label>Statements...</Label> -->
                 <DockPanel>
                     <Grid>
                         <Grid.RowDefinitions>
@@ -183,6 +196,8 @@
                 
                 
             </TabItem>
+            
+            <!--Scenarios tab-->
             <TabItem Name="Scenarios_Tab" Header="Scenarios" Width="{c:Binding ElementName=Panel_TabControl, Path=ActualWidth/4 - 1}">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -207,63 +222,39 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
+                    <!--Action occurences label-->
                     <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">Action occurences</Label>
-                    <xctk:UIntegerUpDown Name="Action_Occurences_UIntUpDown" Grid.Row="1" Grid.Column="0" Margin="3,3,3,3" />
-                    <ComboBox Name="Action_Occurences_ComboBox" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"></ComboBox>
-                    <Button Name="Action_Occurences_Button" Grid.Row="1" Grid.Column="3" Margin="10,2,10,2" >Add</Button>
-                    
+
+                    <!--Action occurences - numeric up down control-->
+                    <xctk:UIntegerUpDown Name="Action_Occurences_UIntUpDown" Grid.Row="1" Grid.Column="0" Value="0" Margin="3,3,3,3" />
+
+                    <!--Action occurences - actions combobox-->
+                    <ComboBox Name="Action_Occurences_ComboBox" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" />
+
+                    <!--Action occurences - add action button-->
+                    <Button Name="Action_Occurences_Button" Grid.Row="1" Grid.Column="3" Click="Action_Occurences_Button_Click" Margin="10,2,10,2" >Add</Button>
+
+                    <!--Observations label-->
                     <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">Observations</Label>
-                    <xctk:UIntegerUpDown Name="Observations_UIntUpDown" Grid.Row="3" Grid.Column="0" Margin="3,3,3,3" />
-                    <RichTextBox Name="Observations_RichTextBox" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="4"></RichTextBox>
-                    <Button Name="Observations_Button" Grid.Row="3" Grid.Column="5" Margin="10,2,10,2" >Add</Button>
 
-                    <Label Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2">Toolbox</Label>
-                    <Grid Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="6">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
+                    <GroupBox Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="6" Grid.RowSpan="3" BorderThickness="0" Name="Observation_Scenario_GroupBox" />
 
-                        <Label Grid.Row="0" Grid.Column="0">Fluent</Label>
-                        <ComboBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Name="Fluent_Observation_ScenarioTab" Margin="2,2,2,2"></ComboBox>
-                        <Button Grid.Row="0" Grid.Column="4" Name="Add_Fluent_Observation_ScenarioTab" Margin="2,2,2,2">Add</Button>
+                    <!--Observations - numeric up down control-->
+                    <xctk:UIntegerUpDown Name="Observations_UIntUpDown" Grid.Row="6" Grid.Column="0" Value="0" Margin="3,3,3,3" />
 
-                        <Button Name="And_Scenario" Grid.Row="0" Grid.Column="6" Margin="2,2,2,2">AND</Button>
-                        <Button Name="Or_Scenario" Grid.Row="0" Grid.Column="7" Margin="2,2,2,2">OR</Button>
-                        <Button Name="Left_Scenario" Grid.Row="0" Grid.Column="8" Margin="2,2,2,2">(</Button>
-                        <Button Name="Right_Scenario" Grid.Row="0" Grid.Column="9" Margin="2,2,2,2">)</Button>
-                        <Button Name="Not_Scenario" Grid.Row="0" Grid.Column="10" Margin="2,2,2,2">NOT</Button>
-                        <Button Name="Erase_Scenario" Grid.Row="0" Grid.Column="11" Margin="2,2,2,2">&lt;-</Button>
-                    </Grid>
-                    <!--<Button Name="And_Scenario" Grid.Row="4" Grid.Column="0" Margin="2,2,2,2">AND</Button>
-                    <Button Name="Or_Scenario" Grid.Row="4" Grid.Column="1" Margin="2,2,2,2">OR</Button>
-                    <Button Name="Left_Scenario" Grid.Row="4" Grid.Column="2" Margin="2,2,2,2">(</Button>
-                    <Button Name="Right_Scenario" Grid.Row="4" Grid.Column="3" Margin="2,2,2,2">)</Button>
-                    <Button Name="Not_Scenario" Grid.Row="4" Grid.Column="4" Margin="2,2,2,2">NOT</Button>
-                    <Button Name="Erase_Scenario" Grid.Row="4" Grid.Column="5" Margin="2,2,2,2">&lt;-</Button>-->
+                    <!--Observations - add observation button-->
+                    <Button Name="Observations_Button" Grid.Row="6" Grid.Column="2" Click="Observations_Button_Click" Margin="10,2,10,2" >Add</Button>
 
-                    <Label Grid.Row="7" Grid.Column="0" HorizontalContentAlignment="Right">Scenario</Label>
-                    <RichTextBox Name="Scenario_RichTextBox" Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2" Margin="3,3,3,3"></RichTextBox>
-
-                    <ListView Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="6" Name="Scenario_ListView">
+                    <!--Scenario - list view with elements-->
+                    <ListView Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="6" Name="Scenario_ListView" >
                         <ListView.ContextMenu>
                             <ContextMenu>
                                 <MenuItem Header="Delete" Click="Delete_Scenario_ListView_Click" />
                             </ContextMenu>
                         </ListView.ContextMenu>
                         <ListView.View>
-                            <GridView AllowsColumnReorder="True" ColumnHeaderToolTip="Test name">
-                                <GridViewColumn DisplayMemberBinding="{Binding Path=ID}" Header="ID" Width="{c:Binding ElementName=Scenario_ListView, Path=ActualWidth/8 - 7}"/>
+                            <GridView AllowsColumnReorder="True" >
+                                <GridViewColumn DisplayMemberBinding="{Binding Path=Moment}" Header="Moment" Width="{c:Binding ElementName=Scenario_ListView, Path=ActualWidth/8 - 7}"/>
                                 <GridViewColumn DisplayMemberBinding="{Binding Path=ActionOccurence}" Header="Action Occurence" Width="{c:Binding ElementName=Scenario_ListView, Path=ActualWidth/8 * 3 - 7}" />
                                 <GridViewColumn DisplayMemberBinding="{Binding Path=Observation}" Header="Observation" Width="{c:Binding ElementName=Scenario_ListView, Path=ActualWidth/8 * 3 - 7}" />
                                 <GridViewColumn DisplayMemberBinding="{Binding Path=Duration}" Header="Duration" Width="{c:Binding ElementName=Scenario_ListView, Path=ActualWidth/8 - 7}" />
@@ -271,9 +262,18 @@
                         </ListView.View>
                     </ListView>
 
-                    <Button Grid.Row="10" Grid.Column="2" Grid.ColumnSpan="2" Name="Finish_Scenario">Finish scenario</Button>
+                    <!--Scenario name label-->
+                    <Label Grid.Row="9" Grid.Column="1" HorizontalContentAlignment="Right" Margin="1,1,1,1">Scenario</Label>
+
+                    <!--Scenario name textbox-->
+                    <TextBox Name="ScenarioName_TextBox" Grid.Row="9" Grid.Column="2" Grid.ColumnSpan="2" Margin="3,3,3,3" />
+
+                    <!--Scenario add button-->
+                    <Button Grid.Row="10" Grid.Column="1" Grid.ColumnSpan="4" Name="Finish_Scenario" Click="Finish_Scenario_Click">Finish scenario</Button>
                 </Grid>
             </TabItem>
+            
+            <!--Queries tab-->
             <TabItem Name="Queries_Tab" Header="Queries" Width="{c:Binding ElementName=Panel_TabControl, Path=ActualWidth/4 - 1}">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -296,21 +296,34 @@
                         <RowDefinition Height="*" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
-
+                    
+                    <!--Select query type label-->
                     <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">Select query type</Label>
+                    
+                    <!--Query type combobox-->
                     <ComboBox Name="Query_Type_ComboBox" Grid.Row="3" Grid.Column="0" SelectionChanged="Query_Type_ComboBox_SelectionChanged" SelectedIndex="0" Grid.ColumnSpan="2" Margin="2,2,2,2" >
                         <ComboBoxItem Content="Possible scenario" Margin="1,1,1,1" />
                         <ComboBoxItem Content="Action execution" Margin="1,1,1,1" />
                         <ComboBoxItem Content="Condition occurence" Margin="1,1,1,1" />
                         <ComboBoxItem Content="Goal attainability" Margin="1,1,1,1" />
                     </ComboBox>
-
+                    
+                    <!--Query type control groupbox-->
                     <GroupBox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="6" Name="Query_GroupBox" />
-
+                    
+                    <!--Scenario label-->
                     <Label Grid.Column="1" Grid.Row="6" HorizontalContentAlignment="Right">Scenario</Label>
+                    
+                    <!--Choosen scenario combobox-->
                     <ComboBox Grid.Row="6" Grid.Column="2" Grid.ColumnSpan="2"  Name="Query_Scenario_ComboBox" Margin="2,2,2,2"></ComboBox>
+                    
+                    <!--Execute query button-->
                     <Button Grid.Row="7" Grid.Column="2" Grid.ColumnSpan="2" Margin="2,2,2,2" Click="ExecuteQuery_Click">Execute query</Button>
+                    
+                    <!--Result label-->
                     <Label Grid.Row="8" Grid.Column="2">Result</Label>
+                    
+                    <!--Result label-->
                     <Label Grid.Row="8" Grid.Column="3">True</Label>
                     
                 </Grid>

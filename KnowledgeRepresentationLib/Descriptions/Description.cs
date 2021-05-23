@@ -1,6 +1,7 @@
 ﻿using KR_Lib.Statements;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace KR_Lib.Descriptions
 {
@@ -17,13 +18,19 @@ namespace KR_Lib.Descriptions
         /// </summary>
         /// <param name="guid">Identyfikator zdania do usunięcia.</param>
         void DeleteStatement(Guid guid);
+        /// <summary>
+        /// Zwracanie listy wszystkich zdań z domeny
+        /// </summary>
+        List<IStatement> GetStatements();
     }
     public class Description : IDescription
     {
         public List<IStatement> statements;
 
         public Description()
-        {}
+        {
+            statements = new List<IStatement>();
+        }
 
         #region Public Methods
         /// <summary>
@@ -34,12 +41,23 @@ namespace KR_Lib.Descriptions
         public Guid AddStatement(IStatement statement)
         {
             statements.Add(statement);
-            return new Guid(); 
+            return statement.GetId();
         }
 
+        /// <summary>
+        /// Usunięcie zdania z domeny.
+        /// </summary>
+        /// <param name="guid">Identyfikator zdania do usunięcia.</param>
         public void DeleteStatement(Guid guid)
         {
-            throw new NotImplementedException();
+            var statementToRemove = statements.SingleOrDefault(statement => statement.GetId() == guid);
+            if (statementToRemove != null)
+                statements.Remove(statementToRemove);
+        }
+
+        public List<IStatement> GetStatements()
+        {
+            return this.statements;
         }
 
         #endregion

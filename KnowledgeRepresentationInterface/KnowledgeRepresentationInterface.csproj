@@ -76,6 +76,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="General\ObservationCreator.xaml.cs">
+      <DependentUpon>ObservationCreator.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Queries\ActionQuery.xaml.cs">
       <DependentUpon>ActionQuery.xaml</DependentUpon>
     </Compile>
@@ -106,6 +109,10 @@
     <Compile Include="Statements\TriggerStatement.xaml.cs">
       <DependentUpon>TriggerStatement.xaml</DependentUpon>
     </Compile>
+    <Page Include="General\ObservationCreator.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -193,7 +200,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Helpers\" />
+    <Folder Include="Scenarios\" />
+    <Folder Include="Statements\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
