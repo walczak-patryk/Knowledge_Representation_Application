@@ -1,4 +1,6 @@
-﻿using System;
+﻿using KnowledgeRepresentationLib.Scenarios;
+using KR_Lib.Formulas;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,17 +13,31 @@ namespace KR_Lib.DataStructures
         public Guid Id { get; set; }
         public string Moment { get; set; }
         public string ActionOccurence { get; set; }
-        public (Action, int) ActionDetails { get; set; }
+        public ActionOccurrence ActionOccurence_engine { get; set; }
         public string Observation { get; set; }
         public string Duration { get; set; }
+        public IFormula formula { get; set; }
+        public int Moment_int { get; set; }
+        public int Duration_int { get; set; }
 
-        public ScenarioItem(string Moment, string ActionOccurence, string Observation, string Duration)
+        public ScenarioItem(string ActionOccurence,Action Action, int Moment_int, int Duration_int, string Observation, IFormula formula)
         {
             this.Id = Guid.NewGuid();
-            this.Moment = Moment;
+            this.Moment = Moment_int.ToString();
             this.ActionOccurence = ActionOccurence;
+            if (Action == null)
+            {
+                this.ActionOccurence_engine = null;
+            }
+            else
+            {
+                this.ActionOccurence_engine = new ActionOccurrence(Action, Duration_int, Moment_int);
+            }
             this.Observation = Observation;
-            this.Duration = Duration;
+            this.Duration = Duration_int.ToString();
+            this.formula = formula;
+            this.Moment_int = Moment_int;
+            this.Duration_int = Duration_int;
         }
     }
 }

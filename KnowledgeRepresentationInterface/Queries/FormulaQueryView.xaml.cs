@@ -1,4 +1,7 @@
-﻿using System;
+﻿using KnowledgeRepresentationInterface.General;
+using KR_Lib.DataStructures;
+using KR_Lib.Formulas;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,30 +15,31 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Action = KR_Lib.DataStructures.Action;
 
 namespace KnowledgeRepresentationInterface.Queries
 {
     /// <summary>
-    /// Interaction logic for ActionQuery.xaml
+    /// Interaction logic for FormulaQuery.xaml
     /// </summary>
-    public partial class ActionQuery : UserControl
+    public partial class FormulaQueryView : UserControl
     {
-        public ActionQuery()
+        public ObservationCreator scenario_obs { get; set; }
+
+        public FormulaQueryView(List<Fluent> fluents)
         {
+            this.scenario_obs = new ObservationCreator(fluents);
             InitializeComponent();
-
+            Observation_GroupBox.Content = this.scenario_obs;
         }
 
-        public void Set_Actions(List<Action> actions)
+        public void Refresh_Fluents()
         {
-            Actions_ComboBox.ItemsSource = actions;
-            Actions_ComboBox.Items.Refresh();
+            this.scenario_obs.RefreshControl();
         }
 
-        private void Duration_UIntUpDown_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        private void Moment_UIntUpDown_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            if (Duration_UIntUpDown.Text == "")
+            if (Moment_UIntUpDown.Text == "")
             {
                 // Create an ImageBrush.
                 ImageBrush textImageBrush = new ImageBrush();
@@ -47,13 +51,21 @@ namespace KnowledgeRepresentationInterface.Queries
                 textImageBrush.AlignmentY = AlignmentY.Top;
                 textImageBrush.Stretch = Stretch.Uniform;
                 // Use the brush to paint the button's background.
-                Duration_UIntUpDown.Background = textImageBrush;
+                Moment_UIntUpDown.Background = textImageBrush;
             }
             else
             {
 
-                Duration_UIntUpDown.Background = null;
+                Moment_UIntUpDown.Background = null;
             }
+        }
+
+        public IFormula Get_Formula()
+        {
+            List<ObservationElement> observation = this.scenario_obs.scenarioObservation;
+            observation = FormulaParser.infix_to_ONP(observation);
+            IFormula formula = FormulaParser.ParseToFormula(observation);
+            return formula;
         }
     }
 }
