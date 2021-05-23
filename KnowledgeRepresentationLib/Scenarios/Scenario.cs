@@ -15,8 +15,7 @@ namespace KR_Lib.Scenarios
         (List<Observation>, List<DataStructures.Action>) GetScenarios(int time);
         List<Observation> GetObservationsAtTime(int time);
         List<ActionWithTimes> GetStartingActions(int time);
-        //List<DataStructures.Observation> observations { get; set; }
-        //List<DataStructures.Action> actions { get; set; }
+        void AddObservation(Observation observation);
     }
     public class Scenario : IScenario
     {
@@ -109,6 +108,11 @@ namespace KR_Lib.Scenarios
             }
 
             return startingActions;
+        }
+
+        public void AddObservation(Observation observation)
+        {
+            this.Observations.Add(observation);
         }
     }
 }

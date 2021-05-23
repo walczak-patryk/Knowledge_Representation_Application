@@ -65,11 +65,23 @@ namespace KR_Lib
         void RemoveScenario(Guid id);
 
         /// <summary>
+        /// Adds scenario to list of scenarios
+        /// </summary>
+        /// <param IScenario="scenario"></param>
+        void AddObservation(Guid scenarioId, List<ObservationElement> observationElements, int time);
+
+        /// <summary>
         /// Checks if query is correct
         /// </summary>
         /// <param IQuery="query"></param>
         /// <returns></returns>
         bool ExecuteQuery(IQuery query);
+
+        /// <summary>
+        /// Set maximal time of computation.
+        /// </summary>
+        /// <param name="time"></param>
+        void SetMaxTime(int time);
 
         // What else is needed? :
         // constructor for Action (string name, int timeDuration)
@@ -93,9 +105,9 @@ namespace KR_Lib
 
         private void GenerateModels(IScenario scenario) 
         {
-            var root = TreeMethods.GenerateTree(description, scenario, 10); //Kacper, Kacper, Kornel
-            var structures = TreeMethods.GenerateStructues(root, scenario); //Kacper, Kacper, Kornel
-            this.modeledStructures = structures.ToModels(); //Ala, Filip
+            var root = TreeMethods.GenerateTree(description, scenario, maxTime);
+            var structures = TreeMethods.GenerateStructues(root, scenario);
+            this.modeledStructures = structures.ToModels();
         }
 
         /// <summary>
@@ -132,11 +144,13 @@ namespace KR_Lib
         /// Adds scenario to list of scenarios
         /// </summary>
         /// <param IScenario="scenario"></param>
-        public void AddObservation(Guid scenarioId, List<ObservationElement> observationElements) 
+        public void AddObservation(Guid scenarioId, List<ObservationElement> observationElements, int time) 
         {
             newChangesFlag = true;
             var observation = FormulaParser.ParseToFormula(observationElements);
-            ////scenarios.Add(scenario);
+            var scenario = scenarios.Where(s => s.Id == scenarioId).FirstOrDefault();
+            if (scenario != null)
+                scenario.AddObservation(new Observation(observation, time));
         }
 
         /// <summary>
@@ -194,6 +208,16 @@ namespace KR_Lib
         {
             newChangesFlag = true;
             this.description.DeleteStatement(id);
+        }
+
+        /// <summary>
+        /// Set maximal time of computation.
+        /// </summary>
+        /// <param name="time"></param>
+        public void SetMaxTime(int time)
+        {
+            newChangesFlag = true;
+            this.maxTime = time;
         }
 
         /// <summary>

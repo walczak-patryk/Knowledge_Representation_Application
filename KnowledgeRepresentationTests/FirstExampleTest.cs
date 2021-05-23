@@ -3,7 +3,6 @@ using KR_Lib.Queries;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using FluentAssertions;
 using Action = KR_Lib.DataStructures.Action;
-using KR_Lib.Descriptions;
 using KR_Lib.Statements;
 using KR_Lib.DataStructures;
 using KR_Lib.Formulas;
