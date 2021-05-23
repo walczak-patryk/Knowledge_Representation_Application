@@ -9,6 +9,7 @@ namespace KR_Lib.Statements
 {
     public class ReleaseStatement : Statement
     {
+
         private Fluent fluent;
         private IFormula formulaIf;
         bool ifFlag = false;
@@ -45,5 +46,6 @@ namespace KR_Lib.Statements
             fluents.Find(f => f.Name.Equals(fluent.Name)).State = !fluents.Find(f => f.Name.Equals(fluent.Name)).State;
             return new State(currentActions, fluents, impossibleActions);
         }
+
     }
 }
