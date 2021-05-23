@@ -76,9 +76,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Helpers\ExpressionView.xaml.cs">
-      <DependentUpon>ExpressionView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Queries\ActionQuery.xaml.cs">
       <DependentUpon>ActionQuery.xaml</DependentUpon>
     </Compile>
@@ -109,10 +106,6 @@
     <Compile Include="Statements\TriggerStatement.xaml.cs">
       <DependentUpon>TriggerStatement.xaml</DependentUpon>
     </Compile>
-    <Page Include="Helpers\ExpressionView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -199,6 +192,8 @@
       <Name>KnowledgeRepresentationLib</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Helpers\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
