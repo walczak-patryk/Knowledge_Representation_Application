@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Action = KR_Lib.DataStructures.Action;
 using KR_Lib;
+using KR_Lib.Scenarios;
 
 namespace KnowledgeRepresentationInterface
 {
@@ -268,7 +269,6 @@ namespace KnowledgeRepresentationInterface
                 }
             }
             this.scenario.name = ScenarioName_TextBox.Text;
-            this.scenarios.Add(this.scenario);
             TreeViewItem new_scenario = new TreeViewItem();
             new_scenario.Header = ScenarioName_TextBox.Text;
             new_scenario.Tag = scenario.Id.ToString();
@@ -287,6 +287,23 @@ namespace KnowledgeRepresentationInterface
                 new_subitem.Tag = item.Id;
                 new_scenario.Items.Add(new_subitem);
             }
+
+            Scenario engine_scenario = new Scenario(this.scenario.name);
+            this.scenario.Id = engine_scenario.Id;
+            this.engine.AddScenario(engine_scenario);
+            foreach(var elem in this.scenario.items)
+            {
+                if(elem.ActionOccurence != null)
+                {
+                    engine_scenario.ActionOccurrences.Add(elem.ActionOccurence_engine);
+                }
+                else
+                {
+                    this.engine.AddObservation(engine_scenario.Id, elem.observationElements, elem.Moment_int);
+                }
+            }
+
+            this.scenarios.Add(this.scenario);
             this.scenario = new ScenarioGUI();
             Scenario_ListView.ItemsSource = this.scenario.items;
             Scenario_ListView.Items.Refresh();
@@ -303,13 +320,19 @@ namespace KnowledgeRepresentationInterface
                 MessageBox.Show("You have to select an action to add!");
                 return;
             }
-            int moment = 0;
-            if(Action_Occurences_Moment_UIntUpDown.Value != null)
+            if(Action_Occurences_Moment_UIntUpDown.Value == null)
             {
-                moment = (int)Action_Occurences_Moment_UIntUpDown.Value;
+                MessageBox.Show("The moment value cannot be empty!");
+                return;
             }
-
-            this.scenario.items.Add(new ScenarioItem(moment.ToString(),action.Name, "", ""));
+            if (Action_Occurences_Duration_UIntUpDown.Value == null)
+            {
+                MessageBox.Show("The duration value cannot be empty!");
+                return;
+            }
+            int moment = (int)Action_Occurences_Moment_UIntUpDown.Value;
+            int duration = (int)Action_Occurences_Duration_UIntUpDown.Value;
+            this.scenario.items.Add(new ScenarioItem(action.Name,action,moment,duration, "", null));
             Scenario_ListView.Items.Refresh();
         }
 
@@ -329,12 +352,13 @@ namespace KnowledgeRepresentationInterface
                 MessageBox.Show("The expression is not valid!");
                 return;
             }
-            int moment = 0;
-            if (Observations_UIntUpDown.Value != null)
+            if (Observations_UIntUpDown.Value == null)
             {
-                moment = (int)Observations_UIntUpDown.Value;
+                MessageBox.Show("The moment value cannot be empty!");
+                return;
             }
-            this.scenario.items.Add(new ScenarioItem(moment.ToString(), "", this.scenario_obs.GetContent(), ""));
+            int moment = (int)Observations_UIntUpDown.Value;
+            this.scenario.items.Add(new ScenarioItem(null,null,moment,0,this.scenario_obs.GetContent(), this.scenario_obs.scenarioObservation));
             Scenario_ListView.Items.Refresh();
             this.scenario_obs.Clear_Control();
         }
@@ -437,16 +461,16 @@ namespace KnowledgeRepresentationInterface
 
         private void AddFluentButton_Click(object sender, RoutedEventArgs e)
         {
-            string name = fluentName.Content;
-            fluents.add(new Fluent(name));
+            //string name = fluentName.Content;
+            //fluents.add(new Fluent(name));
         }
 
         private void AddActionButton_Click(object sender, RoutedEventArgs e)
         {
-            string Name = actionNameTextBox.Content;
+            //string Name = actionNameTextBox.Content;
             //int actionTime = Action_Duration_UIntUpDown.Content;
 
-            actions.add(new Action)
+            //actions.add(new Action)
         }
     }
 }
