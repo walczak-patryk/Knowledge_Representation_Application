@@ -23,30 +23,20 @@ namespace KR_Lib.Statements
             }
         }
 
-        public override bool CheckStatement(Action currentAction, List<Fluent> fluents, List<Action> impossibleActions, int time)
+        public override bool CheckStatement(ActionWithTimes currentAction, List<Fluent> fluents, List<ActionWithTimes> impossibleActions, int time)
         {
-            if (!(currentAction is ActionTime))
-            {
-                throw new Exception("Niewłaściwy typ w CauseStatement: potrzebny ActionTime");
-            }
-            var actionTime = (currentAction as ActionTime);
             // if działa aktualnie tylko z formula o wartości true
             if (ifFlag)
             {
-                return actionTime == action && formulaIf.Evaluate() == true;
+                return currentAction == action && formulaIf.Evaluate() == true;
             }
 
-            return actionTime == action;
+            return currentAction == action;
         }
 
-        public override State DoStatement(List<Action> currentActions, List<Fluent> fluents, List<Action> impossibleActions)
+        public override State DoStatement(List<ActionWithTimes> currentActions, List<Fluent> fluents, List<ActionWithTimes> impossibleActions)
         {
             var currentAction = currentActions[0];
-            // zmiana stanu fluentu na przeciwny
-            if (!(currentAction is ActionTime))
-            {
-                throw new Exception("Niewłaściwy typ w CauseStatement: potrzebny ActionTime");
-            }
             foreach (Fluent fluent in formulaCaused.GetFluents())
             {
                 fluents.Find(f => f.Name.Equals(fluent.Name)).State = !fluents.Find(f => f.Name.Equals(fluent.Name)).State;

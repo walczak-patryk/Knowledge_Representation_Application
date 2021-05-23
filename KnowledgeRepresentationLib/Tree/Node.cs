@@ -1,59 +1,25 @@
-﻿using KR_Lib.Descriptions;
-using KR_Lib.Statements;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace KR_Lib.Tree
 {
     public class Node
     {
-        Node parent;
-        public List<Node> children;
-        public State currentState { get; }
-        public int time;
+        private Node parent;
+        public List<Node> Children { get; }
+        public State CurrentState { get; }
+        public int Time { get; set; }
         
         public Node(Node parent, State currentState, int time)
         {
             this.parent = parent;
-            this.currentState = currentState;
-            this.time = time;
+            this.CurrentState = currentState;
+            this.Time = time;
+            Children = new List<Node>();
         }
 
         public void addChild(Node child)
         {
-            this.children.Add(child);
-        }
-
-        public void checkDescription(List<IStatement> statements)
-        {
-            foreach (Statement statement in statements)
-            {
-                statement.CheckStatement(currentState.currentAction, currentState.Fluents, time);
-                
-                if(statement is CauseStatement)
-                {
-                    currentState.Fluents = statement.DoStatement(currentState.currentAction, currentState.Fluents);
-
-                } else if (statement is InvokeStatement)
-                {
-                    currentState.currentAction = statement.DoStatement(currentState.currentAction, currentState.Fluents);
-
-                } else if (statement is ReleaseStatement)
-                {
-                    currentState.Fluents = statement.DoStatement(currentState.currentAction, currentState.Fluents);
-
-                } else if (statement is TriggerStatement)
-                {
-                    currentState.currentAction = statement.DoStatement(currentState.currentAction, currentState.Fluents);
-
-                } else if (statement is ImpossibleAtStatement)
-                {
-
-                } else if (statement is ImpossibleIfStatement)
-                {
-
-                }
-            }
-        }
+            this.Children.Add(child);
+        }      
     }
 }

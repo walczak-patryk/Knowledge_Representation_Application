@@ -1,7 +1,9 @@
-﻿using KR_Lib.DataStructures;
+﻿using KnowledgeRepresentationLib.Scenarios;
+using KR_Lib.DataStructures;
 using KR_Lib.Formulas;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace KR_Lib.Scenarios
 {
@@ -10,9 +12,9 @@ namespace KR_Lib.Scenarios
         string Name { get; set; }
         Guid Id { get; }
         int GetScenarioDuration();
-        (List<DataStructures.Observation>, List<DataStructures.Action>) GetScenarios(int time);
-        List<DataStructures.Observation> GetObservationsAtTime(int time);
-        List<DataStructures.Action> GetStartingActions(int time);
+        (List<Observation>, List<DataStructures.Action>) GetScenarios(int time);
+        List<Observation> GetObservationsAtTime(int time);
+        List<ActionWithTimes> GetStartingActions(int time);
         //List<DataStructures.Observation> observations { get; set; }
         //List<DataStructures.Action> actions { get; set; }
     }
@@ -20,71 +22,62 @@ namespace KR_Lib.Scenarios
     {
         public string Name { get; set; }
         public Guid Id { get; }
-        public List<DataStructures.Observation> Observations 
-        { 
-            get; 
-            set; 
+        public List<Observation> Observations
+        {
+            get;
+            set;
         }
-        public List<ActionWithTimes> ActionsWithTimes
-        { 
-            get; 
-            set; 
+        public List<ActionOccurrence> ActionOccurrences
+        {
+            get;
+            set;
         }
         public Scenario() { }
         public Scenario(string name)
         {
             this.Name = name;
             this.Id = Guid.NewGuid();
-            this.Observations = new List<DataStructures.Observation>();
-            this.ActionsWithTimes = new List<ActionWithTimes>();
+            this.Observations = new List<Observation>();
+            this.ActionOccurrences = new List<ActionOccurrence>();
         }
         public void addObservation(string name, IFormula formula, int time)
         {
-            DataStructures.Observation OBS = new DataStructures.Observation(formula, time);
+            Observation OBS = new Observation(formula, time);
             Observations.Add(OBS);
         }
         public void addAction(string name, int startTime, int durationTime)
         {
-            DataStructures.ActionWithTimes ACS = new DataStructures.ActionWithTimes(name, startTime, durationTime);
-            ActionsWithTimes.Add(ACS);
+            var actionOccurrence = new ActionOccurrence(name, startTime, durationTime);
+            ActionOccurrences.Add(actionOccurrence);
         }
-        public (List<DataStructures.Observation>, List<DataStructures.Action>) GetScenarios(int time)
+        public (List<Observation>, List<DataStructures.Action>) GetScenarios(int time)
         {
-            List<DataStructures.Observation> reObservations = new List<DataStructures.Observation>();
+            List<Observation> reObservations = new List<Observation>();
             List<DataStructures.Action> retActions = new List<DataStructures.Action>();
-            foreach (DataStructures.Observation obs in Observations)
+            foreach (Observation obs in Observations)
             {
                 if (obs.Time == time)
                 {
                     reObservations.Add(obs);
                 }
             }
-            foreach (DataStructures.ActionWithTimes acs in ActionsWithTimes)
+            foreach (ActionWithTimes acs in ActionOccurrences)
             {
                 if (acs.StartTime <= time && acs.StartTime + acs.DurationTime >= time)
                 {
                     retActions.Add(acs);
                 }
             }
-            (List<DataStructures.Observation>, List<DataStructures.Action>) scenario = (reObservations, retActions);
+            (List<Observation>, List<DataStructures.Action>) scenario = (reObservations, retActions);
             return scenario;
         }
 
-        public List<DataStructures.Observation> GetObservationsAtTime(int time)
+        public List<Observation> GetObservationsAtTime(int time)
         {
-            List<DataStructures.Observation> observations = new List<DataStructures.Observation>();
-            foreach (DataStructures.Observation obs in observations)
-            {
-                if (obs.Time == time)
-                {
-                    observations.Add(obs);
-                }
-            }
-
-            return observations;
+            return Observations.Where(obs => obs.Time == time).ToList();
         }
 
-        public List<DataStructures.Observation> GetObservations()
+        public List<Observation> GetObservations()
         {
             return Observations;
         }
@@ -92,23 +85,23 @@ namespace KR_Lib.Scenarios
         {
             int durationObs = 0;
             int durationAcs = 0;
-            foreach (DataStructures.ActionWithTimes acs in ActionsWithTimes)
+            foreach (ActionWithTimes acs in ActionOccurrences)
             {
                 durationAcs += acs.DurationTime;
             }
-            foreach (DataStructures.Observation obs in Observations)
+            foreach (Observation obs in Observations)
             {
                 durationObs = Math.Max(durationObs, obs.Time);
             }
             return Math.Max(durationAcs, durationObs);
         }
 
-        public List<DataStructures.Action> GetStartingActions(int time)
+        public List<ActionWithTimes> GetStartingActions(int time)
         {
-            List<DataStructures.Action> startingActions = new List<DataStructures.Action>();
-            foreach (DataStructures.Action action in ActionsWithTimes)
+            List<ActionWithTimes> startingActions = new List<ActionWithTimes>();
+            foreach (var action in ActionOccurrences)
             {
-                var actionT = (action as ActionWithTimes);
+                var actionT = new ActionWithTimes(action);
                 if (actionT.StartTime == time)
                 {
                     startingActions.Add(actionT);

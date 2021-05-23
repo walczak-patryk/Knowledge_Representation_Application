@@ -84,17 +84,17 @@ namespace KR_Lib
     {
         private IDescription description = new Description();
         private List<IScenario> scenarios = new List<IScenario>();
-        private int maxTime;
         private List<Action> actions = new List<Action>();
         private List<Fluent> fluents = new List<Fluent>();
         private List<IStructure> modeledStructures;
         private bool newChangesFlag = true;
         private Guid currentScenarioId;
+        private int maxTime;
 
         private void GenerateModels(IScenario scenario) 
         {
-            var root = TreeMethods.GenerateTree(description, scenario, maxTime); //Kacper, Kacper, Kornel
-            var structures = TreeMethods.GenerateStructues(root); //Kacper, Kacper, Kornel
+            var root = TreeMethods.GenerateTree(description, scenario, 10); //Kacper, Kacper, Kornel
+            var structures = TreeMethods.GenerateStructues(root, scenario); //Kacper, Kacper, Kornel
             this.modeledStructures = structures.ToModels(); //Ala, Filip
         }
 
@@ -211,6 +211,7 @@ namespace KR_Lib
             if (newChangesFlag || currentScenarioId != selectedScenario.Id )
             {
                 GenerateModels(selectedScenario);
+                currentScenarioId = selectedScenario.Id;
                 newChangesFlag = false;
             }
 

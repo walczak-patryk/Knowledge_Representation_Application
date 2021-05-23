@@ -2,7 +2,7 @@
 
 namespace KR_Lib.DataStructures
 {
-    public class Fluent
+    public class Fluent : ICloneable
     {
         public Guid Id
         {
@@ -27,9 +27,21 @@ namespace KR_Lib.DataStructures
             this.Id = Guid.NewGuid();
         }
 
+        private Fluent(string name, bool initialState, Guid guid)
+        {
+            this.Name = name;
+            this.State = initialState;
+            this.Id = Id;
+        }
+
         public override string ToString()
         {
             return Name;
+        }
+
+        public object Clone()
+        {
+            return new Fluent(Name, State, Id);
         }
     }
 }

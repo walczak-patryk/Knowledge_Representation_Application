@@ -28,7 +28,9 @@ namespace KR_Lib.Descriptions
         public List<IStatement> statements;
 
         public Description()
-        {}
+        {
+            statements = new List<IStatement>();
+        }
 
         #region Public Methods
         /// <summary>

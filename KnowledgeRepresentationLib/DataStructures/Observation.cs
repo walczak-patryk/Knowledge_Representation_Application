@@ -42,18 +42,11 @@ namespace KR_Lib.DataStructures
         public object Clone()
         {
             Observation Observation = new Observation();
-            Observation.Name = Name;
             Observation.Id = Id;
             Observation.Form = Form;
             Observation.Time = Time;
 
             return Observation;
-        }
-        public override string ToString()
-        {
-            //string description = "Action (" + Id + ", " + Duration + ") with start time: " + StartAt;
-            //return description;
-            return "(" + this.Name + ", " + this.Time + ")";
         }
     }
 }

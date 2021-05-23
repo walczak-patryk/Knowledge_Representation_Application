@@ -1,13 +1,14 @@
-﻿using System;
+﻿
 using System.Collections.Generic;
 using KR_Lib.DataStructures;
+using Action = KR_Lib.DataStructures.Action;
 
 namespace KR_Lib.Tree
 {
     public class State
     {
 
-        public List<DataStructures.Action> currentActions
+        public List<ActionWithTimes> CurrentActions
         {
             get;
             set;
@@ -18,17 +19,17 @@ namespace KR_Lib.Tree
             set;               
         }
 
-        public List<DataStructures.Action> impossibleActions
+        public List<ActionWithTimes> ImpossibleActions
         {
             get;
             set;
         }
 
-        public State(List<DataStructures.Action> currentActions, List<Fluent> fluents, List<DataStructures.Action> impossibleActions)
+        public State(List<ActionWithTimes> currentActions, List<Fluent> fluents, List<ActionWithTimes> impossibleActions)
         {
-            this.currentActions = currentActions;
+            this.CurrentActions = currentActions;
             this.Fluents = fluents;
-            this.impossibleActions = impossibleActions;
+            this.ImpossibleActions = impossibleActions;
         }
 
     }

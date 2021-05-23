@@ -14,14 +14,15 @@ namespace KR_Lib.Statements
             this.time = time;
         }
 
-        public override bool CheckStatement(Action currentAction, List<Fluent> fluents, List<Action> impossibleActions, int currentTime)
+        public override bool CheckStatement(ActionWithTimes currentAction, List<Fluent> fluents, List<ActionWithTimes> impossibleActions, int currentTime)
         {
             return time == currentTime;
         }
 
-        public override State DoStatement(List<Action> currentActions, List<Fluent> fluents, List<Action> impossibleActions)
+        public override State DoStatement(List<ActionWithTimes> currentActions, List<Fluent> fluents, List<ActionWithTimes> impossibleActions)
         {
-            impossibleActions.Add(action);
+            var actionWTime = (action as ActionWithTimes);
+            impossibleActions.Add(actionWTime);
             return new State(currentActions, fluents, impossibleActions);
         }
     }

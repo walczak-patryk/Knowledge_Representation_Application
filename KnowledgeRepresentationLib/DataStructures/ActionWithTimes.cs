@@ -1,8 +1,9 @@
-﻿using System;
+﻿using KnowledgeRepresentationLib.Scenarios;
+using System;
 
 namespace KR_Lib.DataStructures
 {
-    public class ActionWithTimes : Action
+    public class ActionWithTimes : Action, ICloneable
     {
         public int StartTime
         {
@@ -17,16 +18,20 @@ namespace KR_Lib.DataStructures
         private ActionWithTimes() { }
         public ActionWithTimes(string name, int durationTime, int startTime) : base(name)
         {
-            this.Name = name;
             this.StartTime = startTime;
             this.DurationTime = durationTime;
         }
 
-        protected ActionWithTimes(Action action, int durationTime, int startTime) : base(name)
+        internal ActionWithTimes(Action action, int durationTime, int startTime) : base(action)
         {
-            this.Name = action.Name;
             this.StartTime = startTime;
             this.DurationTime = durationTime;
+        }
+
+        internal ActionWithTimes(ActionOccurrence action) : base(action)
+        {
+            this.StartTime = action.StartTime;
+            this.DurationTime = action.DurationTime;
         }
 
         public override bool Equals(object obj)
@@ -75,6 +80,11 @@ namespace KR_Lib.DataStructures
             //string description = "Action (" + Id + ", " + Duration + ") with start time: " + StartAt;
             //return description;
             return "(" + this.Name + ", " + this.DurationTime + ")";
+        }
+
+        public object Clone()
+        {
+            return new ActionWithTimes(this.Name, this.DurationTime, this.StartTime);
         }
     }
 }

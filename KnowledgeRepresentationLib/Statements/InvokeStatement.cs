@@ -15,7 +15,7 @@ namespace KR_Lib.Statements
         bool ifFlag = false;
         bool waitTimeFlag = false;
 
-        public InvokeStatement(ActionWithTimes action, ActionTime actionInvoked, IFormula formulaIf = null, int? waitTime = null) : base(action)
+        public InvokeStatement(ActionTime action, ActionTime actionInvoked, IFormula formulaIf = null, int? waitTime = null) : base(action)
         {
             this.actionInvoked = actionInvoked;
             if (formulaIf != null)
@@ -31,32 +31,38 @@ namespace KR_Lib.Statements
             }
         }
 
-        public override bool CheckStatement(Action currentAction, List<Fluent> fluents, List<Action> impossibleActions, int currentTime)
+        public override bool CheckStatement(ActionWithTimes currentAction, List<Fluent> fluents, List<ActionWithTimes> impossibleActions, int currentTime)
         {
+            // sprawdzić current action == action
             if (!(currentAction is ActionWithTimes))
             {
                 throw new Exception("Niewłaściwy typ w InvokeStatement: potrzebny ActionWithTimes");
             }
 
             var actionWithTimes = (currentAction as ActionWithTimes);
-
-            if(ifFlag)
+            bool result = true;
+            int? startTime = actionWithTimes.GetEndTime() + waitTime;
+            if (ifFlag)
             {
                 if (waitTimeFlag)
                 {
-                    return formulaIf.Evaluate() == true && currentTime == actionWithTimes.GetEndTime() + waitTime && !impossibleActions.Contains(actionInvoked);
+                    result = formulaIf.Evaluate() && currentTime == startTime;
                 } else
                 {
-                    return formulaIf.Evaluate() == true && !impossibleActions.Contains(actionInvoked);
+                    result =  formulaIf.Evaluate();
                 }
             }
 
-            return !impossibleActions.Contains(actionInvoked);
+            if (result)
+            {
+                this.actionInvoked = new ActionWithTimes(actionInvoked, (actionInvoked as ActionTime).Time, startTime.Value);
+            }
+            return result;
         }
 
-        public override State DoStatement(List<Action> currentActions, List<Fluent> fluents, List<Action> impossibleActions)
+        public override State DoStatement(List<ActionWithTimes> currentActions, List<Fluent> fluents, List<ActionWithTimes> impossibleActions)
         {
-            currentActions.Add(actionInvoked);
+            currentActions.Add(actionInvoked as ActionWithTimes);
             return new State(currentActions, fluents, impossibleActions);
         }
     }

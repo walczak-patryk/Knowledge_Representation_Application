@@ -11,7 +11,7 @@ namespace KR_Lib.DataStructures
         }
       
         public ActionTime() { }
-        public ActionTime(Action action, int time) : base(action.Name)
+        public ActionTime(Action action, int time) : base(action)
         {
             this.Time = time;
         }
