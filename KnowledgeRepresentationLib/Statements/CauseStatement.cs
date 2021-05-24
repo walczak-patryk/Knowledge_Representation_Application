@@ -25,10 +25,14 @@ namespace KR_Lib.Statements
 
         public override bool CheckStatement(ActionWithTimes currentAction, List<Fluent> fluents, List<ActionWithTimes> impossibleActions, int time)
         {
+            if (action != currentAction)
+            {
+                return false;
+            }
             // if działa aktualnie tylko z formula o wartości true
             if (ifFlag)
             {
-                return currentAction == action && formulaIf.Evaluate() == true;
+                return currentAction == action && formulaIf.Evaluate();
             }
 
             return currentAction == action;

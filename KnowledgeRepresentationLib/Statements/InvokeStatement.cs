@@ -33,15 +33,13 @@ namespace KR_Lib.Statements
 
         public override bool CheckStatement(ActionWithTimes currentAction, List<Fluent> fluents, List<ActionWithTimes> impossibleActions, int currentTime)
         {
-            // sprawdzić current action == action
-            if (!(currentAction is ActionWithTimes))
+            if (action != currentAction)
             {
-                throw new Exception("Niewłaściwy typ w InvokeStatement: potrzebny ActionWithTimes");
+                return false;
             }
 
-            var actionWithTimes = (currentAction as ActionWithTimes);
             bool result = true;
-            int? startTime = actionWithTimes.GetEndTime() + waitTime;
+            int? startTime = currentAction.GetEndTime() + waitTime;
             if (ifFlag)
             {
                 if (waitTimeFlag)
