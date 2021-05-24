@@ -76,11 +76,30 @@ namespace KR_Lib.Structures
 
         public Structure ToModel()
         {
-            return new Model(EndTime);
+            FinishStructure();
+
+            bool modelCheck = true;
+
+            for(int i = 0; i < EndTime; i++)
+            {
+                foreach(var occ in OcclusionRegions)
+                {
+                    if (!(H(new Formula(occ.Item1), occ.Item3) != H(new Formula(occ.Item1), occ.Item3 - 1)))
+                        modelCheck = false;
+                }
+            }
+
+            if (modelCheck)
+                return new Model(EndTime);
+            else
+                return new InconsistentStructure();
         }
 
         public bool H(IFormula formula, int time)
-        {           
+        {
+            if (!TimeFluents.ContainsKey(time))
+                return false;
+
             var timefluents = TimeFluents[time];
 
             var formFluents = formula.GetFluents();
@@ -98,6 +117,9 @@ namespace KR_Lib.Structures
         public List<Fluent> O(ActionWithTimes action, int time)
         {
             if (action.StartTime > time || action.GetEndTime() < time)
+                return null;
+
+            if (!TimeFluents.ContainsKey(time))
                 return null;
 
             var result = new List<Fluent>();
