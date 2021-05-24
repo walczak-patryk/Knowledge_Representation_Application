@@ -19,11 +19,11 @@ namespace KR_Lib.Statements
             return formulaIf.Evaluate();
         }
 
-        public override State DoStatement(List<ActionWithTimes> currentActions, List<Fluent> fluents, List<ActionWithTimes> impossibleActions)
+        public override State DoStatement(List<ActionWithTimes> currentActions, List<Fluent> fluents, List<ActionWithTimes> impossibleActions, List<ActionWithTimes> futureActions)
         {
             var actionWTime = (action as ActionWithTimes);
             impossibleActions.Add(actionWTime);
-            return new State(currentActions, fluents, impossibleActions);
+            return new State(currentActions, fluents, impossibleActions, futureActions);
         }
     }
 }

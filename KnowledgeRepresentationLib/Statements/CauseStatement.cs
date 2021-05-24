@@ -38,14 +38,14 @@ namespace KR_Lib.Statements
             return currentAction == action;
         }
 
-        public override State DoStatement(List<ActionWithTimes> currentActions, List<Fluent> fluents, List<ActionWithTimes> impossibleActions)
+        public override State DoStatement(List<ActionWithTimes> currentActions, List<Fluent> fluents, List<ActionWithTimes> impossibleActions, List<ActionWithTimes> futureActions)
         {
             var currentAction = currentActions[0];
             foreach (Fluent fluent in formulaCaused.GetFluents())
             {
                 fluents.Find(f => f.Name.Equals(fluent.Name)).State = !fluents.Find(f => f.Name.Equals(fluent.Name)).State;
             }
-            return new State(currentActions, fluents, impossibleActions);
+            return new State(currentActions, fluents, impossibleActions, futureActions);
         }
 
     }

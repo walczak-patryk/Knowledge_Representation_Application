@@ -52,7 +52,7 @@ namespace KR_Lib
             {
                 fluents.AddRange(observation.Form.GetFluents());
             }
-            return new Node(null, new State(actions, fluents, impossibleActions), 0);
+            return new Node(null, new State(actions, fluents, impossibleActions, new List<ActionWithTimes>()), 0);
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace KR_Lib
         {
             List<State> states = new List<State>();
             List<DataStructures.ActionWithTimes> newActions = GetAllActionsAtTime(scenario, parentState, time);
-            State newState = new State(newActions, parentState.Fluents, parentState.ImpossibleActions);
+            State newState = new State(newActions, parentState.Fluents, parentState.ImpossibleActions, parentState.FutureActions);
             foreach (Statement statement in statements)
             {
                 statement.CheckStatement(newActions[0], newState.Fluents, newState.ImpossibleActions, time);
@@ -91,20 +91,20 @@ namespace KR_Lib
                     {
                         states.Add(newState);
                         // rozgałęzienie - po releasie może być stary stan albo zmieniony
-                        states.Add(statement.DoStatement(newState.CurrentActions, newState.Fluents, newState.ImpossibleActions));
+                        states.Add(statement.DoStatement(newState.CurrentActions, newState.Fluents, newState.ImpossibleActions, newState.FutureActions));
                     }
                     else
                     {
                         foreach (State state in states)
                         { 
                             // tworzenie rozgałęzień po releasie
-                            states.Add(statement.DoStatement(newState.CurrentActions, parentState.Fluents, parentState.ImpossibleActions));
+                            states.Add(statement.DoStatement(newState.CurrentActions, parentState.Fluents, parentState.ImpossibleActions, newState.FutureActions));
                         }
                     }
                 }
                 else
                 { 
-                    states.Add(statement.DoStatement(newState.CurrentActions, newState.Fluents, newState.ImpossibleActions));
+                    states.Add(statement.DoStatement(newState.CurrentActions, newState.Fluents, newState.ImpossibleActions, newState.FutureActions));
                 }
             }
 
@@ -119,7 +119,7 @@ namespace KR_Lib
 
         /// <summary>
         /// Zwraca listę wszystkich akcji, które będą trwały w danej chwili
-        /// - zarówno niezakończonych z poprzedniej chwili jak i tych, które się rozpoczynają
+        /// - zarówno niezakończonych z poprzedniej chwili jak i tych, które się rozpoczynają (również z listy FutureActions - ze statementów)
         /// </summary>
         /// <param name="scenario"></param>
         /// <param name="parentState"></param>
@@ -129,13 +129,19 @@ namespace KR_Lib
             List<DataStructures.ActionWithTimes> actions = new List<DataStructures.ActionWithTimes>();
             foreach (DataStructures.ActionWithTimes action in parentState.CurrentActions)
             {
-                var actionWTime = (action as ActionWithTimes);
-                if (actionWTime.GetEndTime() >= time)
+                if (action.GetEndTime() >= time)
                 {
                     actions.Add(action);
                 }
             }
             actions.AddRange(scenario.GetStartingActions(time));
+            foreach (DataStructures.ActionWithTimes futureAction in parentState.FutureActions)
+            {
+                if (futureAction.StartTime == time)
+                {
+                    actions.Add(futureAction);
+                }
+            }
 
             return actions;
         }

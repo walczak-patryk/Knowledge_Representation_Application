@@ -25,11 +25,18 @@ namespace KR_Lib.Tree
             set;
         }
 
-        public State(List<ActionWithTimes> currentActions, List<Fluent> fluents, List<ActionWithTimes> impossibleActions)
+        public List<ActionWithTimes> FutureActions
+        {
+            get;
+            set;
+        }
+
+        public State(List<ActionWithTimes> currentActions, List<Fluent> fluents, List<ActionWithTimes> impossibleActions, List<ActionWithTimes> futureActions)
         {
             this.CurrentActions = currentActions;
             this.Fluents = fluents;
             this.ImpossibleActions = impossibleActions;
+            this.FutureActions = futureActions;
         }
 
     }
