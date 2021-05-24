@@ -81,38 +81,40 @@ namespace KR_Lib
         {
             List<State> states = new List<State>();
             List<DataStructures.ActionWithTimes> newActions = GetAllActionsAtTime(scenario, parentState, time);
-            State newState = new State(newActions, parentState.Fluents, parentState.ImpossibleActions, parentState.FutureActions);
+            State newState = new State(newActions, parentState.Fluents.Select(f => (Fluent)f.Clone()).ToList(), parentState.ImpossibleActions, parentState.FutureActions);
             foreach (Statement statement in statements)
             {
-                statement.CheckStatement(newActions[0], newState.Fluents, newState.ImpossibleActions, time);
+                // w przypadkach gdy coś zachodzi w t+1 - bierze się stan rodzica
+                if (statement is CauseStatement || statement is ReleaseStatement)
+                {
+                    statement.CheckStatement(parentState.CurrentActions[0], parentState.Fluents, parentState.ImpossibleActions, time - 1);
+                }
+                else 
+                {
+                    statement.CheckStatement(newActions[0], newState.Fluents, newState.ImpossibleActions, time);
+                }
                 if (statement is ReleaseStatement)
                 {
                     if (states.Count == 0)
                     {
-                        states.Add(newState);
                         // rozgałęzienie - po releasie może być stary stan albo zmieniony
-                        states.Add(statement.DoStatement(newState.CurrentActions, newState.Fluents, newState.ImpossibleActions, newState.FutureActions));
+                        states.Add(statement.DoStatement(newState.CurrentActions, newState.Fluents.Select(f => (Fluent)f.Clone()).ToList(), newState.ImpossibleActions, newState.FutureActions));
                     }
                     else
                     {
                         foreach (State state in states)
                         { 
-                            // tworzenie rozgałęzień po releasie
-                            states.Add(statement.DoStatement(newState.CurrentActions, parentState.Fluents, parentState.ImpossibleActions, newState.FutureActions));
+                            // tworzenie rozgałęzień po releasie dla każdego z obecnych już stanów
+                            states.Add(statement.DoStatement(newState.CurrentActions, newState.Fluents.Select(f => (Fluent)f.Clone()).ToList(), newState.ImpossibleActions, newState.FutureActions));
                         }
                     }
                 }
                 else
                 { 
-                    states.Add(statement.DoStatement(newState.CurrentActions, newState.Fluents, newState.ImpossibleActions, newState.FutureActions));
+                    newState = statement.DoStatement(newState.CurrentActions, newState.Fluents, newState.ImpossibleActions, newState.FutureActions);
                 }
             }
-
-            // jeśli nic się nie zmieniło - dodajemy stan taki sam jak u rodzica
-            if (states.Count == 0)
-            {
-                states.Add(newState);
-            }    
+            states.Add(newState);
 
             return states;
         }
