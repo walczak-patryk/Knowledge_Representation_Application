@@ -58,10 +58,10 @@ namespace KR_Lib.Statements
             return result;
         }
 
-        public override State DoStatement(List<ActionWithTimes> currentActions, List<Fluent> fluents, List<ActionWithTimes> impossibleActions)
+        public override State DoStatement(List<ActionWithTimes> currentActions, List<Fluent> fluents, List<ActionWithTimes> impossibleActions, List<ActionWithTimes> futureActions)
         {
-            currentActions.Add(actionInvoked as ActionWithTimes);
-            return new State(currentActions, fluents, impossibleActions);
+            futureActions.Add(actionInvoked as ActionWithTimes);
+            return new State(currentActions, fluents, impossibleActions, futureActions);
         }
     }
 }
