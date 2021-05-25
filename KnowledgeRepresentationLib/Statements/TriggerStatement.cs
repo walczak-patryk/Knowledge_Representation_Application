@@ -8,6 +8,7 @@ namespace KR_Lib.Statements
     public class TriggerStatement : Statement
     {
         IFormula formulaIf;
+        private bool doFlag = false;
 
         public TriggerStatement(Action action, IFormula formulaIf) : base(action)
         {
@@ -17,12 +18,17 @@ namespace KR_Lib.Statements
         public override bool CheckStatement(ActionWithTimes currentAction, List<Fluent> fluents, List<ActionWithTimes> impossibleActions, int time)
         {
             formulaIf.SetFluentsStates(fluents);
-            return formulaIf.Evaluate();
+            doFlag = formulaIf.Evaluate();
+            return doFlag;
         }
 
         public override State DoStatement(List<ActionWithTimes> currentActions, List<Fluent> fluents, List<ActionWithTimes> impossibleActions, List<ActionWithTimes> futureActions)
         {
-            currentActions.Add(action as ActionWithTimes);
+            if (doFlag)
+            {
+                currentActions.Add(action as ActionWithTimes);
+            }
+            
             return new State(currentActions, fluents, impossibleActions, futureActions);
         }
     }

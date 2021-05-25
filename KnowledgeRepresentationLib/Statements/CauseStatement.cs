@@ -11,6 +11,7 @@ namespace KR_Lib.Statements
     {
         private IFormula formulaCaused;
         private IFormula formulaIf;
+        private bool doFlag = false;
         bool ifFlag = false;
 
         public CauseStatement(ActionTime action, IFormula formulaCaused, IFormula formulaIf = null) : base(action)
@@ -36,16 +37,22 @@ namespace KR_Lib.Statements
                 return currentAction == action && formulaIf.Evaluate();
             }
 
-            return currentAction == action;
+            doFlag = currentAction == action;
+
+            return doFlag;
         }
 
         public override State DoStatement(List<ActionWithTimes> currentActions, List<Fluent> fluents, List<ActionWithTimes> impossibleActions, List<ActionWithTimes> futureActions)
         {
-            var currentAction = currentActions[0];
-            foreach (Fluent fluent in formulaCaused.GetFluents())
+            if (doFlag)
             {
-                fluents.Find(f => f.Name.Equals(fluent.Name)).State = !fluents.Find(f => f.Name.Equals(fluent.Name)).State;
+                var currentAction = currentActions[0];
+                foreach (Fluent fluent in formulaCaused.GetFluents())
+                {
+                    fluents.Find(f => f.Name.Equals(fluent.Name)).State = !fluents.Find(f => f.Name.Equals(fluent.Name)).State;
+                }
             }
+
             return new State(currentActions, fluents, impossibleActions, futureActions);
         }
 

@@ -12,6 +12,7 @@ namespace KR_Lib.Statements
 
         private Fluent fluent;
         private IFormula formulaIf;
+        private bool doFlag = false;
         bool ifFlag = false;
 
         public ReleaseStatement(Action action, Fluent fluent, IFormula formulaIf) : base(action)
@@ -28,21 +29,28 @@ namespace KR_Lib.Statements
         {
             if (action != currentAction)
             {
-                return false;
+                doFlag = false;
+                return doFlag;
             }
 
             if (ifFlag)
             {
                 formulaIf.SetFluentsStates(fluents);
-                return currentAction.GetEndTime() == currentTime && formulaIf.Evaluate() == true;
+                doFlag = currentAction.GetEndTime() == currentTime && formulaIf.Evaluate() == true;
+                return doFlag;
             }
-
-            return currentAction.GetEndTime() == currentTime;
+            
+            doFlag = currentAction.GetEndTime() == currentTime;
+            return doFlag;
         }
 
         public override State DoStatement(List<ActionWithTimes> currentActions, List<Fluent> fluents, List<ActionWithTimes> impossibleActions, List<ActionWithTimes> futureActions)
         {
-            fluents.Find(f => f.Name.Equals(fluent.Name)).State = !fluents.Find(f => f.Name.Equals(fluent.Name)).State;
+            if (doFlag)
+            {
+                fluents.Find(f => f.Name.Equals(fluent.Name)).State = !fluents.Find(f => f.Name.Equals(fluent.Name)).State;
+            }
+            
             return new State(currentActions, fluents, impossibleActions, futureActions);
         }
 
