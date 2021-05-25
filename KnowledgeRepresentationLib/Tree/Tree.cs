@@ -21,7 +21,7 @@ namespace KR_Lib
         public static Node GenerateTree(IDescription description, IScenario scenario, int maxTime)
         {
             Node root = CreateRoot(description, scenario);
-            List<Node> lastLevelNodes = new List<Node>() { root };
+            List<Node> lastLevelNodes = root.Children;
             List<Node> nextLevelNodes = new List<Node>();
             for (int i = 1; i <= maxTime; i++)
             {
@@ -37,22 +37,72 @@ namespace KR_Lib
         }
 
         /// <summary>
-        /// Tworzy korzeń drzewa możliwości na podstawie domeny i scenariusza
+        /// Tworzy korzeń drzewa z czasem -1 oraz jego dzieci
         /// </summary>
         /// <param name="description"></param>
         /// <param name="scenario"></param>
         /// <returns></returns>
         public static Node CreateRoot(IDescription description, IScenario scenario)
         {
+            Node root = new Node(null, new State(new List<ActionWithTimes>(), new List<Fluent>(), new List<ActionWithTimes>(), new List<ActionWithTimes>()), -1);
             List<DataStructures.ActionWithTimes> actions = scenario.GetStartingActions(0);
             List<Observation> observations = scenario.GetObservationsAtTime(0);
-            List<Fluent> fluents = new List<Fluent>();
-            List<ActionWithTimes> impossibleActions = new List<ActionWithTimes>();
             foreach(Observation observation in observations)
             {
-                fluents.AddRange(observation.Form.GetFluents());
+                List<List<Fluent>> fluentsPermutations = GetAllFluentsCombinations(observation);
+                foreach(List<Fluent> fluents in fluentsPermutations)
+                {
+                    State newState = new State(actions, fluents, new List<ActionWithTimes>(), new List<ActionWithTimes>());
+                    List<State> newStates = CheckDescription(scenario, description.GetStatements(), root.CurrentState, newState, 0);
+                    foreach (State state in newStates)
+                    {
+                        Node newNode = new Node(root, state, 0);
+                        root.addChild(newNode);
+                    }
+                }
             }
-            return new Node(null, new State(actions, fluents, impossibleActions, new List<ActionWithTimes>()), 0);
+
+            return root;
+        }
+
+        /// <summary>
+        /// Tworzenie wszystkich kombinacji wartościowań fluentów z danej obserwacji
+        /// </summary>
+        /// <param name="observation"></param>
+        /// <returns></returns>
+        public static List<List<Fluent>> GetAllFluentsCombinations(Observation observation)
+        {
+            List<List<Fluent>> fluentsCombinations = new List<List<Fluent>>();
+            List<Fluent> fluents = observation.Form.GetFluents();
+            List<List<bool>> boolCombinations = GenerateBoolCombinations(fluents.Count());
+            foreach (List<bool> boolCombination in boolCombinations)
+            {
+                List<Fluent> fluentsCombination = new List<Fluent>();
+                for (int i=0; i<fluents.Count; i++)
+                {
+                    Fluent fluent = (Fluent)fluents[i].Clone();
+                    fluent.State = boolCombination[i];
+                    fluentsCombination.Add(fluent);
+                }
+                fluentsCombinations.Add(fluentsCombination);
+            }
+
+            return fluentsCombinations;
+        }
+
+        /// <summary>
+        /// Tworzy listę wszystkich możliwych kombinacji wartości True/False
+        /// </summary>
+        /// <param name="elementsNumber"></param>
+        /// <returns></returns>
+        public static List<List<bool>> GenerateBoolCombinations(int elementsNumber){
+            List<List<bool>> combinations = Enumerable.Range(0, (int)System.Math.Pow(2, elementsNumber)).Select(i =>
+            Enumerable.Range(0, elementsNumber)
+                .Select(b => ((i & (1 << b)) > 0))
+                .ToList()
+            ).ToList();
+
+            return combinations;
         }
 
         /// <summary>
@@ -64,8 +114,11 @@ namespace KR_Lib
         /// <param name="time"></param>
         /// <returns></returns>
         public static List<Node> CreateNewNodes(IDescription description, IScenario scenario, Node parentNode, int time)
-        {   
-            List<State> newStates = CheckDescription(scenario, description.GetStatements(), parentNode.CurrentState, time);
+        {
+            State parentState = parentNode.CurrentState;
+            List<DataStructures.ActionWithTimes> newActions = GetAllActionsAtTime(scenario, parentState, time);
+            State newState = new State(newActions, parentState.Fluents.Select(f => (Fluent)f.Clone()).ToList(), parentState.ImpossibleActions, parentState.FutureActions);
+            List<State> newStates = CheckDescription(scenario, description.GetStatements(), parentState, newState, time);
             List<Node> newNodes = new List<Node>();
             foreach (State state in newStates)
             {
@@ -77,11 +130,9 @@ namespace KR_Lib
             return newNodes;
         }
 
-        public static List<State> CheckDescription(IScenario scenario, List<IStatement> statements, State parentState, int time)
+        public static List<State> CheckDescription(IScenario scenario, List<IStatement> statements, State parentState, State newState, int time)
         {
             List<State> states = new List<State>();
-            List<DataStructures.ActionWithTimes> newActions = GetAllActionsAtTime(scenario, parentState, time);
-            State newState = new State(newActions, parentState.Fluents.Select(f => (Fluent)f.Clone()).ToList(), parentState.ImpossibleActions, parentState.FutureActions);
             foreach (Statement statement in statements)
             {
                 // w przypadkach gdy coś zachodzi w t+1 - bierze się stan rodzica
@@ -91,7 +142,7 @@ namespace KR_Lib
                 }
                 else 
                 {
-                    statement.CheckStatement(newActions[0], newState.Fluents, newState.ImpossibleActions, time);
+                    statement.CheckStatement(newState.CurrentActions[0], newState.Fluents, newState.ImpossibleActions, time);
                 }
                 if (statement is ReleaseStatement)
                 {
