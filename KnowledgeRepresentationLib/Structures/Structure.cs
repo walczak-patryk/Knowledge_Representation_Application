@@ -101,15 +101,7 @@ namespace KR_Lib.Structures
                 return false;
 
             var timefluents = TimeFluents[time];
-
-            var formFluents = formula.GetFluents();
-
-            foreach(var fl in formFluents)
-            {
-                var fluent = timefluents.Find(x => x.Id == fl.Id);
-                fl.State = fluent.State;
-            }
-            
+            formula.SetFluentsStates(timefluents);
             return formula.Evaluate();
             
         }

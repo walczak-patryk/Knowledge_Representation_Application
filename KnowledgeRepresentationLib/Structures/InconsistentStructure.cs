@@ -8,7 +8,7 @@ namespace KR_Lib.Structures
 {
     public class InconsistentStructure : Structure
     {
-        public InconsistentStructure() : base(-1)
+        public InconsistentStructure() : base(int.MinValue)
         {
         }
 

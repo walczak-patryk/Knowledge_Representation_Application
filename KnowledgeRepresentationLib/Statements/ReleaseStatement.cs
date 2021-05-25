@@ -33,6 +33,7 @@ namespace KR_Lib.Statements
 
             if (ifFlag)
             {
+                formulaIf.SetFluentsStates(fluents);
                 return currentAction.GetEndTime() == currentTime && formulaIf.Evaluate() == true;
             }
 

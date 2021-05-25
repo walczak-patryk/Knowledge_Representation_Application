@@ -31,7 +31,7 @@ namespace KR_Lib.DataStructures
         {
             this.Name = name;
             this.State = initialState;
-            this.Id = Id;
+            this.Id = guid;
         }
 
         public override string ToString()
@@ -42,6 +42,13 @@ namespace KR_Lib.DataStructures
         public object Clone()
         {
             return new Fluent(Name, State, Id);
+        }
+
+        public bool Equals(Fluent fluent)
+        {
+            if (fluent.Id.Equals(this.Id))
+                return true;
+            return false;
         }
     }
 }

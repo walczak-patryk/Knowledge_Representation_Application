@@ -32,6 +32,7 @@ namespace KR_Lib.Statements
             // if działa aktualnie tylko z formula o wartości true
             if (ifFlag)
             {
+                formulaIf.SetFluentsStates(fluents);
                 return currentAction == action && formulaIf.Evaluate();
             }
 

@@ -38,5 +38,11 @@ namespace KR_Lib.Formulas
 
             return fluents;
         }
+
+        public void SetFluentsStates(List<Fluent> fluents)
+        {
+            foreach (var formula in formulas)
+                formula.SetFluentsStates(fluents);
+        }
     }
 }

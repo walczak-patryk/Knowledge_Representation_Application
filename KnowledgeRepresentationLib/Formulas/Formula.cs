@@ -8,7 +8,9 @@ namespace KR_Lib.Formulas
         bool Evaluate();
 
         List<Fluent> GetFluents();
-    
+
+        void SetFluentsStates(List<Fluent> fluents);
+
     }
 
     public class Formula : IFormula
@@ -27,6 +29,15 @@ namespace KR_Lib.Formulas
         public List<Fluent> GetFluents()
         {
             return new List<Fluent>() { this.fluent };
+        }
+
+        public  void SetFluentsStates(List<Fluent> fluents)
+        {
+            foreach(var f in fluents)
+            {
+                if (this.fluent == f)
+                    this.fluent.State = f.State;
+            }
         }
     }
 }
