@@ -136,7 +136,7 @@ namespace KR_Tests
             #endregion
 
             #region Testing
-
+            engine.SetMaxTime(10);
             bool response = engine.ExecuteQuery(query);
             response.Should().BeTrue();
 
@@ -183,7 +183,7 @@ namespace KR_Tests
             #endregion
 
             #region Testing
-
+            engine.SetMaxTime(10);
             var response = engine.ExecuteQuery(query);
             response.Should().BeTrue();
 
@@ -232,7 +232,7 @@ namespace KR_Tests
             #endregion
 
             #region Testing
-
+            engine.SetMaxTime(10);
             var response = engine.ExecuteQuery(query);
             response.Should().BeFalse();
 

@@ -259,7 +259,7 @@ namespace KR_Lib
             //dodanie elementów
 
             structure.TimeFluents[node.Time] = node.CurrentState.Fluents;
-            if (!structure.E.Contains(curAction))
+            if (curAction != null && !structure.E.Contains(curAction))
                 structure.E.Add(curAction);
             structures.Add(structure);
 
