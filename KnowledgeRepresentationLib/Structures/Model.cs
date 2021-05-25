@@ -1,8 +1,4 @@
-﻿using KnowledgeRepresentationLib.Scenarios;
-using KR_Lib.DataStructures;
-using KR_Lib.Structures;
-using System.Collections.Generic;
-using Action = KR_Lib.DataStructures.Action;
+﻿using KR_Lib.Structures;
 
 namespace KR_Lib.Queries
 {
@@ -12,6 +8,9 @@ namespace KR_Lib.Queries
         {
 
         }
+
+        public Model(Structure structure) : base(structure)
+        { }
 
         public new Structure ToModel()
         {

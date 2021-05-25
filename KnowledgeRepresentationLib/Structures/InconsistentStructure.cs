@@ -1,10 +1,4 @@
-﻿using KnowledgeRepresentationLib.Scenarios;
-using KR_Lib.DataStructures;
-using KR_Lib.Structures;
-using System.Collections.Generic;
-using Action = KR_Lib.DataStructures.Action;
-
-namespace KR_Lib.Structures
+﻿namespace KR_Lib.Structures
 {
     public class InconsistentStructure : Structure
     {
@@ -12,7 +6,7 @@ namespace KR_Lib.Structures
         {
         }
 
-        public new Structure ToModel()
+        public override Structure ToModel()
         {
             return this as InconsistentStructure;
         }

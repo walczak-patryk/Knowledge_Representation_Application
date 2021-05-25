@@ -74,7 +74,7 @@ namespace KR_Lib.Structures
             }
         }
 
-        public Structure ToModel()
+        public virtual Structure ToModel()
         {
             FinishStructure();
 
@@ -84,13 +84,13 @@ namespace KR_Lib.Structures
             {
                 foreach(var occ in OcclusionRegions)
                 {
-                    if (!(H(new Formula(occ.Item1), occ.Item3) != H(new Formula(occ.Item1), occ.Item3 - 1)))
+                    if (!(H(new Formula((occ.Item1.Clone() as Fluent)), occ.Item3) != H(new Formula((occ.Item1.Clone() as Fluent)), occ.Item3 - 1)))
                         modelCheck = false;
                 }
             }
 
             if (modelCheck)
-                return new Model(EndTime);
+                return new Model(this);
             else
                 return new InconsistentStructure();
         }
@@ -108,13 +108,19 @@ namespace KR_Lib.Structures
 
         public List<Fluent> O(ActionWithTimes action, int time)
         {
-            if (action.StartTime > time || action.GetEndTime() < time)
-                return null;
+            var result = new List<Fluent>();
+
+            if (!(action.StartTime < time && action.GetEndTime() >= time))
+                return result;
 
             if (!TimeFluents.ContainsKey(time))
-                return null;
+                return result;
 
-            var result = new List<Fluent>();
+            if (time == 0)
+                return result;
+
+            if (action.GetEndTime() < time)
+                return result;
 
             var startFluents = TimeFluents[time - 1];
             var endFluents = TimeFluents[time];
