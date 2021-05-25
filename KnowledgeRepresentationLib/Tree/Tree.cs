@@ -138,11 +138,25 @@ namespace KR_Lib
                 // w przypadkach gdy coś zachodzi w t+1 - bierze się stan rodzica
                 if (statement is CauseStatement || statement is ReleaseStatement)
                 {
-                    statement.CheckStatement(parentState.CurrentActions[0], parentState.Fluents, parentState.ImpossibleActions, time - 1);
+                    if (parentState.CurrentActions.Count == 0)
+                    {
+                        statement.CheckStatement(null, parentState.Fluents, parentState.ImpossibleActions, time - 1);
+                    }
+                    else
+                    {
+                        statement.CheckStatement(parentState.CurrentActions[0], parentState.Fluents, parentState.ImpossibleActions, time - 1);
+                    }
                 }
                 else 
                 {
-                    statement.CheckStatement(newState.CurrentActions[0], newState.Fluents, newState.ImpossibleActions, time);
+                    if (newState.CurrentActions.Count == 0)
+                    {
+                        statement.CheckStatement(null, newState.Fluents, newState.ImpossibleActions, time);
+                    }
+                    else
+                    {
+                        statement.CheckStatement(newState.CurrentActions[0], newState.Fluents, newState.ImpossibleActions, time);
+                    }
                 }
                 if (statement is ReleaseStatement)
                 {
