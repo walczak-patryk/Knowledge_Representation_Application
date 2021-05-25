@@ -73,18 +73,17 @@ namespace KR_Lib
         public static List<List<Fluent>> GetAllFluentsCombinations(Observation observation)
         {
             List<List<Fluent>> fluentsCombinations = new List<List<Fluent>>();
-            List<Fluent> fluents = observation.Form.GetFluents();
+            List<Fluent> fluents = observation.Formula.GetFluents();
             List<List<bool>> boolCombinations = GenerateBoolCombinations(fluents.Count());
             foreach (List<bool> boolCombination in boolCombinations)
             {
                 List<Fluent> fluentsCombination = new List<Fluent>();
                 for (int i=0; i<fluents.Count; i++)
                 {
-                    Fluent fluent = (Fluent)fluents[i].Clone();
-                    fluent.State = boolCombination[i];
-                    fluentsCombination.Add(fluent);
+                    fluents[i].State = boolCombination[i];
                 }
-                fluentsCombinations.Add(fluentsCombination);
+                if(observation.Formula.Evaluate())
+                    fluentsCombinations.Add(fluents.Select(f => (Fluent)f.Clone()).ToList());
             }
 
             return fluentsCombinations;
@@ -218,9 +217,9 @@ namespace KR_Lib
         /// </summary>
         /// <param name="node"></param>
         /// <returns>Lista struktur</returns>
-        public static List<IStructure> GenerateStructues(Node node, IScenario scenario)
+        public static List<IStructure> GenerateStructues(Node node, IScenario scenario, int maxTime)
         {          
-            var structure = new Structure(-1);
+            var structure = new Structure(maxTime);
             var structures = new List<IStructure>() { structure };
             TreeToStructures(node, structure, structures, scenario);
             return structures;
@@ -246,10 +245,12 @@ namespace KR_Lib
                 structure = new InconsistentStructure();
                 return;
             }
+             
             var obs = scenario.GetObservationsAtTime(node.Time);
             foreach (var o in obs)
             {
-                if (!o.Form.Evaluate())
+                o.Formula.SetFluentsStates(node.CurrentState.Fluents);
+                if (!o.Formula.Evaluate())
                 {
                     structure = new InconsistentStructure();
                     return;
@@ -257,24 +258,28 @@ namespace KR_Lib
             }
 
             //dodanie elementów
-
-            structure.TimeFluents[node.Time] = node.CurrentState.Fluents;
-            if (curAction != null && !structure.E.Contains(curAction))
-                structure.E.Add(curAction);
-            structures.Add(structure);
-
+            if (node.Time != -1)
+            {
+                structure.TimeFluents[node.Time] = node.CurrentState.Fluents;
+                if (curAction != null && !structure.E.Contains(curAction))
+                    structure.E.Add(curAction);
+                structures.Add(structure);
+            }
             //koniec dodawania elementów
 
-            if (node.Children.Count == 1)
-                TreeToStructures(node.Children.FirstOrDefault(), structure, structures, scenario);
-            else
+            for(int i = 0; i < node.Children.Count; i++)
             {
-                foreach (Node child in node.Children)
+                if(i != 0)
                 {
                     var newStructure = new Structure(structure);
                     structures.Add(newStructure);
-                    TreeToStructures(child, newStructure, structures, scenario);
+                    TreeToStructures(node.Children[i], newStructure, structures, scenario);
                 }
+                else
+                {
+                    TreeToStructures(node.Children[i], structure, structures, scenario);
+                }
+
             }
         }
     }

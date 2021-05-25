@@ -44,9 +44,11 @@ namespace KR_Lib.Statements
             {
                 if (waitTimeFlag)
                 {
+                    formulaIf.SetFluentsStates(fluents);
                     result = formulaIf.Evaluate() && currentTime == startTime;
                 } else
                 {
+                    formulaIf.SetFluentsStates(fluents);
                     result =  formulaIf.Evaluate();
                 }
             }

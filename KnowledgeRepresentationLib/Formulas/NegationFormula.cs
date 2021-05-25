@@ -19,5 +19,9 @@ namespace KR_Lib.Formulas
         {
             return this.formula.GetFluents();
         }
+        public void SetFluentsStates(List<Fluent> fluents)
+        {
+            this.formula.SetFluentsStates(fluents);
+        }
     }
 }

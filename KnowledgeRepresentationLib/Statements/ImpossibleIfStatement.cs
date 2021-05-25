@@ -16,6 +16,7 @@ namespace KR_Lib.Statements
 
         public override bool CheckStatement(ActionWithTimes currentAction, List<Fluent> fluents, List<ActionWithTimes> impossibleActions, int time)
         {
+            formulaIf.SetFluentsStates(fluents);
             return formulaIf.Evaluate();
         }
 
