@@ -12,6 +12,7 @@ namespace KR_Lib.Statements
         private Action actionInvoked;
         private IFormula formulaIf;
         private int? waitTime;
+        private bool doFlag = false;
         bool ifFlag = false;
         bool waitTimeFlag = false;
 
@@ -35,7 +36,8 @@ namespace KR_Lib.Statements
         {
             if (action != currentAction)
             {
-                return false;
+                doFlag = false;
+                return doFlag;
             }
 
             bool result = true;
@@ -57,12 +59,17 @@ namespace KR_Lib.Statements
             {
                 this.actionInvoked = new ActionWithTimes(actionInvoked, (actionInvoked as ActionTime).Time, startTime.Value);
             }
-            return result;
+            doFlag = result;
+            return doFlag;
         }
 
         public override State DoStatement(List<ActionWithTimes> currentActions, List<Fluent> fluents, List<ActionWithTimes> impossibleActions, List<ActionWithTimes> futureActions)
         {
-            futureActions.Add(actionInvoked as ActionWithTimes);
+            if (doFlag)
+            {
+                futureActions.Add(actionInvoked as ActionWithTimes);
+            }
+
             return new State(currentActions, fluents, impossibleActions, futureActions);
         }
     }

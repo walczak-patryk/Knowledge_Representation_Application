@@ -8,6 +8,7 @@ namespace KR_Lib.Statements
     public class ImpossibleAtStatement : Statement
     {
         private int time;
+        private bool doFlag = false;
 
         public ImpossibleAtStatement(Action action, int time) : base(action)
         {
@@ -16,13 +17,19 @@ namespace KR_Lib.Statements
 
         public override bool CheckStatement(ActionWithTimes currentAction, List<Fluent> fluents, List<ActionWithTimes> impossibleActions, int currentTime)
         {
-            return time == currentTime;
+            doFlag = time == currentTime;
+
+            return doFlag;
         }
 
         public override State DoStatement(List<ActionWithTimes> currentActions, List<Fluent> fluents, List<ActionWithTimes> impossibleActions, List<ActionWithTimes> futureActions)
         {
-            var actionWTime = (action as ActionWithTimes);
-            impossibleActions.Add(actionWTime);
+            if (doFlag)
+            {
+                var actionWTime = (action as ActionWithTimes);
+                impossibleActions.Add(actionWTime);
+            }
+
             return new State(currentActions, fluents, impossibleActions, futureActions);
         }
     }
