@@ -139,11 +139,11 @@ namespace KR_Lib
                 {
                     if (parentState.CurrentActions.Count == 0)
                     {
-                        statement.CheckStatement(null, parentState.Fluents, parentState.ImpossibleActions, time - 1);
+                        statement.CheckStatement(null, parentState.Fluents, parentState.ImpossibleActions, time);
                     }
                     else
                     {
-                        statement.CheckStatement(parentState.CurrentActions[0], parentState.Fluents, parentState.ImpossibleActions, time - 1);
+                        statement.CheckStatement(parentState.CurrentActions[0], parentState.Fluents, parentState.ImpossibleActions, time);
                     }
                 }
                 else 
@@ -195,7 +195,7 @@ namespace KR_Lib
             List<DataStructures.ActionWithTimes> actions = new List<DataStructures.ActionWithTimes>();
             foreach (DataStructures.ActionWithTimes action in parentState.CurrentActions)
             {
-                if (action.GetEndTime() >= time)
+                if (action.GetEndTime() > time)
                 {
                     actions.Add(action);
                 }
@@ -236,13 +236,13 @@ namespace KR_Lib
         {
             if (node == null || node.CurrentState.CurrentActions.Count > 1)
             {
-                structure = new InconsistentStructure();
+                ChangeStructureToInconsistent(structure, structures);
                 return;
             }
             var curAction = node.CurrentState.CurrentActions.FirstOrDefault();
             if (curAction != null && node.CurrentState.ImpossibleActions.Contains(curAction))
             {
-                structure = new InconsistentStructure();
+                ChangeStructureToInconsistent(structure, structures);
                 return;
             }
              
@@ -252,7 +252,7 @@ namespace KR_Lib
                 o.Formula.SetFluentsStates(node.CurrentState.Fluents);
                 if (!o.Formula.Evaluate())
                 {
-                    structure = new InconsistentStructure();
+                    ChangeStructureToInconsistent(structure, structures);
                     return;
                 }
             }
@@ -263,7 +263,7 @@ namespace KR_Lib
                 structure.TimeFluents[node.Time] = node.CurrentState.Fluents;
                 if (curAction != null && !structure.E.Contains(curAction))
                     structure.E.Add(curAction);
-                structures.Add(structure);
+                //structures.Add(structure);
             }
             //koniec dodawania elementów
 
@@ -281,6 +281,14 @@ namespace KR_Lib
                 }
 
             }
+        }
+
+        private static void ChangeStructureToInconsistent(IStructure structure, List<IStructure> structures)
+        {
+            int index = structures.IndexOf(structure);
+            if (index != -1)
+                structures[index] = new InconsistentStructure();
+            return;
         }
     }
 }

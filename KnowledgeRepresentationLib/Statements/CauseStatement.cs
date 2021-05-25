@@ -28,16 +28,17 @@ namespace KR_Lib.Statements
         {
             if (action != currentAction)
             {
+                doFlag = false;
                 return false;
             }
             // if działa aktualnie tylko z formula o wartości true
             if (ifFlag)
             {
                 formulaIf.SetFluentsStates(fluents);
-                return currentAction == action && formulaIf.Evaluate();
+                doFlag = (currentAction == action && time - currentAction.StartTime == (action as ActionTime).Time && formulaIf.Evaluate());
             }
-
-            doFlag = currentAction == action;
+            else
+                doFlag = (currentAction == action &&  time - currentAction.StartTime == (action as ActionTime).Time);
 
             return doFlag;
         }
@@ -46,10 +47,9 @@ namespace KR_Lib.Statements
         {
             if (doFlag)
             {
-                var currentAction = currentActions[0];
                 foreach (Fluent fluent in formulaCaused.GetFluents())
                 {
-                    fluents.Find(f => f.Name.Equals(fluent.Name)).State = !fluents.Find(f => f.Name.Equals(fluent.Name)).State;
+                    fluents.Find(f => f == fluent).State = !fluents.Find(f => f == fluent).State;
                 }
             }
 
