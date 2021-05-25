@@ -505,6 +505,9 @@ namespace KnowledgeRepresentationInterface
             tv_elem.Tag = fluent.Id;
             Fluents_TreeViewItem.Items.Add(tv_elem);
             engine.AddFluent(fluent);
+            scenario_obs.RefreshControl();
+            this.FQ.Refresh_Fluents();
+            this.TQ.Refresh_Fluents();
         }
 
         private void AddActionButton_Click(object sender, RoutedEventArgs e)
@@ -517,7 +520,8 @@ namespace KnowledgeRepresentationInterface
             Actions_TreeViewItem.Items.Add(tv_elem);
             actions.Add(action);
             engine.AddAction(action);
-
+            Action_Occurences_ComboBox.Items.Refresh();
+            this.AQ.Actions_ComboBox.Items.Refresh();
         }
     }
 }
