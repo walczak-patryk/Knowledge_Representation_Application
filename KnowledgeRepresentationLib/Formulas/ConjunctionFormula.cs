@@ -19,6 +19,11 @@ namespace KR_Lib.Formulas
             this.formulas.Add(formula3);
         }
 
+        public ConjunctionFormula(IFormula formula1, IFormula formula2, IFormula formula3, IFormula formula4) : this(formula1, formula2, formula3)
+        {
+            this.formulas.Add(formula4);
+        }
+
         public bool Evaluate()
         {
             if (this.formulas.Count == 0)

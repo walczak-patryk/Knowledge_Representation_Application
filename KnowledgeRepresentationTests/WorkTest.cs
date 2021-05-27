@@ -16,7 +16,7 @@ namespace KR_Tests
     /// Testy pierwszego przyjkładu z dokumentacji
     /// </summary>
     [TestClass]
-    public class FirstExampleTest
+    public class WorkTest
     {
         /*
          * Katarzyna tworzy oprogramowanie dla firmy w której pracuje. Jeżeli uda jej się szybko dokończyć oprogramowanie
