@@ -100,6 +100,7 @@ namespace KR_Tests
             engine.AddStatement(new InvokeStatement(new ActionTime(load, 1), new ActionTime(escape, 1)));
             engine.AddStatement(new ReleaseStatement(new ActionTime(escape, 1), hidden, hiddenFormula));
             engine.AddStatement(new CauseStatement(new ActionTime(shoot, 1), negaliveFormula, new ConjunctionFormula(neghiddenFormula, loadedFormula)));
+            engine.AddStatement(new CauseStatement(new ActionTime(shoot, 1), negloadedFormula));
 
             #endregion
         }

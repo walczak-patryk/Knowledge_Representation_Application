@@ -138,7 +138,7 @@ namespace KR_Lib
             foreach (Statement statement in statements)
             {
                 // w przypadkach gdy coś zachodzi w t+1 - bierze się stan rodzica
-                if (statement is CauseStatement || statement is ReleaseStatement)
+                if (statement is CauseStatement || statement is ReleaseStatement || statement is InvokeStatement)
                 {
                     if (parentState.CurrentActions.Count == 0)
                     {
@@ -160,31 +160,95 @@ namespace KR_Lib
                         statement.CheckStatement(newState.CurrentActions[0], newState.Fluents, newState.ImpossibleActions, time);
                     }
                 }
-                if (statement is ReleaseStatement)
+                if (statement is ReleaseStatement && statement.GetDoFlag())
                 {
                     if (states.Count == 0)
                     {
                         // rozgałęzienie - po releasie może być stary stan albo zmieniony
-                        states.Add(statement.DoStatement(newState.CurrentActions, newState.Fluents.Select(f => (Fluent)f.Clone()).ToList(), newState.ImpossibleActions, newState.FutureActions));
+                        states.Add(statement.DoStatement(newState.CurrentActions, newState.Fluents.Select(f => (Fluent)f.Clone()).ToList(), newState.ImpossibleActions, newState.FutureActions, time)[0]);
                     }
                     else
                     {
                         foreach (State state in states)
                         { 
                             // tworzenie rozgałęzień po releasie dla każdego z obecnych już stanów
-                            states.Add(statement.DoStatement(newState.CurrentActions, newState.Fluents.Select(f => (Fluent)f.Clone()).ToList(), newState.ImpossibleActions, newState.FutureActions));
+                            states.Add(statement.DoStatement(newState.CurrentActions, newState.Fluents.Select(f => (Fluent)f.Clone()).ToList(), newState.ImpossibleActions, newState.FutureActions, time)[0]);
                         }
                     }
                 }
                 else
-                { 
-                    newState = statement.DoStatement(newState.CurrentActions, newState.Fluents, newState.ImpossibleActions, newState.FutureActions);
+                {
+                    if  (statement is CauseStatement)
+                    
+                    {
+                        states.AddRange(statement.DoStatement(newState.CurrentActions, newState.Fluents, newState.ImpossibleActions, newState.FutureActions, time));
+                    }
+                    else
+                    {
+                        for (int i = 0; i < states.Count;  i++)
+                        {
+                            states[i] = statement.DoStatement(newState.CurrentActions, newState.Fluents, newState.ImpossibleActions, newState.FutureActions, time)[0];
+                        }
+                    }
                 }
             }
-            states.Add(newState);
 
             return states;
         }
+
+        //public static List<State> CheckDescription(IScenario scenario, List<IStatement> statements, State parentState, State newState, int time)
+        //{
+        //    List<State> states = new List<State>();
+        //    foreach (Statement statement in statements)
+        //    {
+        //        // w przypadkach gdy coś zachodzi w t+1 - bierze się stan rodzica
+        //        if (statement is CauseStatement || statement is ReleaseStatement)
+        //        {
+        //            if (parentState.CurrentActions.Count == 0)
+        //            {
+        //                statement.CheckStatement(null, parentState.Fluents, parentState.ImpossibleActions, time);
+        //            }
+        //            else
+        //            {
+        //                statement.CheckStatement(parentState.CurrentActions[0], parentState.Fluents, parentState.ImpossibleActions, time);
+        //            }
+        //        }
+        //        else
+        //        {
+        //            if (newState.CurrentActions.Count == 0)
+        //            {
+        //                statement.CheckStatement(null, newState.Fluents, newState.ImpossibleActions, time);
+        //            }
+        //            else
+        //            {
+        //                statement.CheckStatement(newState.CurrentActions[0], newState.Fluents, newState.ImpossibleActions, time);
+        //            }
+        //        }
+        //        if (statement is ReleaseStatement)
+        //        {
+        //            if (states.Count == 0)
+        //            {
+        //                // rozgałęzienie - po releasie może być stary stan albo zmieniony
+        //                states.Add(statement.DoStatement(newState.CurrentActions, newState.Fluents.Select(f => (Fluent)f.Clone()).ToList(), newState.ImpossibleActions, newState.FutureActions));
+        //            }
+        //            else
+        //            {
+        //                foreach (State state in states)
+        //                {
+        //                    // tworzenie rozgałęzień po releasie dla każdego z obecnych już stanów
+        //                    states.Add(statement.DoStatement(newState.CurrentActions, newState.Fluents.Select(f => (Fluent)f.Clone()).ToList(), newState.ImpossibleActions, newState.FutureActions));
+        //                }
+        //            }
+        //        }
+        //        else
+        //        {
+        //            newState = statement.DoStatement(newState.CurrentActions, newState.Fluents, newState.ImpossibleActions, newState.FutureActions);
+        //        }
+        //    }
+        //    states.Add(newState);
+
+        //    return states;
+        //}
 
         /// <summary>
         /// Zwraca listę wszystkich akcji, które będą trwały w danej chwili

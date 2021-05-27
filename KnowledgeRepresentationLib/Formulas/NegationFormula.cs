@@ -19,6 +19,12 @@ namespace KR_Lib.Formulas
         {
             return this.formula.GetFluents();
         }
+
+        public List<List<Fluent>> GetStatesFluents(bool state)
+        {
+            return formula.GetStatesFluents(!state);
+        }
+
         public void SetFluentsStates(List<Fluent> fluents)
         {
             this.formula.SetFluentsStates(fluents);

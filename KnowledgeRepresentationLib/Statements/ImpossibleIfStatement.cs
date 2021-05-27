@@ -22,7 +22,7 @@ namespace KR_Lib.Statements
             return doFlag;
         }
 
-        public override State DoStatement(List<ActionWithTimes> currentActions, List<Fluent> fluents, List<ActionWithTimes> impossibleActions, List<ActionWithTimes> futureActions)
+        public override List<State> DoStatement(List<ActionWithTimes> currentActions, List<Fluent> fluents, List<ActionWithTimes> impossibleActions, List<ActionWithTimes> futureActions, int time)
         {
             if (doFlag)
             {
@@ -30,7 +30,11 @@ namespace KR_Lib.Statements
                 impossibleActions.Add(actionWTime);
             }
 
-            return new State(currentActions, fluents, impossibleActions, futureActions);
+            return new List<State>() {new State(currentActions, fluents, impossibleActions, futureActions)};
+        }
+        public override bool GetDoFlag()
+        {
+            return doFlag;
         }
     }
 }

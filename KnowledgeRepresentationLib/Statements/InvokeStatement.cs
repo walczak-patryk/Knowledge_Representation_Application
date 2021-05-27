@@ -54,14 +54,22 @@ namespace KR_Lib.Statements
             return doFlag;
         }
 
-        public override State DoStatement(List<ActionWithTimes> currentActions, List<Fluent> fluents, List<ActionWithTimes> impossibleActions, List<ActionWithTimes> futureActions)
+        public override List<State> DoStatement(List<ActionWithTimes> currentActions, List<Fluent> fluents, List<ActionWithTimes> impossibleActions, List<ActionWithTimes> futureActions, int time)
         {
             if (doFlag)
             {
-                futureActions.Add(actionInvoked as ActionWithTimes);
+                var act = actionInvoked as ActionWithTimes;
+                if (act.StartTime == time)
+                    currentActions.Add(act);
+                else
+                    futureActions.Add(actionInvoked as ActionWithTimes);
             }
 
-            return new State(currentActions, fluents, impossibleActions, futureActions);
+            return new List<State>(){new State(currentActions, fluents, impossibleActions, futureActions)};
+        }
+        public override bool GetDoFlag()
+        {
+            return doFlag;
         }
     }
 }

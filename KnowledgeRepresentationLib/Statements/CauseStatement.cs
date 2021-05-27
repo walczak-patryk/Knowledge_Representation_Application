@@ -4,6 +4,7 @@ using KR_Lib.Tree;
 using Action = KR_Lib.DataStructures.Action;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace KR_Lib.Statements
 {
@@ -38,17 +39,32 @@ namespace KR_Lib.Statements
             return doFlag;
         }
 
-        public override State DoStatement(List<ActionWithTimes> currentActions, List<Fluent> fluents, List<ActionWithTimes> impossibleActions, List<ActionWithTimes> futureActions)
-        {
+        public override List<State> DoStatement(List<ActionWithTimes> currentActions, List<Fluent> fluents, List<ActionWithTimes> impossibleActions, List<ActionWithTimes> futureActions, int time)
+        {     
+            List<State> states = new List<State> ();       
             if (doFlag)
-            {
-                foreach (Fluent fluent in formulaCaused.GetFluents())
-                {
-                    fluents.Find(f => f == fluent).State = !fluents.Find(f => f == fluent).State;
+            {                           
+                var combinations = formulaCaused.GetStatesFluents(true);
+                foreach(var listOfFluents in combinations){
+                    var state = new State(currentActions, fluents.Select(f => (Fluent)f.Clone()).ToList(), impossibleActions, futureActions);
+                    foreach (Fluent fluent in listOfFluents)
+                    {
+                        state.Fluents.Find(f => f == fluent).State = fluent.State;
+                    }
+                    states.Add(state);
                 }
+                return states;
+            }
+            else{
+                states.Add(new State(currentActions, fluents, impossibleActions, futureActions));
             }
 
-            return new State(currentActions, fluents, impossibleActions, futureActions);
+            return states;
+        }
+
+        public override bool GetDoFlag()
+        {
+            return doFlag;
         }
 
     }

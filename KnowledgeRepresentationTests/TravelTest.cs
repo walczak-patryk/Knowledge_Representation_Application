@@ -73,7 +73,7 @@ namespace KR_Tests
 
             #endregion
 
-            #region Add actions
+            #region Add fluents
 
             late = new Fluent("late");
             engine.AddFluent(late);
@@ -121,7 +121,7 @@ namespace KR_Tests
         public void TestScenario1()
         {
             /*
-             * Obs={(¬late∧¬arrived∧ ¬dead_deer∧ ¬deer_on_road,0), ¬late∧arrived∧ ¬dead_deer∧ ¬deer_on_road,14)}
+             * Obs={(¬late∧¬arrived∧ ¬dead_deer∧ ¬deer_on_road,0), (¬late∧arrived∧ ¬dead_deer∧ ¬deer_on_road,14)}
              * Acs:{(sleep,6,0),(driving_slow,8,6)}
              * 
              * Kwerenda:
