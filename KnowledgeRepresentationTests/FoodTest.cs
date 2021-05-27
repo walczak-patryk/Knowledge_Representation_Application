@@ -157,7 +157,7 @@ namespace KR_Tests
 
             engine.SetMaxTime(5);
             bool response = engine.ExecuteQuery(query);
-            response.Should().BeTrue();
+            response.Should().BeFalse();
 
             #endregion
         }
