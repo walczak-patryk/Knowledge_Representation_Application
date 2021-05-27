@@ -26,11 +26,6 @@ namespace KR_Lib.Statements
 
         public override bool CheckStatement(ActionWithTimes currentAction, List<Fluent> fluents, List<ActionWithTimes> impossibleActions, int time)
         {
-            if (action != currentAction)
-            {
-                doFlag = false;
-                return false;
-            }
             // if działa aktualnie tylko z formula o wartości true
             if (ifFlag)
             {

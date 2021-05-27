@@ -11,12 +11,11 @@ namespace KR_Lib.Statements
     {
         private Action actionInvoked;
         private IFormula formulaIf;
-        private int? waitTime;
+        private int waitTime;
         private bool doFlag = false;
         bool ifFlag = false;
-        bool waitTimeFlag = false;
 
-        public InvokeStatement(ActionTime action, ActionTime actionInvoked, IFormula formulaIf = null, int? waitTime = null) : base(action)
+        public InvokeStatement(ActionTime action, ActionTime actionInvoked, IFormula formulaIf = null, int waitTime = 0) : base(action)
         {
             this.actionInvoked = actionInvoked;
             if (formulaIf != null)
@@ -25,11 +24,7 @@ namespace KR_Lib.Statements
                 this.formulaIf = formulaIf;
             }
 
-            if (waitTime != null)
-            {
-                waitTimeFlag = true;
-                this.waitTime = waitTime;
-            }
+            this.waitTime = waitTime;
         }
 
         public override bool CheckStatement(ActionWithTimes currentAction, List<Fluent> fluents, List<ActionWithTimes> impossibleActions, int currentTime)
@@ -44,15 +39,11 @@ namespace KR_Lib.Statements
             int? startTime = currentAction.GetEndTime() + waitTime;
             if (ifFlag)
             {
-                if (waitTimeFlag)
-                {
-                    formulaIf.SetFluentsStates(fluents);
-                    result = formulaIf.Evaluate() && currentTime == startTime;
-                } else
-                {
-                    formulaIf.SetFluentsStates(fluents);
-                    result =  formulaIf.Evaluate();
-                }
+                formulaIf.SetFluentsStates(fluents);
+                result = formulaIf.Evaluate() && currentTime == startTime;
+            } else
+            {
+                result = currentTime == startTime;
             }
 
             if (result)

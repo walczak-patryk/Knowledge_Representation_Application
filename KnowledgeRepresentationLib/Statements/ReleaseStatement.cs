@@ -36,11 +36,11 @@ namespace KR_Lib.Statements
             if (ifFlag)
             {
                 formulaIf.SetFluentsStates(fluents);
-                doFlag = currentAction.GetEndTime() == currentTime && formulaIf.Evaluate() == true;
+                doFlag = currentTime - currentAction.StartTime == (action as ActionTime).Time && formulaIf.Evaluate();
                 return doFlag;
             }
             
-            doFlag = currentAction.GetEndTime() == currentTime;
+            doFlag = currentTime - currentAction.StartTime == (action as ActionTime).Time;
             return doFlag;
         }
 
@@ -48,7 +48,7 @@ namespace KR_Lib.Statements
         {
             if (doFlag)
             {
-                fluents.Find(f => f.Name.Equals(fluent.Name)).State = !fluents.Find(f => f.Name.Equals(fluent.Name)).State;
+                fluents.Find(f => f == fluent).State = !fluents.Find(f => f == fluent).State;
             }
             
             return new State(currentActions, fluents, impossibleActions, futureActions);
