@@ -160,7 +160,7 @@ namespace KR_Tests
             #region Add specific formulas
 
             IFormula observationFormula1 = new ConjunctionFormula(workFormula, negBonusFormula, negLaptopFormula);
-            IFormula observationFormula2 = new ConjunctionFormula(negWorkFormula, negBonusFormula, negLaptopFormula);
+            IFormula observationFormula2 = new ConjunctionFormula(negWorkFormula, bonusFormula, negLaptopFormula);
 
             #endregion
 

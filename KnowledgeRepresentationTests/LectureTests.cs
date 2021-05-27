@@ -13,50 +13,41 @@ using KnowledgeRepresentationLib.Scenarios;
 namespace KR_Tests
 {
     /// <summary>
-    /// Testy czwartego przyjkładu z dokumentacji
+    /// Testy przykładów z wykładu
     /// </summary>
     [TestClass]
-    public class FriendsTest
+    public class LectureTest
     {
         /*
-         * Pewnego wieczoru Krystyna poszła się spotkać z przyjaciółkami, 
-         * jej rodzice zawsze proszą ją żeby, ze względówbezpieczeństwa, była w domu przed 23:00. 
-         * Podczas spotkania koleżanki oglądały film, Krystyna nie patrzyła na zegareki dopiero po 
-         * jakimś czasie zorientowała się jak późno jest. 
-         * Pójście pieszo zajmie jej dużo czasu. 
-         * Ponieważ odjechał jejtramwaj, wtedy, żeby zdążyć do domu przed ustalonym czasem jest 
-         * zmuszona pojechać taksówką.
+         * Yale Shooting problem with changes
          * 
          * 
-         * (watching,3)causes¬tram
-         * (watching,2)causes late
-         * (commute,2)impossible if¬money
-         * (commute,3) causes angry_dad
-         * (commute,2) causes ¬money∧ ¬late if ¬tram
-         * (commute,2) causes ¬late if tram
+         * (load, 1) causes loaded
+         * (load,1) invokes escape
+         * (shoot,1) causes ¬loaded
+         * (escape, 1) releases hidden
+         * (shoot, 1) causes ¬alive if loaded and ¬hidden
          */
 
         #region Variables
 
         IEngine engine;
 
-        Action watching;
-        Action commute;
+        Action load;
+        Action shoot;
+        Action escape;
 
-        Fluent late;
-        Fluent tram;
-        Fluent money;
-        Fluent angryDad;
+        Fluent loaded;
+        Fluent alive;
+        Fluent hidden;
 
-        IFormula lateFormula;
-        IFormula tramFormula;
-        IFormula angryDadFormula;
-        IFormula moneyFormula;
+        IFormula loadedFormula;
+        IFormula aliveFormula;
+        IFormula hiddenFormula;
 
-        IFormula negLateFormula;
-        IFormula negtramFormula;
-        IFormula negangryDadFormula;
-        IFormula negmoneyFormula;
+        IFormula negloadedFormula;
+        IFormula negaliveFormula;
+        IFormula neghiddenFormula;
 
         #endregion
 
@@ -67,54 +58,48 @@ namespace KR_Tests
 
             #region Add actions
 
-            watching = new Action("watching");
-            engine.AddAction(watching);
+            load = new Action("load");
+            engine.AddAction(load);
 
-            commute = new Action("commute");
-            engine.AddAction(commute);
+            shoot = new Action("shoot");
+            engine.AddAction(shoot);
+
+            escape = new Action("escape");
+            engine.AddAction(escape);
 
             #endregion
 
             #region Add actions
 
-            late = new Fluent("late");
-            engine.AddFluent(late);
+            loaded = new Fluent("loaded");
+            engine.AddFluent(loaded);
 
-            tram = new Fluent("tram");
-            engine.AddFluent(tram);
+            alive = new Fluent("alive");
+            engine.AddFluent(alive);
 
-            money = new Fluent("money");
-            engine.AddFluent(money);
-
-            angryDad = new Fluent("angryDad");
-            engine.AddFluent(angryDad);
+            hidden = new Fluent("hidden");
+            engine.AddFluent(hidden);
 
             #endregion
 
             #region Add common formulas
 
-            lateFormula = new Formula(late);
-            tramFormula = new Formula(tram);
-            moneyFormula = new Formula(money);
-            angryDadFormula = new Formula(angryDad);
+            loadedFormula = new Formula(loaded);
+            aliveFormula = new Formula(alive);
+            hiddenFormula = new Formula(hidden);
 
-            negLateFormula = new NegationFormula(lateFormula);
-            negtramFormula = new NegationFormula(tramFormula);
-            negmoneyFormula = new NegationFormula(moneyFormula);
-            negangryDadFormula = new NegationFormula(angryDadFormula);
+            negloadedFormula = new NegationFormula(loadedFormula);
+            negaliveFormula = new NegationFormula(aliveFormula);
+            neghiddenFormula = new NegationFormula(hiddenFormula);
 
             #endregion
 
             #region Add domain
 
-            engine.AddStatement(new CauseStatement(new ActionTime(watching, 3), negtramFormula));
-            engine.AddStatement(new CauseStatement(new ActionTime(watching, 2), lateFormula));
-            engine.AddStatement(new CauseStatement(new ActionTime(commute, 3), angryDadFormula));
-            engine.AddStatement(new CauseStatement(new ActionTime(commute, 8), negLateFormula));
-            engine.AddStatement(new CauseStatement(new ActionTime(commute, 2), negLateFormula, negtramFormula));
-            engine.AddStatement(new CauseStatement(new ActionTime(commute, 2), negmoneyFormula, negtramFormula));
-            engine.AddStatement(new CauseStatement(new ActionTime(commute, 2), negLateFormula, tramFormula));
-            engine.AddStatement(new ImpossibleIfStatement(new ActionTime(commute, 2), negmoneyFormula));
+            engine.AddStatement(new CauseStatement(new ActionTime(load, 1), loadedFormula));
+            engine.AddStatement(new InvokeStatement(new ActionTime(load, 1), new ActionTime(escape, 1)));
+            engine.AddStatement(new ReleaseStatement(new ActionTime(escape, 1), hidden, hiddenFormula));
+            engine.AddStatement(new CauseStatement(new ActionTime(shoot, 1), negaliveFormula, new ConjunctionFormula(neghiddenFormula, loadedFormula)));
 
             #endregion
         }
@@ -123,20 +108,20 @@ namespace KR_Tests
         public void TestScenario1()
         {
             /*
-             * Obs={(¬late∧¬angry_dad∧money,0)}
-             * Acs={(watching,3,0),(commute,3,3)}
+             * Obs={(¬loaded∧¬hidden∧alive,0), (¬loaded∧¬hidden∧¬alive,4)}
+             * Acs={(load,1,0),(shoot,1,3)}
              * 
              * Kwerenda:
-             * Czy osiągalny jest stanmoney∧¬angry_daddla zadanego zbioru obserwacji?
+             * Czy scenariusz jest osiagany zawsze
              * 
              * Odpowiedź:
-             * Stanmoney∧¬angry_dadjest osiągalny w czasie 0. 
-             * Później w scenariuszu ujęto akcję commute trwającą 3, która powoduje rozzłoszczenie taty.
+             * Tak
              */
 
             #region Add specific formulas
 
-            IFormula observationFormula1 = new ConjunctionFormula(negLateFormula, negangryDadFormula, moneyFormula);
+            IFormula observationFormula1 = new ConjunctionFormula(negloadedFormula, aliveFormula, neghiddenFormula);
+            IFormula observationFormula2 = new ConjunctionFormula(negloadedFormula, negaliveFormula, neghiddenFormula);
 
             #endregion
 
@@ -144,8 +129,8 @@ namespace KR_Tests
 
             IScenario scenario = new Scenario("testScenario1")
             {
-                Observations = new List<Observation>() { new Observation(observationFormula1, 0) },
-                ActionOccurrences = new List<ActionOccurrence> { new ActionOccurrence(watching, 3, 0), new ActionOccurrence(commute, 3, 3) }
+                Observations = new List<Observation>() { new Observation(observationFormula1, 0), new Observation(observationFormula2, 4) },
+                ActionOccurrences = new List<ActionOccurrence> { new ActionOccurrence(load, 1, 0), new ActionOccurrence(shoot, 1, 3) }
             };
             engine.AddScenario(scenario);
 
@@ -153,7 +138,7 @@ namespace KR_Tests
 
             #region Add querry
 
-            IQuery query = new TargetQuery(new ConjunctionFormula(moneyFormula, negangryDadFormula), QueryType.Ever, scenario.Id);
+            IQuery query = new PossibleScenarioQuery(QueryType.Ever, scenario.Id);
 
             #endregion
 
@@ -169,19 +154,20 @@ namespace KR_Tests
         public void TestScenario2()
         {
             /*
-             *Obs={(¬late∧¬angry_dad∧money,0)}
-             *Acs={(watching,2,0),(commute,2,2)}
-             *
-             *Kwerenda:
-             *Czy osiągalny jest stanmoney∧¬angry_daddla zadanego zbioru obserwacji?
-             *
-             *Odpowiedź:
-             *Stanmoney∧¬angry_dadosiągalny jest w czasie 0 i w czasie 4
+             * Obs={(¬loaded∧¬hidden∧alive,0), (¬loaded∧¬hidden∧¬alive,0)}
+             * Acs={(load,1,0),(shoot,3,1)}
+             * 
+             * Kwerenda:
+             * Czy akcja escape dzieje sie w 2 chwili czasowej?
+             * 
+             * Odpowiedź:
+             * Tak
              */
 
             #region Add specific formulas
 
-            IFormula observationFormula1 = new ConjunctionFormula(negLateFormula, negangryDadFormula, moneyFormula);
+            IFormula observationFormula1 = new ConjunctionFormula(negloadedFormula, aliveFormula, neghiddenFormula);
+            IFormula observationFormula2 = new ConjunctionFormula(negloadedFormula, negaliveFormula, neghiddenFormula);
 
             #endregion
 
@@ -189,8 +175,8 @@ namespace KR_Tests
 
             IScenario scenario = new Scenario("testScenario2")
             {
-                Observations = new List<Observation>() { new Observation(observationFormula1, 0) },
-                ActionOccurrences = new List<ActionOccurrence> { new ActionOccurrence(watching, 2, 0), new ActionOccurrence(commute, 2, 2) }
+                Observations = new List<Observation>() { new Observation(observationFormula1, 0), new Observation(observationFormula2, 4) },
+                ActionOccurrences = new List<ActionOccurrence> { new ActionOccurrence(load, 1, 0), new ActionOccurrence(shoot, 1, 3) }
             };
             engine.AddScenario(scenario);
 
@@ -198,7 +184,7 @@ namespace KR_Tests
 
             #region Add querry
 
-            IQuery query = new TargetQuery(new ConjunctionFormula(moneyFormula, negangryDadFormula), QueryType.Ever, scenario.Id);
+            IQuery query = new ActionQuery(3, escape, scenario.Id);
 
             #endregion
 
