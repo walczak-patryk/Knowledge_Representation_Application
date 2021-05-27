@@ -18,9 +18,9 @@ namespace KR_Lib
         /// <param name="scenario"></param>
         /// <param name="maxTime"></param>
         /// <returns>Korzeń powstałego drzewa możliwości.</returns>
-        public static Node GenerateTree(IDescription description, IScenario scenario, int maxTime)
+        public static Node GenerateTree(IDescription description, IScenario scenario, List<Fluent> fluents, int maxTime)
         {
-            Node root = CreateRoot(description, scenario);
+            Node root = CreateRoot(description, scenario, fluents);
             List<Node> lastLevelNodes = root.Children;
             List<Node> nextLevelNodes = new List<Node>();
             for (int i = 1; i <= maxTime; i++)
@@ -42,17 +42,17 @@ namespace KR_Lib
         /// <param name="description"></param>
         /// <param name="scenario"></param>
         /// <returns></returns>
-        public static Node CreateRoot(IDescription description, IScenario scenario)
+        public static Node CreateRoot(IDescription description, IScenario scenario, List<Fluent>fluents)
         {
             Node root = new Node(null, new State(new List<ActionWithTimes>(), new List<Fluent>(), new List<ActionWithTimes>(), new List<ActionWithTimes>()), -1);
             List<DataStructures.ActionWithTimes> actions = scenario.GetStartingActions(0);
             List<Observation> observations = scenario.GetObservationsAtTime(0);
             foreach(Observation observation in observations)
             {
-                List<List<Fluent>> fluentsPermutations = GetAllFluentsCombinations(observation);
-                foreach(List<Fluent> fluents in fluentsPermutations)
+                List<List<Fluent>> fluentsCombinations = GetAllFluentsCombinations(observation, fluents);
+                foreach(List<Fluent> fluentsCombination in fluentsCombinations)
                 {
-                    State newState = new State(actions, fluents, new List<ActionWithTimes>(), new List<ActionWithTimes>());
+                    State newState = new State(actions, fluentsCombination, new List<ActionWithTimes>(), new List<ActionWithTimes>());
                     List<State> newStates = CheckDescription(scenario, description.GetStatements(), root.CurrentState, newState, 0);
                     foreach (State state in newStates)
                     {
@@ -70,20 +70,23 @@ namespace KR_Lib
         /// </summary>
         /// <param name="observation"></param>
         /// <returns></returns>
-        public static List<List<Fluent>> GetAllFluentsCombinations(Observation observation)
+        public static List<List<Fluent>> GetAllFluentsCombinations(Observation observation, List<Fluent> fluents)
         {
             List<List<Fluent>> fluentsCombinations = new List<List<Fluent>>();
-            List<Fluent> fluents = observation.Formula.GetFluents();
-            List<List<bool>> boolCombinations = GenerateBoolCombinations(fluents.Count());
+            List<Fluent> allFluents = fluents.Select(f => (Fluent)f.Clone()).ToList();
+            List<List<bool>> boolCombinations = GenerateBoolCombinations(allFluents.Count());
             foreach (List<bool> boolCombination in boolCombinations)
             {
                 List<Fluent> fluentsCombination = new List<Fluent>();
-                for (int i=0; i<fluents.Count; i++)
+                for (int i=0; i<allFluents.Count; i++)
                 {
-                    fluents[i].State = boolCombination[i];
+                    Fluent newFluent = (Fluent)allFluents[i].Clone();
+                    newFluent.State = boolCombination[i];
+                    fluentsCombination.Add(newFluent);
                 }
+                observation.Formula.SetFluentsStates(fluentsCombination);
                 if(observation.Formula.Evaluate())
-                    fluentsCombinations.Add(fluents.Select(f => (Fluent)f.Clone()).ToList());
+                    fluentsCombinations.Add(fluentsCombination);
             }
 
             return fluentsCombinations;
