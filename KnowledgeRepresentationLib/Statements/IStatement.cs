@@ -12,7 +12,10 @@ namespace KR_Lib.Statements
         Guid GetId();
 
         bool GetDoFlag();
+
+        void CheckAndDo(State parentState, ref List<State> newState, int time);
     }
+
     public abstract class Statement : IStatement
     {
         public Guid guid;
@@ -23,13 +26,9 @@ namespace KR_Lib.Statements
         {
             this.guid = Guid.NewGuid();
             this.action = action;
-        }
+        }       
 
-        
-
-        public abstract bool CheckStatement(ActionWithTimes currentAction, List<Fluent> fluents, List<ActionWithTimes> impossibleActions, int time);
-
-        public abstract List<State> DoStatement(List<ActionWithTimes> currentActions, List<Fluent> fluents, List<ActionWithTimes> impossibleActions, List<ActionWithTimes> futureActions, int time);
+        public abstract void CheckAndDo(State parentState, ref List<State> newState, int time);
 
         public virtual bool GetDoFlag()
         {

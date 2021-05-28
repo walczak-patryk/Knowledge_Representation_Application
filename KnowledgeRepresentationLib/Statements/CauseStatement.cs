@@ -12,8 +12,7 @@ namespace KR_Lib.Statements
     {
         private IFormula formulaCaused;
         private IFormula formulaIf;
-        private bool doFlag = false;
-        bool ifFlag = false;
+        private bool ifFlag = false;
 
         public CauseStatement(ActionTime action, IFormula formulaCaused, IFormula formulaIf = null) : base(action)
         {
@@ -25,8 +24,9 @@ namespace KR_Lib.Statements
             }
         }
 
-        public override bool CheckStatement(ActionWithTimes currentAction, List<Fluent> fluents, List<ActionWithTimes> impossibleActions, int time)
+        private bool CheckStatement(ActionWithTimes currentAction, List<Fluent> fluents, List<ActionWithTimes> impossibleActions, int time)
         {
+            bool doFlag = false;
             // if działa aktualnie tylko z formula o wartości true
             if (ifFlag)
             {
@@ -39,33 +39,29 @@ namespace KR_Lib.Statements
             return doFlag;
         }
 
-        public override List<State> DoStatement(List<ActionWithTimes> currentActions, List<Fluent> fluents, List<ActionWithTimes> impossibleActions, List<ActionWithTimes> futureActions, int time)
-        {     
+        private void DoStatement(ref List<State> newStates)
+        {                
             List<State> states = new List<State> ();       
-            if (doFlag)
+            foreach (var s in newStates)
             {                           
                 var combinations = formulaCaused.GetStatesFluents(true);
                 foreach(var listOfFluents in combinations){
-                    var state = new State(currentActions, fluents.Select(f => (Fluent)f.Clone()).ToList(), impossibleActions, futureActions);
+                    var state = new State(s.CurrentActions, s.Fluents.Select(f => (Fluent)f.Clone()).ToList(), s.ImpossibleActions, s.FutureActions);
                     foreach (Fluent fluent in listOfFluents)
                     {
                         state.Fluents.Find(f => f == fluent).State = fluent.State;
                     }
                     states.Add(state);
                 }
-                return states;
             }
-            else{
-                states.Add(new State(currentActions, fluents, impossibleActions, futureActions));
-            }
-
-            return states;
+            newStates = states;
         }
 
-        public override bool GetDoFlag()
+        public override void CheckAndDo(State parentState, ref List<State> newStates, int time)
         {
-            return doFlag;
+            if(CheckStatement(parentState.CurrentActions.FirstOrDefault(), parentState.Fluents, parentState.ImpossibleActions, time))
+                this.DoStatement(ref newStates);
+            return;
         }
-
     }
 }
