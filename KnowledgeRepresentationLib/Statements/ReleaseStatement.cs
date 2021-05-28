@@ -4,6 +4,7 @@ using KR_Lib.Tree;
 using Action = KR_Lib.DataStructures.Action;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace KR_Lib.Statements
 {
@@ -12,7 +13,6 @@ namespace KR_Lib.Statements
 
         private Fluent fluent;
         private IFormula formulaIf;
-        private bool doFlag = false;
         bool ifFlag = false;
 
         public ReleaseStatement(Action action, Fluent fluent, IFormula formulaIf) : base(action)
@@ -25,33 +25,41 @@ namespace KR_Lib.Statements
             }
         }
 
-        public override bool CheckStatement(ActionWithTimes currentAction, List<Fluent> fluents, List<ActionWithTimes> impossibleActions, int currentTime)
+        public bool CheckStatement(ActionWithTimes currentAction, List<Fluent> fluents, List<ActionWithTimes> impossibleActions, int currentTime)
         {
             if (action != currentAction)
             {
-                doFlag = false;
-                return doFlag;
+                return false;
             }
 
             if (ifFlag)
             {
                 formulaIf.SetFluentsStates(fluents);
-                doFlag = currentTime - currentAction.StartTime == (action as ActionTime).Time && formulaIf.Evaluate();
-                return doFlag;
+                return (currentTime - currentAction.StartTime == (action as ActionTime).Time && formulaIf.Evaluate());
             }
             
-            doFlag = currentTime - currentAction.StartTime == (action as ActionTime).Time;
-            return doFlag;
+            return (currentTime - currentAction.StartTime == (action as ActionTime).Time);
         }
 
-        public override State DoStatement(List<ActionWithTimes> currentActions, List<Fluent> fluents, List<ActionWithTimes> impossibleActions, List<ActionWithTimes> futureActions)
+        public void DoStatement(ref List<State> newStates)
         {
-            if (doFlag)
+            List<State> states = new List<State>();
+            foreach (var state in newStates)
             {
-                fluents.Find(f => f == fluent).State = !fluents.Find(f => f == fluent).State;
+                var s = new State(state.CurrentActions, state.Fluents.Select(f => (Fluent)f.Clone()).ToList(), state.ImpossibleActions, state.FutureActions);
+                s.Fluents.Find(f => f == fluent).State = !s.Fluents.Find(f => f == fluent).State;
+                states.Add(s);
             }
+            newStates.AddRange(states);
             
-            return new State(currentActions, fluents, impossibleActions, futureActions);
+            return;
+        }
+        
+        public override void CheckAndDo(State parentState, ref List<State> newStates, int time)
+        {
+            if(CheckStatement(parentState.CurrentActions.FirstOrDefault(), parentState.Fluents, parentState.ImpossibleActions, time))
+                this.DoStatement(ref newStates);
+            return;
         }
 
     }

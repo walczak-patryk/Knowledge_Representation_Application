@@ -134,56 +134,12 @@ namespace KR_Lib
 
         public static List<State> CheckDescription(IScenario scenario, List<IStatement> statements, State parentState, State newState, int time)
         {
-            List<State> states = new List<State>();
+            List<State> newStates = new List<State>() { newState };
             foreach (Statement statement in statements)
             {
-                // w przypadkach gdy coś zachodzi w t+1 - bierze się stan rodzica
-                if (statement is CauseStatement || statement is ReleaseStatement)
-                {
-                    if (parentState.CurrentActions.Count == 0)
-                    {
-                        statement.CheckStatement(null, parentState.Fluents, parentState.ImpossibleActions, time);
-                    }
-                    else
-                    {
-                        statement.CheckStatement(parentState.CurrentActions[0], parentState.Fluents, parentState.ImpossibleActions, time);
-                    }
-                }
-                else 
-                {
-                    if (newState.CurrentActions.Count == 0)
-                    {
-                        statement.CheckStatement(null, newState.Fluents, newState.ImpossibleActions, time);
-                    }
-                    else
-                    {
-                        statement.CheckStatement(newState.CurrentActions[0], newState.Fluents, newState.ImpossibleActions, time);
-                    }
-                }
-                if (statement is ReleaseStatement)
-                {
-                    if (states.Count == 0)
-                    {
-                        // rozgałęzienie - po releasie może być stary stan albo zmieniony
-                        states.Add(statement.DoStatement(newState.CurrentActions, newState.Fluents.Select(f => (Fluent)f.Clone()).ToList(), newState.ImpossibleActions, newState.FutureActions));
-                    }
-                    else
-                    {
-                        foreach (State state in states)
-                        { 
-                            // tworzenie rozgałęzień po releasie dla każdego z obecnych już stanów
-                            states.Add(statement.DoStatement(newState.CurrentActions, newState.Fluents.Select(f => (Fluent)f.Clone()).ToList(), newState.ImpossibleActions, newState.FutureActions));
-                        }
-                    }
-                }
-                else
-                { 
-                    newState = statement.DoStatement(newState.CurrentActions, newState.Fluents, newState.ImpossibleActions, newState.FutureActions);
-                }
+                statement.CheckAndDo(parentState, ref newStates, time);          
             }
-            states.Add(newState);
-
-            return states;
+            return newStates;
         }
 
         /// <summary>

@@ -2,34 +2,40 @@
 using KR_Lib.Formulas;
 using KR_Lib.Tree;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace KR_Lib.Statements
 {
     public class TriggerStatement : Statement
     {
         IFormula formulaIf;
-        private bool doFlag = false;
 
         public TriggerStatement(Action action, IFormula formulaIf) : base(action)
         {
             this.formulaIf = formulaIf;
         }
 
-        public override bool CheckStatement(ActionWithTimes currentAction, List<Fluent> fluents, List<ActionWithTimes> impossibleActions, int time)
+        public bool CheckStatement(ActionWithTimes currentAction, List<Fluent> fluents, List<ActionWithTimes> impossibleActions, int time)
         {
             formulaIf.SetFluentsStates(fluents);
-            doFlag = formulaIf.Evaluate();
-            return doFlag;
+            return formulaIf.Evaluate();
         }
 
-        public override State DoStatement(List<ActionWithTimes> currentActions, List<Fluent> fluents, List<ActionWithTimes> impossibleActions, List<ActionWithTimes> futureActions)
+        public void DoStatement(State state)
         {
-            if (doFlag)
-            {
-                currentActions.Add(action as ActionWithTimes);
-            }
+            state.CurrentActions.Add(action as ActionWithTimes);
             
-            return new State(currentActions, fluents, impossibleActions, futureActions);
+            return;
+        }
+
+        public override void CheckAndDo(State parentState, ref List<State> newStates, int time)
+        {
+            foreach(var state in newStates)
+            {
+                if(CheckStatement(state.CurrentActions.FirstOrDefault(), state.Fluents, state.ImpossibleActions, time))
+                    this.DoStatement(state);           
+            }
+            return;
         }
     }
 }

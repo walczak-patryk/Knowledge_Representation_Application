@@ -22,6 +22,12 @@ namespace KR_Lib.DataStructures
             this.DurationTime = durationTime;
         }
 
+        internal ActionWithTimes(ActionWithTimes action) : base(action)
+        {
+            this.StartTime = action.StartTime;
+            this.DurationTime = action.DurationTime;
+        }
+
         internal ActionWithTimes(Action action, int durationTime, int startTime) : base(action)
         {
             this.StartTime = startTime;
@@ -84,7 +90,7 @@ namespace KR_Lib.DataStructures
 
         public object Clone()
         {
-            return new ActionWithTimes(this.Name, this.DurationTime, this.StartTime);
+            return new ActionWithTimes(this);
         }
     }
 }

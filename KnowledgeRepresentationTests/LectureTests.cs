@@ -100,6 +100,7 @@ namespace KR_Tests
             engine.AddStatement(new InvokeStatement(new ActionTime(load, 1), new ActionTime(escape, 1)));
             engine.AddStatement(new ReleaseStatement(new ActionTime(escape, 1), hidden, hiddenFormula));
             engine.AddStatement(new CauseStatement(new ActionTime(shoot, 1), negaliveFormula, new ConjunctionFormula(neghiddenFormula, loadedFormula)));
+            engine.AddStatement(new CauseStatement(new ActionTime(shoot, 1), negloadedFormula));
 
             #endregion
         }
@@ -109,13 +110,25 @@ namespace KR_Tests
         {
             /*
              * Obs={(¬loaded∧¬hidden∧alive,0), (¬loaded∧¬hidden∧¬alive,4)}
-             * Acs={(load,1,0),(shoot,1,3)}
+             * Acs={(load,1,1),(shoot,1,3)}
+             * 
+             * Kwerenda 1:
+             * Czy scenariusz jest osiagany zawsze
+             * 
+             * Odpowiedź 1:
+             * Tak
              * 
              * Kwerenda:
-             * Czy scenariusz jest osiagany zawsze
+             * Czy akcja escape dzieje sie w 2 chwili czasowej?
              * 
              * Odpowiedź:
              * Tak
+             * 
+             * Kwerenda 3:
+             * Czy indyk żyje w czasie 4
+             * 
+             * Odpowiedź 3:
+             * Nie
              */
 
             #region Add specific formulas
@@ -130,7 +143,7 @@ namespace KR_Tests
             IScenario scenario = new Scenario("testScenario1")
             {
                 Observations = new List<Observation>() { new Observation(observationFormula1, 0), new Observation(observationFormula2, 4) },
-                ActionOccurrences = new List<ActionOccurrence> { new ActionOccurrence(load, 1, 0), new ActionOccurrence(shoot, 1, 3) }
+                ActionOccurrences = new List<ActionOccurrence> { new ActionOccurrence(load, 1, 1), new ActionOccurrence(shoot, 1, 3) }
             };
             engine.AddScenario(scenario);
 
@@ -138,62 +151,23 @@ namespace KR_Tests
 
             #region Add querry
 
-            IQuery query = new PossibleScenarioQuery(QueryType.Ever, scenario.Id);
+            IQuery posibleScenarioQuery = new PossibleScenarioQuery(QueryType.Ever, scenario.Id);
+            IQuery actionQuery = new ActionQuery(2, escape, scenario.Id);
+            IQuery formulaQuery = new FormulaQuery(4, aliveFormula, scenario.Id); 
 
             #endregion
 
             #region Testing
-            engine.SetMaxTime(8);
-            bool response = engine.ExecuteQuery(query);
-            response.Should().BeTrue();
+            engine.SetMaxTime(4);
+            
+            bool responsePosibleScenarioQuery = engine.ExecuteQuery(posibleScenarioQuery);
+            responsePosibleScenarioQuery.Should().BeTrue();
+            bool responseActionQuery = engine.ExecuteQuery(actionQuery);
+            responseActionQuery.Should().BeTrue();
+            bool responseFormulaQuery = engine.ExecuteQuery(formulaQuery);
+            responseFormulaQuery.Should().BeFalse();
 
             #endregion
-        }
-
-        [TestMethod]
-        public void TestScenario2()
-        {
-            /*
-             * Obs={(¬loaded∧¬hidden∧alive,0), (¬loaded∧¬hidden∧¬alive,0)}
-             * Acs={(load,1,0),(shoot,3,1)}
-             * 
-             * Kwerenda:
-             * Czy akcja escape dzieje sie w 2 chwili czasowej?
-             * 
-             * Odpowiedź:
-             * Tak
-             */
-
-            #region Add specific formulas
-
-            IFormula observationFormula1 = new ConjunctionFormula(negloadedFormula, aliveFormula, neghiddenFormula);
-            IFormula observationFormula2 = new ConjunctionFormula(negloadedFormula, negaliveFormula, neghiddenFormula);
-
-            #endregion
-
-            #region Add scenarios
-
-            IScenario scenario = new Scenario("testScenario2")
-            {
-                Observations = new List<Observation>() { new Observation(observationFormula1, 0), new Observation(observationFormula2, 4) },
-                ActionOccurrences = new List<ActionOccurrence> { new ActionOccurrence(load, 1, 0), new ActionOccurrence(shoot, 1, 3) }
-            };
-            engine.AddScenario(scenario);
-
-            #endregion
-
-            #region Add querry
-
-            IQuery query = new ActionQuery(3, escape, scenario.Id);
-
-            #endregion
-
-            #region Testing
-            engine.SetMaxTime(8);
-            bool response = engine.ExecuteQuery(query);
-            response.Should().BeTrue();
-
-            #endregion
-        }
+        }  
     }
 }

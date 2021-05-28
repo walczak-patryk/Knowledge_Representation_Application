@@ -44,6 +44,29 @@ namespace KR_Lib.Formulas
             return fluents;
         }
 
+        public List<List<Fluent>> GetStatesFluents(bool state)
+        {
+            List<List<Fluent>> listOfFluents = new List<List<Fluent>>();
+            if (state)
+            {
+                foreach (var formula in formulas)
+                    listOfFluents.AddRange(formula.GetStatesFluents(state));
+            }
+            else
+            {
+                var combinations = TreeMethods.GenerateBoolCombinations(this.formulas.Count);
+                foreach (var combination in combinations)
+                {
+                    if(combination.Contains(false)){
+                        for(int i = 0; i< combination.Count; i++)
+                            listOfFluents.AddRange(this.formulas[i].GetStatesFluents(combination[i]));
+                    }                       
+                }
+            }           
+
+            return listOfFluents;
+        }
+
         public void SetFluentsStates(List<Fluent> fluents)
         {
             foreach (var formula in formulas)

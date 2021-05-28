@@ -2,35 +2,40 @@
 using KR_Lib.Formulas;
 using KR_Lib.Tree;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace KR_Lib.Statements
 {
     public class ImpossibleAtStatement : Statement
     {
         private int time;
-        private bool doFlag = false;
 
         public ImpossibleAtStatement(Action action, int time) : base(action)
         {
             this.time = time;
         }
 
-        public override bool CheckStatement(ActionWithTimes currentAction, List<Fluent> fluents, List<ActionWithTimes> impossibleActions, int currentTime)
+        public bool CheckStatement(ActionWithTimes currentAction, List<Fluent> fluents, List<ActionWithTimes> impossibleActions, int currentTime)
         {
-            doFlag = time == currentTime;
-
-            return doFlag;
+            return (time == currentTime);
         }
 
-        public override State DoStatement(List<ActionWithTimes> currentActions, List<Fluent> fluents, List<ActionWithTimes> impossibleActions, List<ActionWithTimes> futureActions)
+        public void DoStatement(State newState)
         {
-            if (doFlag)
+            var actionWTime = (action as ActionWithTimes);
+            newState.ImpossibleActions.Add(actionWTime);
+            return;
+        }
+
+        public override void CheckAndDo(State parentState, ref List<State> newStates, int time)
+        {   
+            foreach( var newState in newStates)
             {
-                var actionWTime = (action as ActionWithTimes);
-                impossibleActions.Add(actionWTime);
+                if(CheckStatement(newState.CurrentActions.FirstOrDefault(), parentState.Fluents, parentState.ImpossibleActions, time))
+                    this.DoStatement(newState);
             }
-
-            return new State(currentActions, fluents, impossibleActions, futureActions);
+            return;
         }
+
     }
 }
