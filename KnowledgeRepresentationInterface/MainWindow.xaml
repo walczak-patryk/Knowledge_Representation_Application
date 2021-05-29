@@ -191,8 +191,8 @@
 
                         <GroupBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="8"
                                   Grid.RowSpan="5" Name="Statement_GroupBox"/>
-                        <Button Grid.Row="7" Grid.Column="4" Content="Add statement" 
-                                Grid.ColumnSpan="2" Margin="3"/>
+                        <Button Name="AddStatementButton"  Grid.Row="7" Grid.Column="4" Content="Add statement" 
+                                 Grid.ColumnSpan="2" Margin="3" Click="AddStatementButton_Click"/>
                     </Grid>
                 </DockPanel>
 
