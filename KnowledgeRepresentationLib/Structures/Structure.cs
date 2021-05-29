@@ -79,7 +79,7 @@ namespace KR_Lib.Structures
             return new Model(EndTime);
         }
 
-        public bool H(Formula formula, int time)
+        public bool H(IFormula formula, int time)
         {           
             var timefluents = TimeFluents[time];
 
@@ -120,7 +120,7 @@ namespace KR_Lib.Structures
             return result.Count > 0;
         }
 
-        public bool EvaluateFormula(Formula formula, int time) // = H
+        public bool EvaluateFormula(IFormula formula, int time) // = H
         {
             return this.H(formula, time);
         }

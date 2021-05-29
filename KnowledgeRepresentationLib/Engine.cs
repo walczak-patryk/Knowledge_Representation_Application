@@ -68,7 +68,7 @@ namespace KR_Lib
         /// Adds scenario to list of scenarios
         /// </summary>
         /// <param IScenario="scenario"></param>
-        void AddObservation(Guid scenarioId, List<ObservationElement> observationElements, int time);
+        void AddObservation(Guid scenarioId, IFormula formula, int time);
 
         /// <summary>
         /// Checks if query is correct
@@ -144,13 +144,12 @@ namespace KR_Lib
         /// Adds scenario to list of scenarios
         /// </summary>
         /// <param IScenario="scenario"></param>
-        public void AddObservation(Guid scenarioId, List<ObservationElement> observationElements, int time) 
+        public void AddObservation(Guid scenarioId, IFormula formula, int time) 
         {
             newChangesFlag = true;
-            var observation = FormulaParser.ParseToFormula(observationElements);
             var scenario = scenarios.Where(s => s.Id == scenarioId).FirstOrDefault();
             if (scenario != null)
-                scenario.AddObservation(new Observation(observation, time));
+                scenario.AddObservation(new Observation(formula, time));
         }
 
         /// <summary>

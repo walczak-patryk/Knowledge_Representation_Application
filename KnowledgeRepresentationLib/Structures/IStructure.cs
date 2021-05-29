@@ -36,10 +36,10 @@ namespace KR_Lib.Structures
 
 
         Structure ToModel();
-        bool H(Formula formula, int time);
+        bool H(IFormula formula, int time);
         List<Fluent> O(ActionWithTimes action, int time);
         bool CheckActionBelongingToE(Action action, int time);
-        bool EvaluateFormula(Formula formula, int time);
+        bool EvaluateFormula(IFormula formula, int time);
         void FinishStructure();
     }
 }

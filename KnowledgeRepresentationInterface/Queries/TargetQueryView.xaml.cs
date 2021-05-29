@@ -1,5 +1,6 @@
 ﻿using KnowledgeRepresentationInterface.General;
 using KR_Lib.DataStructures;
+using KR_Lib.Formulas;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,11 +21,11 @@ namespace KnowledgeRepresentationInterface.Queries
     /// <summary>
     /// Interaction logic for TargetQuery.xaml
     /// </summary>
-    public partial class TargetQuery : UserControl
+    public partial class TargetQueryView : UserControl
     {
         public ObservationCreator scenario_obs { get; set; }
 
-        public TargetQuery(List<Fluent> fluents)
+        public TargetQueryView(List<Fluent> fluents)
         {
             this.scenario_obs = new ObservationCreator(fluents);
             InitializeComponent();
@@ -34,6 +35,14 @@ namespace KnowledgeRepresentationInterface.Queries
         public void Refresh_Fluents()
         {
             this.scenario_obs.RefreshControl();
+        }
+
+        public IFormula Get_Formula()
+        {
+            List<ObservationElement> observation = this.scenario_obs.scenarioObservation;
+            observation = FormulaParser.infix_to_ONP(observation);
+            IFormula formula = FormulaParser.ParseToFormula(observation);
+            return formula;
         }
     }
 }

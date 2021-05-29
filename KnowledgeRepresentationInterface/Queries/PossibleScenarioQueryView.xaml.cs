@@ -18,9 +18,9 @@ namespace KnowledgeRepresentationInterface.Queries
     /// <summary>
     /// Interaction logic for PossibleScenarioQuery.xaml
     /// </summary>
-    public partial class PossibleScenarioQuery : UserControl
+    public partial class PossibleScenarioQueryView : UserControl
     {
-        public PossibleScenarioQuery()
+        public PossibleScenarioQueryView()
         {
             InitializeComponent();
         }

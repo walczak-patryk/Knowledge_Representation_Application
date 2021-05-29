@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Action = KR_Lib.DataStructures.Action;
 using KR_Lib;
+using KR_Lib.Scenarios;
+using KR_Lib.Queries;
 
 namespace KnowledgeRepresentationInterface
 {
@@ -22,10 +24,10 @@ namespace KnowledgeRepresentationInterface
     {
         IEngine engine;
 
-        PossibleScenarioQuery PSQ;
-        ActionQuery AQ;
-        FormulaQuery FQ;
-        TargetQuery TQ;
+        PossibleScenarioQueryView PSQ;
+        ActionQueryView AQ;
+        FormulaQueryView FQ;
+        TargetQueryView TQ;
         ScenarioGUI scenario;
         List<Action> actions;
         List<Fluent> fluents;
@@ -56,24 +58,6 @@ namespace KnowledgeRepresentationInterface
             Scenario_ListView.ItemsSource = this.scenario.items;
             Query_GroupBox.Content = this.PSQ;
 
-            this.actions.Add(new Action("action1"));
-            this.actions.Add(new Action("action2"));
-            this.fluents.Add(new Fluent("fluent1", true));
-            this.fluents.Add(new Fluent("fluent2", true));
-            foreach(var elem in this.actions)
-            {
-                TreeViewItem ele = new TreeViewItem();
-                ele.Header = elem.Name;
-                ele.Tag = elem.Id;
-                Actions_TreeViewItem.Items.Add(ele);
-            }
-            foreach (var elem in this.fluents)
-            {
-                TreeViewItem ele = new TreeViewItem();
-                ele.Header = elem.Name;
-                ele.Tag = elem.Id;
-                Fluents_TreeViewItem.Items.Add(ele);
-            }
             Action_Occurences_ComboBox.ItemsSource = this.actions;
             Query_Scenario_ComboBox.ItemsSource = this.scenarios;
             Observation_Scenario_GroupBox.Content = this.scenario_obs;
@@ -81,10 +65,10 @@ namespace KnowledgeRepresentationInterface
 
         private void Initialize_Query_Types()
         {
-            this.PSQ = new PossibleScenarioQuery();
-            this.AQ = new ActionQuery();
-            this.FQ = new FormulaQuery(this.fluents);
-            this.TQ = new TargetQuery(this.fluents);
+            this.PSQ = new PossibleScenarioQueryView();
+            this.AQ = new ActionQueryView();
+            this.FQ = new FormulaQueryView(this.fluents);
+            this.TQ = new TargetQueryView(this.fluents);
         }
 
         private void Initialize_Statement_Types()
@@ -166,26 +150,79 @@ namespace KnowledgeRepresentationInterface
                 MessageBox.Show("You have to select a scenario!");
                 return;
             }
-            switch(Query_Type_ComboBox.SelectedIndex)
+
+            ScenarioGUI selected_scenario = (ScenarioGUI)Query_Scenario_ComboBox.SelectedItem;
+            IQuery query;
+            bool result = false;
+            switch (Query_Type_ComboBox.SelectedIndex)
             {
                 case 0:
-                    QueryType qt = QueryType.Always;
+                    QueryType qt_PSQ = QueryType.Always;
                     if (this.PSQ.Type_ComboBox.SelectedIndex==1)
                     {
-                        qt = QueryType.Ever;
+                        qt_PSQ = QueryType.Ever;
                     }
-                    KR_Lib.Queries.PossibleScenarioQuery query = new KR_Lib.Queries.PossibleScenarioQuery(qt, Guid.NewGuid());
+                    query = new KR_Lib.Queries.PossibleScenarioQuery(qt_PSQ, selected_scenario.Id);
+                    result = this.engine.ExecuteQuery(query);
                     break;
                 case 1:
-
+                    if(this.AQ.Moment_UIntUpDown.Value==null)
+                    {
+                        MessageBox.Show("The moment value cannot be empty!");
+                        return;
+                    }
+                    if (this.AQ.Actions_ComboBox.SelectedItem == null)
+                    {
+                        MessageBox.Show("You have to select an action!");
+                        return;
+                    }
+                    int time_AQ = (int)this.AQ.Moment_UIntUpDown.Value;
+                    Action action_AQ = (Action)this.AQ.Actions_ComboBox.SelectedItem;
+                    query = new KR_Lib.Queries.ActionQuery(time_AQ, action_AQ, selected_scenario.Id);
+                    result = this.engine.ExecuteQuery(query);
                     break;
                 case 2:
-
+                    if (this.FQ.Moment_UIntUpDown.Value == null)
+                    {
+                        MessageBox.Show("The moment value cannot be empty!");
+                        return;
+                    }
+                    IFormula formula_FQ = this.FQ.Get_Formula();
+                    if (formula_FQ == null)
+                    {
+                        MessageBox.Show("The formula is not valid!");
+                        return;
+                    }
+                    int time_FQ = (int)this.FQ.Moment_UIntUpDown.Value;
+                    query = new KR_Lib.Queries.FormulaQuery(time_FQ, formula_FQ, selected_scenario.Id);
+                    result = this.engine.ExecuteQuery(query);
                     break;
                 case 3:
-
+                    IFormula formula_TQ = this.TQ.Get_Formula();
+                    if (formula_TQ == null)
+                    {
+                        MessageBox.Show("The formula is not valid!");
+                        return;
+                    }
+                    QueryType qt_TQ = QueryType.Always;
+                    if (this.PSQ.Type_ComboBox.SelectedIndex == 1)
+                    {
+                        qt_TQ = QueryType.Ever;
+                    }
+                    query = new KR_Lib.Queries.TargetQuery(formula_TQ, qt_TQ, selected_scenario.Id);
+                    result = this.engine.ExecuteQuery(query);
                     break;
             }
+
+            if(result)
+            {
+                Result_label.Content = "TRUE";
+            }
+            else
+            {
+                Result_label.Content = "FALSE";
+            }
+
             Query_Scenario_ComboBox.SelectedIndex = -1;
         }
 
@@ -268,25 +305,41 @@ namespace KnowledgeRepresentationInterface
                 }
             }
             this.scenario.name = ScenarioName_TextBox.Text;
-            this.scenarios.Add(this.scenario);
             TreeViewItem new_scenario = new TreeViewItem();
             new_scenario.Header = ScenarioName_TextBox.Text;
             new_scenario.Tag = scenario.Id.ToString();
             foreach(var item in this.scenario.items)
             {
                 TreeViewItem new_subitem = new TreeViewItem();
-                if(item.ActionOccurence.Length==0)
+                if(item.ActionOccurence == null)
                 {
-                    new_subitem.Header = "Observation: " + item.Observation;
+                    new_subitem.Header = "Observation: " + item.Observation + " M: " + item.Moment;
                 }
                 else
                 {
-                    new_subitem.Header = "Action occurence: " + item.ActionOccurence;
+                    new_subitem.Header = "Action occurence: " + item.ActionOccurence + " D: " + item.Duration + " M: " + item.Moment;
                 }
                 
                 new_subitem.Tag = item.Id;
                 new_scenario.Items.Add(new_subitem);
             }
+
+            Scenario engine_scenario = new Scenario(this.scenario.name);
+            this.scenario.Id = engine_scenario.Id;
+            this.engine.AddScenario(engine_scenario);
+            foreach(var elem in this.scenario.items)
+            {
+                if(elem.ActionOccurence != null)
+                {
+                    engine_scenario.ActionOccurrences.Add(elem.ActionOccurence_engine);
+                }
+                else
+                {
+                    this.engine.AddObservation(engine_scenario.Id,elem.formula, elem.Moment_int);
+                }
+            }
+
+            this.scenarios.Add(this.scenario);
             this.scenario = new ScenarioGUI();
             Scenario_ListView.ItemsSource = this.scenario.items;
             Scenario_ListView.Items.Refresh();
@@ -303,13 +356,19 @@ namespace KnowledgeRepresentationInterface
                 MessageBox.Show("You have to select an action to add!");
                 return;
             }
-            int moment = 0;
-            if(Action_Occurences_Moment_UIntUpDown.Value != null)
+            if(Action_Occurences_Moment_UIntUpDown.Value == null)
             {
-                moment = (int)Action_Occurences_Moment_UIntUpDown.Value;
+                MessageBox.Show("The moment value cannot be empty!");
+                return;
             }
-
-            this.scenario.items.Add(new ScenarioItem(moment.ToString(),action.Name, "", ""));
+            if (Action_Occurences_Duration_UIntUpDown.Value == null)
+            {
+                MessageBox.Show("The duration value cannot be empty!");
+                return;
+            }
+            int moment = (int)Action_Occurences_Moment_UIntUpDown.Value;
+            int duration = (int)Action_Occurences_Duration_UIntUpDown.Value;
+            this.scenario.items.Add(new ScenarioItem(action.Name,action,moment,duration, "", null));
             Scenario_ListView.Items.Refresh();
         }
 
@@ -329,12 +388,13 @@ namespace KnowledgeRepresentationInterface
                 MessageBox.Show("The expression is not valid!");
                 return;
             }
-            int moment = 0;
-            if (Observations_UIntUpDown.Value != null)
+            if (Observations_UIntUpDown.Value == null)
             {
-                moment = (int)Observations_UIntUpDown.Value;
+                MessageBox.Show("The moment value cannot be empty!");
+                return;
             }
-            this.scenario.items.Add(new ScenarioItem(moment.ToString(), "", this.scenario_obs.GetContent(), ""));
+            int moment = (int)Observations_UIntUpDown.Value;
+            this.scenario.items.Add(new ScenarioItem(null,null,moment,0,this.scenario_obs.GetContent(), formula));
             Scenario_ListView.Items.Refresh();
             this.scenario_obs.Clear_Control();
         }
@@ -438,19 +498,188 @@ namespace KnowledgeRepresentationInterface
         private void AddFluentButton_Click(object sender, RoutedEventArgs e)
         {
             string name = fluentName.Text;
+            if (this.IsNameInFluents(name))
+            {
+                MessageBox.Show($"Fluent name '{name}' already used. Type another name.");
+                return;
+            }
+
             Fluent fluent = new Fluent(name);
             fluents.Add(fluent);
-
+            TreeViewItem tv_elem = new TreeViewItem();
+            tv_elem.Header = name;
+            tv_elem.Tag = fluent.Id;
+            Fluents_TreeViewItem.Items.Add(tv_elem);
             engine.AddFluent(fluent);
         }
 
         private void AddActionButton_Click(object sender, RoutedEventArgs e)
         {
             string name = actionNameTextBox.Text;
+
+            if (this.IsNameInActions(name))
+            {
+                MessageBox.Show($"Action name '{name}' already used. Type another name.");
+                return;
+            }
             Action action = new Action(name);
 
             actions.Add(action);
             engine.AddAction(action);
+
+            TreeViewItem tv_elem = new TreeViewItem();
+            tv_elem.Header = name;
+            tv_elem.Tag = action.Id;
+            Actions_TreeViewItem.Items.Add(tv_elem);
+            actions.Add(action);
+            engine.AddAction(action);
+
+        }
+        private bool IsNameInActions(string name)
+        {
+            foreach (Action action in this.actions)
+            {
+                var actionName = action.Name;
+                if(actionName == name)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private bool IsNameInFluents(string name)
+        {
+            foreach (Fluent fluent in this.fluents)
+            {
+                var fluentName = fluent.Name;
+                if (fluentName == name)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private void AddStatementButton_Click(object sender, RoutedEventArgs e)
+        {
+            //
+            //if (Statement_GroupBox == null)
+            //{
+            //    MessageBox.Show($"No statement type chosen.");
+            //    return;
+            //}
+            
+            if (Statement_Type_ComboBox.SelectedIndex == -1)
+            {
+                MessageBox.Show($"No statement type chosen.");
+                return;
+            }
+            switch (Statement_Type_ComboBox.SelectedIndex)
+            {
+                case 0: //CS
+                        //Statement_GroupBox.Content = this.CS;
+
+                    if (this.CS.CauseStatement_ComboBox.SelectedIndex == -1)
+                    {
+                        MessageBox.Show($"No action chosen for 'cause' statement type.");
+                        return;
+                    }
+                    if (this.CS.CauseStatementFirstExpression.Text == "")
+                    {
+                        MessageBox.Show($"First Expression not specified.");
+                        return;
+                    }
+                    if (this.CS.CauseStatementSecondExpression.Text == "")
+                    {
+                        MessageBox.Show($"Second Expression not specified.");
+                        return;
+                    }
+                    //CO zrobic gdy sa wartosci
+
+                    break;
+                case 1: //IAS
+                    //Statement_GroupBox.Content = this.IAS;
+
+                    if (this.IAS.ImpossibleAtStatement_ComboBox.SelectedIndex == -1)
+                    {
+                        MessageBox.Show("No Action chosen for 'impossible at' statement type.");
+                        return;
+                    }
+                    if(this.IAS.Action_Duration_UIntUpDown.Value == null || this.IAS.Action_Duration_UIntUpDown.Value == 0)
+                    {
+                        MessageBox.Show("Specify time for 'impossible at' statement type.");
+                        return;
+                    }
+                    //Co zrobic gdy sa wartosci
+
+                    break;
+                case 2: //IIS
+                    //Statement_GroupBox.Content = this.IIS;
+                    if (this.IIS.ImpossibleIfStatement_ComboBox.SelectedIndex == -1)
+                    {
+                        MessageBox.Show("No action chosen for 'impossible if' statement type.");
+                        return;
+                    }
+                    if (this.IIS.Expression_TextBox.Text == "")
+                    {
+                        MessageBox.Show("No expression specified for 'impossible if' statement type.");
+                        return;
+                    }
+                    //Co zrobic gdy sa wartosci
+
+                    break;
+                case 3: //IS
+                    //Statement_GroupBox.Content = this.IS;
+                    if (this.IS.InvokeStatementFirst_ComboBox.SelectedIndex == -1)
+                    {
+                        MessageBox.Show("No action chosen for 'invoke' statement type.");
+                        return;
+                    }
+                    if (this.IS.InvokeStatementSecend_ComboBox.SelectedIndex == -1)
+                    {
+                        MessageBox.Show("No action chosen for 'invoke' statement type.");
+                        return;
+                    }
+                    //Co zrobic gdy sa wartosci
+
+                    break;
+                case 4: //RS
+                    //Statement_GroupBox.Content = this.RS;
+                    if(this.RS.ReleaseStatementActions_ComboBox.SelectedIndex == -1)
+                    {
+                        MessageBox.Show("No action chosen for 'release' statement type.");
+                        return;
+                    }
+                    if (this.RS.ReleaseStatementFluents_ComboBox.SelectedIndex == -1)
+                    {
+                        MessageBox.Show("No fluent chosen for 'release' statement type.");
+                        return;
+                    }
+                    if(this.RS.Expression_TextBox.Text == "")
+                    {
+                        MessageBox.Show("No expression specified for 'release' statement type.");
+                        return;
+                    }
+                    //Co zrobic gdy sa wartosci
+
+                    break;
+                case 5: //TS
+                    //Statement_GroupBox.Content = this.TS;
+                    if(this.TS.Expression.Text == "")
+                    {
+                        MessageBox.Show("No expression specified for 'trigger' statement type.");
+                        return;
+                    }
+                    if(this.TS.TriggerStatementAction_ComboBox.SelectedIndex == -1)
+                    {
+                        MessageBox.Show("No action choosen for 'trigger' statement type.");
+                        return;
+                    }
+                    //Co zrobic gdy sa wartosci
+
+                    break;
+            }
         }
     }
 }
