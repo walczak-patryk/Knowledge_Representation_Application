@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Action = KR_Lib.DataStructures.Action;
+using KR_Lib.DataStructures;
 
 namespace KnowledgeRepresentationInterface.Statements
 {
@@ -23,6 +25,15 @@ namespace KnowledgeRepresentationInterface.Statements
         public ReleaseStatement()
         {
             InitializeComponent();
+        }
+
+        public void Set_Actions_And_Fluents(List<Action> actions, List<Fluent> fluents)
+        {
+            ReleaseStatementActions_ComboBox.ItemsSource = actions;
+            ReleaseStatementActions_ComboBox.Items.Refresh();
+
+            ReleaseStatementFluents_ComboBox.ItemsSource = fluents;
+            ReleaseStatementFluents_ComboBox.Items.Refresh();
         }
     }
 }

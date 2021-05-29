@@ -91,6 +91,7 @@ namespace KnowledgeRepresentationInterface
                     this.actions.RemoveAll(x => x.Id.ToString() == item.Tag.ToString());
                     Action_Occurences_ComboBox.Items.Refresh();
                     this.AQ.Set_Actions(this.actions);
+                    this.CS.Set_Actions(this.actions);
                     return;
                 }
             }
@@ -262,21 +263,27 @@ namespace KnowledgeRepresentationInterface
             {
                 case 0:
                     Statement_GroupBox.Content = this.CS;
+                    this.CS.Set_Actions(this.actions);
                     break;
                 case 1:
                     Statement_GroupBox.Content = this.IAS;
+                    this.IAS.Set_Actions(this.actions);
                     break;
                 case 2:
                     Statement_GroupBox.Content = this.IIS;
+                    this.IIS.Set_Actions(this.actions);
                     break;
                 case 3:
                     Statement_GroupBox.Content = this.IS;
+                    this.IS.Set_Actions(this.actions);
                     break;
                 case 4:
                     Statement_GroupBox.Content = this.RS;
+                    this.RS.Set_Actions_And_Fluents(this.actions, this.fluents);
                     break;
                 case 5:
                     Statement_GroupBox.Content = this.TS;
+                    this.TS.Set_Actions(this.actions);
                     break;
                 
                 

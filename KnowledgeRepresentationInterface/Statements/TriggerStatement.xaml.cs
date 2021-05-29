@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Action = KR_Lib.DataStructures.Action;
 
 namespace KnowledgeRepresentationInterface.Statements
 {
@@ -23,6 +24,12 @@ namespace KnowledgeRepresentationInterface.Statements
         public TriggerStatement()
         {
             InitializeComponent();
+        }
+
+        public void Set_Actions(List<Action> actions)
+        {
+            TriggerStatementAction_ComboBox.ItemsSource = actions;
+            TriggerStatementAction_ComboBox.Items.Refresh();
         }
     }
 }

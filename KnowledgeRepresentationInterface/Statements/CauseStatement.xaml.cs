@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Action = KR_Lib.DataStructures.Action;
 
 namespace KnowledgeRepresentationInterface.Statements
 {
@@ -20,10 +21,16 @@ namespace KnowledgeRepresentationInterface.Statements
     /// </summary>
     public partial class CauseStatement : UserControl
     {
+        
         public CauseStatement()
         {
             InitializeComponent();
         }
 
+        public void Set_Actions(List<Action> actions)
+        {
+            CauseStatement_ComboBox.ItemsSource = actions;
+            CauseStatement_ComboBox.Items.Refresh();
+        }
     }
 }
