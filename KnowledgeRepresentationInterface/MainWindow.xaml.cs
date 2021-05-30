@@ -141,7 +141,7 @@ namespace KnowledgeRepresentationInterface
 
         private void Panel_TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
+            Statement_Type_ComboBox_SelectionChanged(sender, e);
         }
 
         private void ExecuteQuery_Click(object sender, RoutedEventArgs e)
