@@ -65,6 +65,10 @@ namespace KR_Lib.Formulas
                     }
                 }
             }
+            if(stack.Count > 1)
+            {
+                return null;
+            }
             //show(stack.Peek().formula);
             return stack.Pop().formula;
         }
@@ -98,7 +102,7 @@ namespace KR_Lib.Formulas
                 {
                     result.Add(elem);
                 }
-                else if (elem.operator_ == "(")
+                else if (elem.operator_ == "(" || elem.operator_ == "NOT")
                 {
                     stack.Push(elem);
                 }

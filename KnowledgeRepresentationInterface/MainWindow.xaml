@@ -6,7 +6,7 @@
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:local="clr-namespace:KnowledgeRepresentationInterface" xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
         mc:Ignorable="d"
-        Title="RW" Height="600" Width="950"
+        Title="RW" Height="600" Width="1100"
         MinWidth="403" MinHeight="270"
         WindowStartupLocation="CenterScreen">
     <!--<Window.Resources>

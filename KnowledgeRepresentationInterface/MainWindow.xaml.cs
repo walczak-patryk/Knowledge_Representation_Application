@@ -47,7 +47,7 @@ namespace KnowledgeRepresentationInterface
         {
             this.engine = new Engine();
             InitializeComponent();
-        
+            this.FontSize = 14;
             this.scenario = new ScenarioGUI();
             this.scenarios = new List<ScenarioGUI>();
             this.actions = new List<Action>();
