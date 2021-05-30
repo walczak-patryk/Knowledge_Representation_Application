@@ -19,9 +19,9 @@ namespace KnowledgeRepresentationInterface.Statements
     /// <summary>
     /// Interaction logic for ImpossibleAtStatement.xaml
     /// </summary>
-    public partial class ImpossibleAtStatement : UserControl
+    public partial class ImpossibleAtStatementView : UserControl
     {
-        public ImpossibleAtStatement()
+        public ImpossibleAtStatementView()
         {
             InitializeComponent();
         }
