@@ -168,7 +168,7 @@
                         </Grid.RowDefinitions>
 
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="15"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
@@ -177,7 +177,7 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="15"/>
                         </Grid.ColumnDefinitions>
 
                         <ComboBox Name="Statement_Type_ComboBox" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" SelectionChanged="Statement_Type_ComboBox_SelectionChanged"  >
