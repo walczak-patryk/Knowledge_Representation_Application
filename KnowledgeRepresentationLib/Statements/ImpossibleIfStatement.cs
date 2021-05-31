@@ -2,6 +2,7 @@
 using KR_Lib.Formulas;
 using KR_Lib.Tree;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace KR_Lib.Statements
 {
@@ -14,16 +15,28 @@ namespace KR_Lib.Statements
             this.formulaIf = formulaIf;
         }
 
-        public override bool CheckStatement(ActionWithTimes currentAction, List<Fluent> fluents, List<ActionWithTimes> impossibleActions, int time)
+        public bool CheckStatement(ActionWithTimes currentAction, List<Fluent> fluents, List<ActionWithTimes> impossibleActions, int time)
         {
+            formulaIf.SetFluentsStates(fluents);
             return formulaIf.Evaluate();
         }
 
-        public override State DoStatement(List<ActionWithTimes> currentActions, List<Fluent> fluents, List<ActionWithTimes> impossibleActions)
+        public void DoStatement(State newState)
         {
             var actionWTime = (action as ActionWithTimes);
-            impossibleActions.Add(actionWTime);
-            return new State(currentActions, fluents, impossibleActions);
+            newState.ImpossibleActions.Add(actionWTime);
+
+            return;
+        }
+        
+        public override void CheckAndDo(State parentState, ref List<State> newStates, int time)
+        {
+            foreach( var newState in newStates)
+            {
+                if(CheckStatement(newState.CurrentActions.FirstOrDefault(), parentState.Fluents, parentState.ImpossibleActions, time))
+                    this.DoStatement(newState);
+            }
+            return;
         }
     }
 }

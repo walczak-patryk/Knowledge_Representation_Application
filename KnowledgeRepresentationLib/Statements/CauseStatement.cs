@@ -4,6 +4,7 @@ using KR_Lib.Tree;
 using Action = KR_Lib.DataStructures.Action;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace KR_Lib.Statements
 {
@@ -11,7 +12,7 @@ namespace KR_Lib.Statements
     {
         private IFormula formulaCaused;
         private IFormula formulaIf;
-        bool ifFlag = false;
+        private bool ifFlag = false;
 
         public CauseStatement(ActionTime action, IFormula formulaCaused, IFormula formulaIf = null) : base(action)
         {
@@ -23,26 +24,44 @@ namespace KR_Lib.Statements
             }
         }
 
-        public override bool CheckStatement(ActionWithTimes currentAction, List<Fluent> fluents, List<ActionWithTimes> impossibleActions, int time)
+        private bool CheckStatement(ActionWithTimes currentAction, List<Fluent> fluents, List<ActionWithTimes> impossibleActions, int time)
         {
+            bool doFlag = false;
             // if działa aktualnie tylko z formula o wartości true
             if (ifFlag)
             {
-                return currentAction == action && formulaIf.Evaluate() == true;
+                formulaIf.SetFluentsStates(fluents);
+                doFlag = (currentAction == action && time - currentAction.StartTime == (action as ActionTime).Time && formulaIf.Evaluate());
             }
+            else
+                doFlag = (currentAction == action &&  time - currentAction.StartTime == (action as ActionTime).Time);
 
-            return currentAction == action;
+            return doFlag;
         }
 
-        public override State DoStatement(List<ActionWithTimes> currentActions, List<Fluent> fluents, List<ActionWithTimes> impossibleActions)
+        private void DoStatement(ref List<State> newStates)
+        {                
+            List<State> states = new List<State> ();       
+            foreach (var s in newStates)
+            {                           
+                var combinations = formulaCaused.GetStatesFluents(true);
+                foreach(var listOfFluents in combinations){
+                    var state = new State(s.CurrentActions, s.Fluents.Select(f => (Fluent)f.Clone()).ToList(), s.ImpossibleActions, s.FutureActions);
+                    foreach (Fluent fluent in listOfFluents)
+                    {
+                        state.Fluents.Find(f => f == fluent).State = fluent.State;
+                    }
+                    states.Add(state);
+                }
+            }
+            newStates = states;
+        }
+
+        public override void CheckAndDo(State parentState, ref List<State> newStates, int time)
         {
-            var currentAction = currentActions[0];
-            foreach (Fluent fluent in formulaCaused.GetFluents())
-            {
-                fluents.Find(f => f.Name.Equals(fluent.Name)).State = !fluents.Find(f => f.Name.Equals(fluent.Name)).State;
-            }
-            return new State(currentActions, fluents, impossibleActions);
+            if(CheckStatement(parentState.CurrentActions.FirstOrDefault(), parentState.Fluents, parentState.ImpossibleActions, time))
+                this.DoStatement(ref newStates);
+            return;
         }
-
     }
 }

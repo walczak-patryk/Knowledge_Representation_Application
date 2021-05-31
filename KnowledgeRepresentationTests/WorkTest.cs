@@ -16,7 +16,7 @@ namespace KR_Tests
     /// Testy pierwszego przyjkładu z dokumentacji
     /// </summary>
     [TestClass]
-    public class FirstExampleTest
+    public class WorkTest
     {
         /*
          * Katarzyna tworzy oprogramowanie dla firmy w której pracuje. Jeżeli uda jej się szybko dokończyć oprogramowanie
@@ -136,7 +136,7 @@ namespace KR_Tests
             #endregion
 
             #region Testing
-
+            engine.SetMaxTime(10);
             bool response = engine.ExecuteQuery(query);
             response.Should().BeTrue();
 
@@ -160,7 +160,7 @@ namespace KR_Tests
             #region Add specific formulas
 
             IFormula observationFormula1 = new ConjunctionFormula(workFormula, negBonusFormula, negLaptopFormula);
-            IFormula observationFormula2 = new ConjunctionFormula(negWorkFormula, negBonusFormula, negLaptopFormula);
+            IFormula observationFormula2 = new ConjunctionFormula(negWorkFormula, bonusFormula, negLaptopFormula);
 
             #endregion
 
@@ -183,7 +183,7 @@ namespace KR_Tests
             #endregion
 
             #region Testing
-
+            engine.SetMaxTime(10);
             var response = engine.ExecuteQuery(query);
             response.Should().BeTrue();
 
@@ -232,7 +232,7 @@ namespace KR_Tests
             #endregion
 
             #region Testing
-
+            engine.SetMaxTime(10);
             var response = engine.ExecuteQuery(query);
             response.Should().BeFalse();
 

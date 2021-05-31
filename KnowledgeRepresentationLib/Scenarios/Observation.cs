@@ -11,7 +11,7 @@ namespace KR_Lib.DataStructures
             set;
         }
 
-        public IFormula Form
+        public IFormula Formula
         {
             get;
             set;
@@ -25,7 +25,7 @@ namespace KR_Lib.DataStructures
         public Observation() { }
         public Observation(IFormula formula, int time)
         {
-            this.Form = formula;
+            this.Formula = formula;
             this.Time = time;
             this.Id = Guid.NewGuid();
         }
@@ -43,7 +43,7 @@ namespace KR_Lib.DataStructures
         {
             Observation Observation = new Observation();
             Observation.Id = Id;
-            Observation.Form = Form;
+            Observation.Formula = Formula;
             Observation.Time = Time;
 
             return Observation;

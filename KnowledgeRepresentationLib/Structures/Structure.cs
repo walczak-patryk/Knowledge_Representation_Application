@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using KnowledgeRepresentationLib.Scenarios;
 using KR_Lib.DataStructures;
 using KR_Lib.Formulas;
@@ -74,33 +75,53 @@ namespace KR_Lib.Structures
             }
         }
 
-        public Structure ToModel()
+        public virtual Structure ToModel()
         {
-            return new Model(EndTime);
+            FinishStructure();
+
+            bool modelCheck = true;
+
+            for(int i = 0; i < EndTime; i++)
+            {
+                foreach(var occ in OcclusionRegions)
+                {
+                    if (!(H(new Formula((occ.Item1.Clone() as Fluent)), occ.Item3) != H(new Formula((occ.Item1.Clone() as Fluent)), occ.Item3 - 1)))
+                        modelCheck = false;
+                }
+            }
+
+            if (modelCheck)
+                return new Model(this);
+            else
+                return new InconsistentStructure();
         }
 
         public bool H(IFormula formula, int time)
-        {           
+        {
+            if (!TimeFluents.ContainsKey(time))
+                return false;
+
             var timefluents = TimeFluents[time];
-
-            var formFluents = formula.GetFluents();
-
-            foreach(var fl in formFluents)
-            {
-                var fluent = timefluents.Find(x => x.Id == fl.Id);
-                fl.State = fluent.State;
-            }
-            
+            formula.SetFluentsStates(timefluents);
             return formula.Evaluate();
             
         }
 
         public List<Fluent> O(ActionWithTimes action, int time)
         {
-            if (action.StartTime > time || action.GetEndTime() < time)
-                return null;
-
             var result = new List<Fluent>();
+
+            if (!(action.StartTime < time && action.GetEndTime() >= time))
+                return result;
+
+            if (!TimeFluents.ContainsKey(time))
+                return result;
+
+            if (time == 0)
+                return result;
+
+            if (action.GetEndTime() < time)
+                return result;
 
             var startFluents = TimeFluents[time - 1];
             var endFluents = TimeFluents[time];
@@ -116,8 +137,12 @@ namespace KR_Lib.Structures
 
         public bool CheckActionBelongingToE(Action action, int time)
         {
-            var result = E.FindAll(x => x.Id == action.Id);
-            return result.Count > 0;
+            var result = E.Where(x => x == action).FirstOrDefault();
+            if(result != null){
+                if(time >= result.StartTime && time < result.GetEndTime())
+                    return true;
+            }
+            return false;    
         }
 
         public bool EvaluateFormula(IFormula formula, int time) // = H

@@ -4,6 +4,7 @@ using KR_Lib.Tree;
 using Action = KR_Lib.DataStructures.Action;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace KR_Lib.Statements
 {
@@ -11,11 +12,10 @@ namespace KR_Lib.Statements
     {
         private Action actionInvoked;
         private IFormula formulaIf;
-        private int? waitTime;
+        private int waitTime;
         bool ifFlag = false;
-        bool waitTimeFlag = false;
 
-        public InvokeStatement(ActionTime action, ActionTime actionInvoked, IFormula formulaIf = null, int? waitTime = null) : base(action)
+        public InvokeStatement(ActionTime action, ActionTime actionInvoked, IFormula formulaIf = null, int waitTime = 0) : base(action)
         {
             this.actionInvoked = actionInvoked;
             if (formulaIf != null)
@@ -24,33 +24,25 @@ namespace KR_Lib.Statements
                 this.formulaIf = formulaIf;
             }
 
-            if (waitTime != null)
-            {
-                waitTimeFlag = true;
-                this.waitTime = waitTime;
-            }
+            this.waitTime = waitTime;
         }
 
-        public override bool CheckStatement(ActionWithTimes currentAction, List<Fluent> fluents, List<ActionWithTimes> impossibleActions, int currentTime)
+        public bool CheckStatement(ActionWithTimes currentAction, List<Fluent> fluents, List<ActionWithTimes> impossibleActions, int currentTime)
         {
-            // sprawdzić current action == action
-            if (!(currentAction is ActionWithTimes))
+            if (action != currentAction)
             {
-                throw new Exception("Niewłaściwy typ w InvokeStatement: potrzebny ActionWithTimes");
+                return false;
             }
 
-            var actionWithTimes = (currentAction as ActionWithTimes);
             bool result = true;
-            int? startTime = actionWithTimes.GetEndTime() + waitTime;
+            int? startTime = currentAction.GetEndTime() + waitTime;
             if (ifFlag)
             {
-                if (waitTimeFlag)
-                {
-                    result = formulaIf.Evaluate() && currentTime == startTime;
-                } else
-                {
-                    result =  formulaIf.Evaluate();
-                }
+                formulaIf.SetFluentsStates(fluents);
+                result = formulaIf.Evaluate() && currentTime == startTime;
+            } else
+            {
+                result = currentTime == startTime;
             }
 
             if (result)
@@ -60,10 +52,23 @@ namespace KR_Lib.Statements
             return result;
         }
 
-        public override State DoStatement(List<ActionWithTimes> currentActions, List<Fluent> fluents, List<ActionWithTimes> impossibleActions)
+        public void DoStatement(ref List<State> newStates, int time)
         {
-            currentActions.Add(actionInvoked as ActionWithTimes);
-            return new State(currentActions, fluents, impossibleActions);
+            foreach (var state in newStates)
+            {
+                var act = actionInvoked as ActionWithTimes;
+                if (act.StartTime == time)
+                    state.CurrentActions.Add(act);
+                else
+                    state.FutureActions.Add(act);
+            }
+        }
+
+        public override void CheckAndDo(State parentState, ref List<State> newStates, int time)
+        {
+            if(CheckStatement(parentState.CurrentActions.FirstOrDefault(), parentState.Fluents, parentState.ImpossibleActions, time))
+                this.DoStatement(ref newStates, time);
+            return;
         }
     }
 }

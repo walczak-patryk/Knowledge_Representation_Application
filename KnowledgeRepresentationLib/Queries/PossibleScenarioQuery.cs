@@ -35,8 +35,13 @@ namespace KR_Lib.Queries
             bool atLeatOneInconsistent = false;
             foreach (var model in modeledStructures)
             {
-                if (model is InconsistentStructure) atLeatOneInconsistent = true;
-                else if (model is Model) atLeatOneModel = true;
+                if (model is InconsistentStructure) 
+                    atLeatOneInconsistent = true;
+                else
+                {
+                    if (model is Model) 
+                        atLeatOneModel = true;
+                }
             }
             if (this.queryType == QueryType.Ever) return atLeatOneModel;
             else return !atLeatOneInconsistent;

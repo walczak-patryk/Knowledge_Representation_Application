@@ -18,10 +18,10 @@ namespace KR_Lib
         /// <param name="scenario"></param>
         /// <param name="maxTime"></param>
         /// <returns>Korzeń powstałego drzewa możliwości.</returns>
-        public static Node GenerateTree(IDescription description, IScenario scenario, int maxTime)
+        public static Node GenerateTree(IDescription description, IScenario scenario, List<Fluent> fluents, int maxTime)
         {
-            Node root = CreateRoot(description, scenario);
-            List<Node> lastLevelNodes = new List<Node>() { root };
+            Node root = CreateRoot(description, scenario, fluents);
+            List<Node> lastLevelNodes = root.Children;
             List<Node> nextLevelNodes = new List<Node>();
             for (int i = 1; i <= maxTime; i++)
             {
@@ -37,22 +37,74 @@ namespace KR_Lib
         }
 
         /// <summary>
-        /// Tworzy korzeń drzewa możliwości na podstawie domeny i scenariusza
+        /// Tworzy korzeń drzewa z czasem -1 oraz jego dzieci
         /// </summary>
         /// <param name="description"></param>
         /// <param name="scenario"></param>
         /// <returns></returns>
-        public static Node CreateRoot(IDescription description, IScenario scenario)
+        public static Node CreateRoot(IDescription description, IScenario scenario, List<Fluent>fluents)
         {
+            Node root = new Node(null, new State(new List<ActionWithTimes>(), new List<Fluent>(), new List<ActionWithTimes>(), new List<ActionWithTimes>()), -1);
             List<DataStructures.ActionWithTimes> actions = scenario.GetStartingActions(0);
             List<Observation> observations = scenario.GetObservationsAtTime(0);
-            List<Fluent> fluents = new List<Fluent>();
-            List<ActionWithTimes> impossibleActions = new List<ActionWithTimes>();
             foreach(Observation observation in observations)
             {
-                fluents.AddRange(observation.Form.GetFluents());
+                List<List<Fluent>> fluentsCombinations = GetAllFluentsCombinations(observation, fluents);
+                foreach(List<Fluent> fluentsCombination in fluentsCombinations)
+                {
+                    State newState = new State(actions, fluentsCombination, new List<ActionWithTimes>(), new List<ActionWithTimes>());
+                    List<State> newStates = CheckDescription(scenario, description.GetStatements(), root.CurrentState, newState, 0);
+                    foreach (State state in newStates)
+                    {
+                        Node newNode = new Node(root, state, 0);
+                        root.addChild(newNode);
+                    }
+                }
             }
-            return new Node(null, new State(actions, fluents, impossibleActions), 0);
+
+            return root;
+        }
+
+        /// <summary>
+        /// Tworzenie wszystkich kombinacji wartościowań fluentów z danej obserwacji
+        /// </summary>
+        /// <param name="observation"></param>
+        /// <returns></returns>
+        public static List<List<Fluent>> GetAllFluentsCombinations(Observation observation, List<Fluent> fluents)
+        {
+            List<List<Fluent>> fluentsCombinations = new List<List<Fluent>>();
+            List<Fluent> allFluents = fluents.Select(f => (Fluent)f.Clone()).ToList();
+            List<List<bool>> boolCombinations = GenerateBoolCombinations(allFluents.Count());
+            foreach (List<bool> boolCombination in boolCombinations)
+            {
+                List<Fluent> fluentsCombination = new List<Fluent>();
+                for (int i=0; i<allFluents.Count; i++)
+                {
+                    Fluent newFluent = (Fluent)allFluents[i].Clone();
+                    newFluent.State = boolCombination[i];
+                    fluentsCombination.Add(newFluent);
+                }
+                observation.Formula.SetFluentsStates(fluentsCombination);
+                if(observation.Formula.Evaluate())
+                    fluentsCombinations.Add(fluentsCombination);
+            }
+
+            return fluentsCombinations;
+        }
+
+        /// <summary>
+        /// Tworzy listę wszystkich możliwych kombinacji wartości True/False
+        /// </summary>
+        /// <param name="elementsNumber"></param>
+        /// <returns></returns>
+        public static List<List<bool>> GenerateBoolCombinations(int elementsNumber){
+            List<List<bool>> combinations = Enumerable.Range(0, (int)System.Math.Pow(2, elementsNumber)).Select(i =>
+            Enumerable.Range(0, elementsNumber)
+                .Select(b => ((i & (1 << b)) > 0))
+                .ToList()
+            ).ToList();
+
+            return combinations;
         }
 
         /// <summary>
@@ -64,8 +116,11 @@ namespace KR_Lib
         /// <param name="time"></param>
         /// <returns></returns>
         public static List<Node> CreateNewNodes(IDescription description, IScenario scenario, Node parentNode, int time)
-        {   
-            List<State> newStates = CheckDescription(scenario, description.GetStatements(), parentNode.CurrentState, time);
+        {
+            State parentState = parentNode.CurrentState;
+            List<DataStructures.ActionWithTimes> newActions = GetAllActionsAtTime(scenario, parentState, time);
+            State newState = new State(newActions, parentState.Fluents.Select(f => (Fluent)f.Clone()).ToList(), parentState.ImpossibleActions, parentState.FutureActions);
+            List<State> newStates = CheckDescription(scenario, description.GetStatements(), parentState, newState, time);
             List<Node> newNodes = new List<Node>();
             foreach (State state in newStates)
             {
@@ -77,49 +132,19 @@ namespace KR_Lib
             return newNodes;
         }
 
-        public static List<State> CheckDescription(IScenario scenario, List<IStatement> statements, State parentState, int time)
+        public static List<State> CheckDescription(IScenario scenario, List<IStatement> statements, State parentState, State newState, int time)
         {
-            List<State> states = new List<State>();
-            List<DataStructures.ActionWithTimes> newActions = GetAllActionsAtTime(scenario, parentState, time);
-            State newState = new State(newActions, parentState.Fluents, parentState.ImpossibleActions);
+            List<State> newStates = new List<State>() { newState };
             foreach (Statement statement in statements)
             {
-                statement.CheckStatement(newActions[0], newState.Fluents, newState.ImpossibleActions, time);
-                if (statement is ReleaseStatement)
-                {
-                    if (states.Count == 0)
-                    {
-                        states.Add(newState);
-                        // rozgałęzienie - po releasie może być stary stan albo zmieniony
-                        states.Add(statement.DoStatement(newState.CurrentActions, newState.Fluents, newState.ImpossibleActions));
-                    }
-                    else
-                    {
-                        foreach (State state in states)
-                        { 
-                            // tworzenie rozgałęzień po releasie
-                            states.Add(statement.DoStatement(newState.CurrentActions, parentState.Fluents, parentState.ImpossibleActions));
-                        }
-                    }
-                }
-                else
-                { 
-                    states.Add(statement.DoStatement(newState.CurrentActions, newState.Fluents, newState.ImpossibleActions));
-                }
+                statement.CheckAndDo(parentState, ref newStates, time);          
             }
-
-            // jeśli nic się nie zmieniło - dodajemy stan taki sam jak u rodzica
-            if (states.Count == 0)
-            {
-                states.Add(newState);
-            }    
-
-            return states;
+            return newStates;
         }
 
         /// <summary>
         /// Zwraca listę wszystkich akcji, które będą trwały w danej chwili
-        /// - zarówno niezakończonych z poprzedniej chwili jak i tych, które się rozpoczynają
+        /// - zarówno niezakończonych z poprzedniej chwili jak i tych, które się rozpoczynają (również z listy FutureActions - ze statementów)
         /// </summary>
         /// <param name="scenario"></param>
         /// <param name="parentState"></param>
@@ -129,13 +154,19 @@ namespace KR_Lib
             List<DataStructures.ActionWithTimes> actions = new List<DataStructures.ActionWithTimes>();
             foreach (DataStructures.ActionWithTimes action in parentState.CurrentActions)
             {
-                var actionWTime = (action as ActionWithTimes);
-                if (actionWTime.GetEndTime() >= time)
+                if (action.GetEndTime() > time)
                 {
                     actions.Add(action);
                 }
             }
             actions.AddRange(scenario.GetStartingActions(time));
+            foreach (DataStructures.ActionWithTimes futureAction in parentState.FutureActions)
+            {
+                if (futureAction.StartTime == time)
+                {
+                    actions.Add(futureAction);
+                }
+            }
 
             return actions;
         }
@@ -145,9 +176,9 @@ namespace KR_Lib
         /// </summary>
         /// <param name="node"></param>
         /// <returns>Lista struktur</returns>
-        public static List<IStructure> GenerateStructues(Node node, IScenario scenario)
+        public static List<IStructure> GenerateStructues(Node node, IScenario scenario, int maxTime)
         {          
-            var structure = new Structure(-1);
+            var structure = new Structure(maxTime);
             var structures = new List<IStructure>() { structure };
             TreeToStructures(node, structure, structures, scenario);
             return structures;
@@ -164,45 +195,59 @@ namespace KR_Lib
         {
             if (node == null || node.CurrentState.CurrentActions.Count > 1)
             {
-                structure = new InconsistentStructure();
+                ChangeStructureToInconsistent(structure, structures);
                 return;
             }
             var curAction = node.CurrentState.CurrentActions.FirstOrDefault();
             if (curAction != null && node.CurrentState.ImpossibleActions.Contains(curAction))
             {
-                structure = new InconsistentStructure();
+                ChangeStructureToInconsistent(structure, structures);
                 return;
             }
+             
             var obs = scenario.GetObservationsAtTime(node.Time);
             foreach (var o in obs)
             {
-                if (!o.Form.Evaluate())
+                o.Formula.SetFluentsStates(node.CurrentState.Fluents);
+                if (!o.Formula.Evaluate())
                 {
-                    structure = new InconsistentStructure();
+                    ChangeStructureToInconsistent(structure, structures);
                     return;
                 }
             }
 
             //dodanie elementów
-
-            structure.TimeFluents[node.Time] = node.CurrentState.Fluents;
-            if (!structure.E.Contains(curAction))
-                structure.E.Add(curAction);
-            structures.Add(structure);
-
+            if (node.Time != -1)
+            {
+                structure.TimeFluents[node.Time] = node.CurrentState.Fluents;
+                if (curAction != null && !structure.E.Contains(curAction))
+                    structure.E.Add(curAction);
+                //structures.Add(structure);
+            }
             //koniec dodawania elementów
 
-            if (node.Children.Count == 1)
-                TreeToStructures(node.Children.FirstOrDefault(), structure, structures, scenario);
-            else
+            for(int i = 0; i < node.Children.Count; i++)
             {
-                foreach (Node child in node.Children)
+                if(i != 0)
                 {
                     var newStructure = new Structure(structure);
                     structures.Add(newStructure);
-                    TreeToStructures(child, newStructure, structures, scenario);
+                    TreeToStructures(node.Children[i], newStructure, structures, scenario);
                 }
+                else
+                {
+                    TreeToStructures(node.Children[i], structure, structures, scenario);
+                }
+
             }
+        }
+
+        private static void ChangeStructureToInconsistent(IStructure structure, List<IStructure> structures)
+        {
+            int index = structures.IndexOf(structure);
+            if (index != -1)
+                structures[index] = new InconsistentStructure();
+            return;
         }
     }
 }
