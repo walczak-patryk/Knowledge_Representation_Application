@@ -31,11 +31,7 @@
         <!--Menubar-->
         <DockPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
             <Menu DockPanel.Dock="Top">
-                <MenuItem Header="_File">
-                    <MenuItem Header="_Open" />
-                    <MenuItem Header="_Save" />
-                </MenuItem>
-                <MenuItem Header="About" />
+                <MenuItem Header="About" Click="MenuItem_Click" />
             </Menu>
         </DockPanel>
 
@@ -136,7 +132,7 @@
                            VerticalAlignment="Top" Content="duration" Margin="12,0"/>
                     <xctk:UIntegerUpDown Name="Action_Duration_UIntUpDown"
                                          Grid.Row="2" Grid.Column="3" Margin="3,3,3,3" /> -->
-                    <Button Name="AddActionButton"  Grid.Row="2" Grid.Column="4" Content="Add action" Margin="3" Click="AddActionButton_Click"/>
+                    <Button Name="AddActionButton"  Grid.Row="2" Grid.Column="4" Content="Add action" Margin="1" Click="AddActionButton_Click"/>
 
                     <Label Grid.Row="4" Grid.Column="1" Content="Fluent"/>
                     <TextBox Name="fluentName"  Grid.Row="5" Grid.Column="1" Text="Fluent name"
@@ -144,7 +140,7 @@
 
 
                     <Button Name="AddFluentButton" Grid.Row="5" Grid.Column="4" Content="Add fluent" Click="AddFluentButton_Click" 
-                            Margin="3"/>
+                            Margin="1"/>
 
                 </Grid>
 
