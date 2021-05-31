@@ -221,7 +221,7 @@
                     </Grid.RowDefinitions>
 
                     <!--Action occurences label-->
-                    <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">Action occurences</Label>
+                    <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">Action occurrences</Label>
 
                     <!--Action occurences - numeric up down control for moment-->
                     <xctk:UIntegerUpDown Name="Action_Occurences_Moment_UIntUpDown" ValueChanged="Action_Occurences_Moment_UIntUpDown_ValueChanged" Grid.Row="1" Grid.Column="0" Margin="3,3,3,3" >

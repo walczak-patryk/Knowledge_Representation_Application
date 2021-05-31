@@ -317,7 +317,7 @@ namespace KnowledgeRepresentationInterface
                 }
                 else
                 {
-                    new_subitem.Header = "Action occurence: " + item.ActionOccurence + " D: " + item.Duration + " M: " + item.Moment;
+                    new_subitem.Header = "Action occurrence: " + item.ActionOccurence + " D: " + item.Duration + " M: " + item.Moment;
                 }
                 
                 new_subitem.Tag = item.Id;

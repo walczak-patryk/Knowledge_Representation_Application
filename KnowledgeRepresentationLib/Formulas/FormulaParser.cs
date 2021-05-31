@@ -9,6 +9,10 @@ namespace KR_Lib.Formulas
     {
         public static IFormula ParseToFormula(List<ObservationElement> observationElements)
         {
+            if(observationElements == null)
+            {
+                return null;
+            }
             Stack<ObservationElement> stack = new Stack<ObservationElement>();
             List<ObservationElement> observationElements_copy = observationElements.GetRange(0, observationElements.Count);
             foreach(var elem in observationElements_copy)
@@ -84,6 +88,10 @@ namespace KR_Lib.Formulas
 
         public static List<ObservationElement> infix_to_ONP(List<ObservationElement> observation)
         {
+            if(observation[observation.Count -1].operator_ == "NOT")
+            {
+                return null;
+            }
             Dictionary<string, int> priorities = new Dictionary<string, int>();
             priorities.Add("AND", 2);
             priorities.Add("(", 0);
