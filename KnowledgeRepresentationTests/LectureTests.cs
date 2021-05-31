@@ -113,7 +113,7 @@ namespace KR_Tests
              * Acs={(load,1,1),(shoot,1,3)}
              * 
              * Kwerenda 1:
-             * Czy scenariusz jest osiagany zawsze
+             * Czy scenariusz jest osiagany zawsze?
              * 
              * Odpowiedź 1:
              * Tak
@@ -151,7 +151,7 @@ namespace KR_Tests
 
             #region Add querry
 
-            IQuery posibleScenarioQuery = new PossibleScenarioQuery(QueryType.Ever, scenario.Id);
+            IQuery posibleScenarioQuery = new PossibleScenarioQuery(QueryType.Always, scenario.Id);
             IQuery actionQuery = new ActionQuery(2, escape, scenario.Id);
             IQuery formulaQuery = new FormulaQuery(4, aliveFormula, scenario.Id); 
 
@@ -168,6 +168,100 @@ namespace KR_Tests
             responseFormulaQuery.Should().BeFalse();
 
             #endregion
-        }  
+        }
+
+        [TestMethod]
+        public void TestScenario2()
+        {
+            /*
+             * Obs={(¬loaded∧¬hidden∧alive,0), (¬loaded∧¬hidden∧¬alive,4)}
+             * Acs={(load,1,1),(shoot,1,1)}
+             * 
+             * Kwerenda 1:
+             * Czy scenariusz jest osiagany kiedykolwiek?
+             * 
+             * Odpowiedź 1:
+             * Nie, mamy dwie współliniowe akcje w chwili czasowej 1.
+             */
+
+            #region Add specific formulas
+
+            IFormula observationFormula1 = new ConjunctionFormula(negloadedFormula, aliveFormula, neghiddenFormula);
+            IFormula observationFormula2 = new ConjunctionFormula(negloadedFormula, negaliveFormula, neghiddenFormula);
+
+            #endregion
+
+            #region Add scenarios
+
+            IScenario scenario = new Scenario("testScenario2")
+            {
+                Observations = new List<Observation>() { new Observation(observationFormula1, 0), new Observation(observationFormula2, 4) },
+                ActionOccurrences = new List<ActionOccurrence> { new ActionOccurrence(load, 1, 1), new ActionOccurrence(shoot, 1, 1) }
+            };
+            engine.AddScenario(scenario);
+
+            #endregion
+
+            #region Add querry
+
+            IQuery posibleScenarioQuery = new PossibleScenarioQuery(QueryType.Ever, scenario.Id);
+
+            #endregion
+
+            #region Testing
+            engine.SetMaxTime(4);
+
+            bool responsePosibleScenarioQuery = engine.ExecuteQuery(posibleScenarioQuery);
+            responsePosibleScenarioQuery.Should().BeFalse();
+
+            #endregion
+        }
+
+        [TestMethod]
+        public void TestScenario3()
+        {
+            /*
+             * Obs={(¬loaded∧¬hidden∧alive,0), (¬loaded∧¬hidden∧¬alive,0)}
+             * Acs={(load,1,1),(shoot,1,3)}
+             * 
+             * Kwerenda 1:
+             * Czy scenariusz jest osiagany kiedykolwiek?
+             * 
+             * Odpowiedź 1:
+             * Nie, mamy dwie sprzeczne obserwacje w chwili 0.
+             */
+
+            #region Add specific formulas
+
+            IFormula observationFormula1 = new ConjunctionFormula(negloadedFormula, aliveFormula, neghiddenFormula);
+            IFormula observationFormula2 = new ConjunctionFormula(negloadedFormula, negaliveFormula, neghiddenFormula);
+
+            #endregion
+
+            #region Add scenarios
+
+            IScenario scenario = new Scenario("testScenario3")
+            {
+                Observations = new List<Observation>() { new Observation(observationFormula1, 0), new Observation(observationFormula2, 0) },
+                ActionOccurrences = new List<ActionOccurrence> { new ActionOccurrence(load, 1, 1), new ActionOccurrence(shoot, 1, 3) }
+            };
+            engine.AddScenario(scenario);
+
+            #endregion
+
+            #region Add querry
+
+            IQuery posibleScenarioQuery = new PossibleScenarioQuery(QueryType.Ever, scenario.Id);
+
+            #endregion
+
+            #region Testing
+            engine.SetMaxTime(4);
+
+            bool responsePosibleScenarioQuery = engine.ExecuteQuery(posibleScenarioQuery);
+            responsePosibleScenarioQuery.Should().BeFalse();
+
+            #endregion
+        }
     }
 }
