@@ -307,7 +307,7 @@ namespace KnowledgeRepresentationInterface
             this.scenario.name = ScenarioName_TextBox.Text;
             TreeViewItem new_scenario = new TreeViewItem();
             new_scenario.Header = ScenarioName_TextBox.Text;
-            new_scenario.Tag = scenario.Id.ToString();
+            //new_scenario.Tag = scenario.Id.ToString();
             foreach(var item in this.scenario.items)
             {
                 TreeViewItem new_subitem = new TreeViewItem();
@@ -326,6 +326,7 @@ namespace KnowledgeRepresentationInterface
 
             Scenario engine_scenario = new Scenario(this.scenario.name);
             this.scenario.Id = engine_scenario.Id;
+            new_scenario.Tag = scenario.Id.ToString();
             this.engine.AddScenario(engine_scenario);
             foreach(var elem in this.scenario.items)
             {
@@ -522,6 +523,13 @@ namespace KnowledgeRepresentationInterface
             engine.AddAction(action);
             Action_Occurences_ComboBox.Items.Refresh();
             this.AQ.Actions_ComboBox.Items.Refresh();
+        }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Niniejszy program jest systemem realizującym scenariusze działań z wykorzystaniem rozszerzenia języka AL.\n\n" +
+                "Autorzy:\nJoanna Frankiewicz *\nPatryk Walczak *\nAlicja Danilczuk\nKacper Gąsior\nPamela Krzypkowska\nKornel Mrozowski\n" + 
+                "Martin Mrugała\nKacper Skoczek\nFilip Szymczak\nDamian Wysokiński");
         }
     }
 }
