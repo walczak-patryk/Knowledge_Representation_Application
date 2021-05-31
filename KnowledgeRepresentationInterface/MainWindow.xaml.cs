@@ -14,6 +14,7 @@ using Action = KR_Lib.DataStructures.Action;
 using KR_Lib;
 using KR_Lib.Scenarios;
 using KR_Lib.Queries;
+using KR_Lib.Statements;
 
 namespace KnowledgeRepresentationInterface
 {
@@ -31,17 +32,18 @@ namespace KnowledgeRepresentationInterface
         ScenarioGUI scenario;
         List<Action> actions;
         List<Fluent> fluents;
+        List<IStatement> statements;
         List<ScenarioGUI> scenarios;
         ObservationCreator scenario_obs;
         
 
         //statements
-        CauseStatement CS;
-        ImpossibleAtStatement IAS;
-        ImpossibleIfStatement IIS;
-        InvokeStatement IS;
-        ReleaseStatement RS;
-        TriggerStatement TS;
+        CauseStatementView CS;
+        ImpossibleAtStatementView IAS;
+        ImpossibleIfStatementView IIS;
+        InvokeStatementView IS;
+        ReleaseStatementView RS;
+        TriggerStatementView TS;
 
         public MainWindow()
         {
@@ -52,6 +54,7 @@ namespace KnowledgeRepresentationInterface
             this.scenarios = new List<ScenarioGUI>();
             this.actions = new List<Action>();
             this.fluents = new List<Fluent>();
+            this.statements = new List<IStatement>();
             this.scenario_obs = new ObservationCreator(this.fluents);
             Initialize_Query_Types();
             Initialize_Statement_Types();
@@ -73,12 +76,12 @@ namespace KnowledgeRepresentationInterface
 
         private void Initialize_Statement_Types()
         {
-            this.CS = new CauseStatement();
-            this.IAS = new ImpossibleAtStatement();
-            this.IIS = new ImpossibleIfStatement();
-            this.IS = new InvokeStatement();
-            this.RS = new ReleaseStatement();
-            this.TS = new TriggerStatement();
+            this.CS = new CauseStatementView(this.fluents);
+            this.IAS = new ImpossibleAtStatementView();
+            this.IIS = new ImpossibleIfStatementView(this.fluents);
+            this.IS = new InvokeStatementView(this.fluents);
+            this.RS = new ReleaseStatementView(this.fluents);
+            this.TS = new TriggerStatementView(this.fluents);
         }
 
         private void Delete_TreeView_Click(object sender, RoutedEventArgs e)
@@ -91,6 +94,7 @@ namespace KnowledgeRepresentationInterface
                     this.actions.RemoveAll(x => x.Id.ToString() == item.Tag.ToString());
                     Action_Occurences_ComboBox.Items.Refresh();
                     this.AQ.Set_Actions(this.actions);
+                    this.CS.Set_Actions(this.actions);
                     return;
                 }
             }
@@ -140,7 +144,7 @@ namespace KnowledgeRepresentationInterface
 
         private void Panel_TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
+            Statement_Type_ComboBox_SelectionChanged(sender, e);
         }
 
         private void ExecuteQuery_Click(object sender, RoutedEventArgs e)
@@ -262,21 +266,27 @@ namespace KnowledgeRepresentationInterface
             {
                 case 0:
                     Statement_GroupBox.Content = this.CS;
+                    this.CS.Set_Actions(this.actions);
                     break;
                 case 1:
                     Statement_GroupBox.Content = this.IAS;
+                    this.IAS.Set_Actions(this.actions);
                     break;
                 case 2:
                     Statement_GroupBox.Content = this.IIS;
+                    this.IIS.Set_Actions(this.actions);
                     break;
                 case 3:
                     Statement_GroupBox.Content = this.IS;
+                    this.IS.Set_Actions(this.actions);
                     break;
                 case 4:
                     Statement_GroupBox.Content = this.RS;
+                    this.RS.Set_Actions_And_Fluents(this.actions, this.fluents);
                     break;
                 case 5:
                     Statement_GroupBox.Content = this.TS;
+                    this.TS.Set_Actions(this.actions);
                     break;
                 
                 
@@ -499,6 +509,12 @@ namespace KnowledgeRepresentationInterface
         private void AddFluentButton_Click(object sender, RoutedEventArgs e)
         {
             string name = fluentName.Text;
+            if (this.IsNameInFluents(name))
+            {
+                MessageBox.Show($"Fluent name '{name}' already used. Type another name.");
+                return;
+            }
+
             Fluent fluent = new Fluent(name);
             fluents.Add(fluent);
             TreeViewItem tv_elem = new TreeViewItem();
@@ -514,7 +530,15 @@ namespace KnowledgeRepresentationInterface
         private void AddActionButton_Click(object sender, RoutedEventArgs e)
         {
             string name = actionNameTextBox.Text;
+
+            if (this.IsNameInActions(name))
+            {
+                MessageBox.Show($"Action name '{name}' already used. Type another name.");
+                return;
+            }
             Action action = new Action(name);
+
+
             TreeViewItem tv_elem = new TreeViewItem();
             tv_elem.Header = name;
             tv_elem.Tag = action.Id;
@@ -530,6 +554,288 @@ namespace KnowledgeRepresentationInterface
             MessageBox.Show("Niniejszy program jest systemem realizującym scenariusze działań z wykorzystaniem rozszerzenia języka AL.\n\n" +
                 "Autorzy:\nJoanna Frankiewicz *\nPatryk Walczak *\nAlicja Danilczuk\nKacper Gąsior\nPamela Krzypkowska\nKornel Mrozowski\n" + 
                 "Martin Mrugała\nKacper Skoczek\nFilip Szymczak\nDamian Wysokiński");
+        }
+        private bool IsNameInActions(string name)
+        {
+            foreach (Action action in this.actions)
+            {
+                var actionName = action.Name;
+                if(actionName == name)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private bool IsNameInFluents(string name)
+        {
+            foreach (Fluent fluent in this.fluents)
+            {
+                var fluentName = fluent.Name;
+                if (fluentName == name)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private void AddStatementButton_Click(object sender, RoutedEventArgs e)
+        {           
+            if (Statement_Type_ComboBox.SelectedIndex == -1)
+            {
+                MessageBox.Show($"No statement type chosen.");
+                return;
+            }
+            switch (Statement_Type_ComboBox.SelectedIndex)
+            {
+                case 0: //CS
+
+                    if (this.CS.CauseStatement_ComboBox.SelectedIndex == -1)
+                    {
+                        MessageBox.Show($"No action chosen for 'cause' statement type.");
+                        return;
+                    }
+
+                    if(this.CS.Get_First_Formula() == null)
+                    {
+                        MessageBox.Show($"Incorrect first formula");
+                        return;
+                    }
+
+                    if (this.CS.Get_Second_Formula() == null)
+                    {
+                        MessageBox.Show($"Incorrect second formula");
+                        return;
+                    }
+
+                    Action action = (Action)this.CS.CauseStatement_ComboBox.SelectedItem;
+                    int time = Convert.ToInt32(TimeInfinity_UpDown.Value);
+
+                    ActionTime actionTime = new ActionTime(action, time);
+                    IStatement statement = new CauseStatement(actionTime, this.CS.Get_First_Formula(), this.CS.Get_Second_Formula());
+
+                    TreeViewItem tv_elem = new TreeViewItem();
+                    tv_elem.Header = "Cause Statement " + CauseStatementView.numberOfCouseStatements;
+                    tv_elem.Tag = statement.GetId();
+
+                    TreeViewItem tv_elem_formula1 = new TreeViewItem();
+                    tv_elem_formula1.Header = this.CS.scenario_obs.Observations_TextBox.Text;
+                    tv_elem_formula1.Tag = this.CS.Get_First_Formula().ToString();
+
+                    TreeViewItem tv_elem_formula2 = new TreeViewItem();
+                    tv_elem_formula2.Header = this.CS.scenario_obs2.Observations_TextBox.Text;
+                    tv_elem_formula2.Tag = this.CS.Get_Second_Formula().ToString();
+
+                    
+                    CauseStatementView.numberOfCouseStatements += 1;
+
+                    tv_elem.Items.Add(tv_elem_formula1);
+                    tv_elem.Items.Add(tv_elem_formula2);
+
+                    tv_elem.Tag = statement.GetId();
+                    Statements_TreeViewItem.Items.Add(tv_elem);
+
+                    statements.Add(statement);
+                    engine.AddStatement(statement);
+                    
+
+                    break;
+                case 1: //IAS
+
+                    if (this.IAS.ImpossibleAtStatement_ComboBox.SelectedIndex == -1)
+                    {
+                        MessageBox.Show("No Action chosen for 'impossible at' statement type.");
+                        return;
+                    }
+                    if(this.IAS.Action_Duration_UIntUpDown.Value == null || this.IAS.Action_Duration_UIntUpDown.Value == 0)
+                    {
+                        MessageBox.Show("Specify time for 'impossible at' statement type.");
+                        return;
+                    }
+
+                    Action actionIAS = (Action)this.IAS.ImpossibleAtStatement_ComboBox.SelectedItem;
+                    int timeIAS = Convert.ToInt32(this.IAS.Action_Duration_UIntUpDown.Value);
+
+                    IStatement statementIAS = new ImpossibleAtStatement(actionIAS, timeIAS);
+                    TreeViewItem tv_elemIAS = new TreeViewItem();
+                    tv_elemIAS.Header = "Imposssible At Statement " + ImpossibleAtStatementView.numberOfImpossibleAtStatements;
+                    tv_elemIAS.Tag = statementIAS.GetId();
+
+                    TreeViewItem tv_elem_timeIAS = new TreeViewItem();
+                    tv_elem_timeIAS.Header = "time: " + timeIAS;
+                    tv_elem_timeIAS.Tag = timeIAS.ToString();
+
+                    tv_elemIAS.Items.Add(tv_elem_timeIAS);
+
+                    ImpossibleAtStatementView.numberOfImpossibleAtStatements += 1;
+
+                    Statements_TreeViewItem.Items.Add(tv_elemIAS);
+
+                    statements.Add(statementIAS);
+                    engine.AddStatement(statementIAS);
+
+                    break;
+                case 2: //IIS
+                    if (this.IIS.ImpossibleIfStatement_ComboBox.SelectedIndex == -1)
+                    {
+                        MessageBox.Show("No action chosen for 'impossible if' statement type.");
+                        return;
+                    }
+
+                    if (this.IIS.Get_Formula()== null)
+                    {
+                        MessageBox.Show($"Incorrect second formula");
+                        return;
+                    }
+
+                    Action actionIIS = (Action)this.IIS.ImpossibleIfStatement_ComboBox.SelectedItem;
+
+                    IStatement statementIIS = new ImpossibleIfStatement(actionIIS, this.IIS.Get_Formula());
+                    TreeViewItem tv_elemIIS = new TreeViewItem();
+                    tv_elemIIS.Header = "Impossible If Statement " + ImpossibleIfStatementView.numberOfImpossibleifStatements; 
+                    tv_elemIIS.Tag = statementIIS.GetId();
+
+                    TreeViewItem tv_elem_formulaIIS = new TreeViewItem();
+                    tv_elem_formulaIIS.Header = this.IIS.scenario_obs.Observations_TextBox.Text;
+                    tv_elem_formulaIIS.Tag = this.IIS.Get_Formula().ToString();
+
+                    ImpossibleIfStatementView.numberOfImpossibleifStatements += 1;
+
+                    tv_elemIIS.Items.Add(tv_elem_formulaIIS);
+
+                    Statements_TreeViewItem.Items.Add(tv_elemIIS);
+
+
+
+                    statements.Add(statementIIS);
+                    engine.AddStatement(statementIIS);
+
+                    break;
+                case 3: //IS
+                    if (this.IS.InvokeStatementFirst_ComboBox.SelectedIndex == -1)
+                    {
+                        MessageBox.Show("No action chosen for 'invoke' statement type.");
+                        return;
+                    }
+                    if (this.IS.InvokeStatementSecend_ComboBox.SelectedIndex == -1)
+                    {
+                        MessageBox.Show("No action chosen for 'invoke' statement type.");
+                        return;
+                    }
+                    if (this.IS.Get_Formula() == null)
+                    {
+                        MessageBox.Show($"Incorrect formula");
+                        return;
+                    }
+
+                    Action actionIS1 = (Action)this.IS.InvokeStatementFirst_ComboBox.SelectedItem;
+                    Action actionIS2 = (Action)this.IS.InvokeStatementSecend_ComboBox.SelectedItem;
+
+                    int timeIS = Convert.ToInt32(TimeInfinity_UpDown.Value);
+
+                    ActionTime actionTimeIS1 = new ActionTime(actionIS1, timeIS);
+                    ActionTime actionTimeIS2 = new ActionTime(actionIS2, timeIS);
+
+                    int waitTimeValue = Convert.ToInt32(this.IS.Action_Duration_UIntUpDown.Value);
+
+                    IStatement statementIS = new InvokeStatement(actionTimeIS1, actionTimeIS2, this.IS.Get_Formula(), waitTimeValue);
+                    TreeViewItem tv_elemIS = new TreeViewItem();
+
+                    tv_elemIS.Header = "Invoke Statement " + InvokeStatementView.numberOfIvokeStatements;
+                    tv_elemIS.Tag = statementIS.GetId();
+
+                    TreeViewItem tv_elem_formulaIS = new TreeViewItem();
+                    tv_elem_formulaIS.Header = this.IS.scenario_obs.Observations_TextBox.Text;
+                    tv_elem_formulaIS.Tag = this.IS.Get_Formula().ToString();
+
+                    tv_elemIS.Items.Add(tv_elem_formulaIS);
+
+                    InvokeStatementView.numberOfIvokeStatements += 1;
+                    Statements_TreeViewItem.Items.Add(tv_elemIS);
+
+                    statements.Add(statementIS);
+                    engine.AddStatement(statementIS);
+
+                    break;
+                case 4: //RS
+                    if(this.RS.ReleaseStatementActions_ComboBox.SelectedIndex == -1)
+                    {
+                        MessageBox.Show("No action chosen for 'release' statement type.");
+                        return;
+                    }
+                    if (this.RS.ReleaseStatementFluents_ComboBox.SelectedIndex == -1)
+                    {
+                        MessageBox.Show("No fluent chosen for 'release' statement type.");
+                        return;
+                    }
+
+                    if (this.RS.Get_Formula() == null)
+                    {
+                        MessageBox.Show($"Incorrect formula");
+                        return;
+                    }
+
+                    Action actionRS = (Action)this.RS.ReleaseStatementActions_ComboBox.SelectedItem;
+                    Fluent fluentRS = (Fluent)this.RS.ReleaseStatementFluents_ComboBox.SelectedItem;
+
+                    IStatement statementRS = new ReleaseStatement(actionRS, fluentRS, this.RS.Get_Formula());
+
+
+                    TreeViewItem tv_elemRS = new TreeViewItem();
+
+                    tv_elemRS.Header = "Release Statement " + ReleaseStatementView.numberOfReleaseStatements; 
+                    tv_elemRS.Tag = statementRS.GetId();
+
+                    TreeViewItem tv_elem_formulaRS = new TreeViewItem();
+                    tv_elem_formulaRS.Header = this.RS.scenario_obs.Observations_TextBox.Text;
+                    tv_elem_formulaRS.Tag = this.RS.Get_Formula().ToString();
+
+                    tv_elemRS.Items.Add(tv_elem_formulaRS);
+                    ReleaseStatementView.numberOfReleaseStatements += 1;
+
+                    Statements_TreeViewItem.Items.Add(tv_elemRS);
+
+                    statements.Add(statementRS);
+                    engine.AddStatement(statementRS);
+
+                    break;
+                case 5: //TS
+                    
+                    if(this.TS.TriggerStatementAction_ComboBox.SelectedIndex == -1)
+                    {
+                        MessageBox.Show("No action choosen for 'trigger' statement type.");
+                        return;
+                    }
+
+                    if (this.TS.Get_Formula() == null)
+                    {
+                        MessageBox.Show($"Incorrect formula");
+                        return;
+                    }
+                    
+                    IStatement statementTS = new TriggerStatement((Action)this.TS.TriggerStatementAction_ComboBox.SelectedItem, this.TS.Get_Formula());
+
+                    TreeViewItem tv_elemTS = new TreeViewItem();
+
+                    tv_elemTS.Header = "Trigger Statement " + TriggerStatementView.numberOfTriggerStatements;
+                    tv_elemTS.Tag = statementTS.GetId();
+
+                    TreeViewItem tv_elem_formulaTS = new TreeViewItem();
+                    tv_elem_formulaTS.Header = this.TS.scenario_obs.Observations_TextBox.Text;
+                    tv_elem_formulaTS.Tag = this.TS.Get_Formula().ToString();
+
+                    tv_elemTS.Items.Add(tv_elem_formulaTS);
+                    TriggerStatementView.numberOfTriggerStatements += 1;
+
+                    Statements_TreeViewItem.Items.Add(tv_elemTS);
+
+                    statements.Add(statementTS);
+                    engine.AddStatement(statementTS);
+
+                    break;
+            }
         }
     }
 }
