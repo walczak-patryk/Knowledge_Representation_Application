@@ -47,10 +47,10 @@ namespace KR_Lib
             Node root = new Node(null, new State(new List<ActionWithTimes>(), new List<Fluent>(), new List<ActionWithTimes>(), new List<ActionWithTimes>()), -1);
             List<DataStructures.ActionWithTimes> actions = scenario.GetStartingActions(0);
             List<Observation> observations = scenario.GetObservationsAtTime(0);
-            foreach(Observation observation in observations)
+            if (observations.Count == 0)
             {
-                List<List<Fluent>> fluentsCombinations = GetAllFluentsCombinations(observation, fluents);
-                foreach(List<Fluent> fluentsCombination in fluentsCombinations)
+                List<List<Fluent>> fluentsCombinations = GetAllFluentsCombinations(null, fluents);
+                foreach (List<Fluent> fluentsCombination in fluentsCombinations)
                 {
                     State newState = new State(actions, fluentsCombination, new List<ActionWithTimes>(), new List<ActionWithTimes>());
                     List<State> newStates = CheckDescription(scenario, description.GetStatements(), root.CurrentState, newState, 0);
@@ -58,6 +58,23 @@ namespace KR_Lib
                     {
                         Node newNode = new Node(root, state, 0);
                         root.addChild(newNode);
+                    }
+                }
+            }
+            else
+            {
+                foreach (Observation observation in observations)
+                {
+                    List<List<Fluent>> fluentsCombinations = GetAllFluentsCombinations(observation, fluents);
+                    foreach (List<Fluent> fluentsCombination in fluentsCombinations)
+                    {
+                        State newState = new State(actions, fluentsCombination, new List<ActionWithTimes>(), new List<ActionWithTimes>());
+                        List<State> newStates = CheckDescription(scenario, description.GetStatements(), root.CurrentState, newState, 0);
+                        foreach (State state in newStates)
+                        {
+                            Node newNode = new Node(root, state, 0);
+                            root.addChild(newNode);
+                        }
                     }
                 }
             }
@@ -84,9 +101,16 @@ namespace KR_Lib
                     newFluent.State = boolCombination[i];
                     fluentsCombination.Add(newFluent);
                 }
-                observation.Formula.SetFluentsStates(fluentsCombination);
-                if(observation.Formula.Evaluate())
+                if (observation == null)
+                {
                     fluentsCombinations.Add(fluentsCombination);
+                }
+                else
+                {
+                    observation.Formula.SetFluentsStates(fluentsCombination);
+                    if (observation.Formula.Evaluate())
+                        fluentsCombinations.Add(fluentsCombination);
+                }
             }
 
             return fluentsCombinations;
