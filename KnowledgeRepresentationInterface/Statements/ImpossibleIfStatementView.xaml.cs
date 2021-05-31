@@ -24,6 +24,7 @@ namespace KnowledgeRepresentationInterface.Statements
     /// </summary>
     public partial class ImpossibleIfStatementView : UserControl
     {
+        public static int numberOfImpossibleifStatements = 0;
         public ObservationCreator scenario_obs { get; set; }
         public ImpossibleIfStatementView()
         {

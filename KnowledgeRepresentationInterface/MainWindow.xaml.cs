@@ -617,7 +617,23 @@ namespace KnowledgeRepresentationInterface
                     IStatement statement = new CauseStatement(actionTime, this.CS.Get_First_Formula(), this.CS.Get_Second_Formula());
 
                     TreeViewItem tv_elem = new TreeViewItem();
-                    tv_elem.Header = this.CS.CauseStatement_ComboBox.SelectedItem.ToString() + statement.GetId();
+                    tv_elem.Header = "Cause Statement " + CauseStatementView.numberOfCouseStatements;
+                    tv_elem.Tag = statement.GetId();
+
+                    TreeViewItem tv_elem_formula1 = new TreeViewItem();
+                    tv_elem_formula1.Header = this.CS.scenario_obs.Observations_TextBox.Text;
+                    tv_elem_formula1.Tag = this.CS.Get_First_Formula().ToString();
+
+                    TreeViewItem tv_elem_formula2 = new TreeViewItem();
+                    tv_elem_formula2.Header = this.CS.scenario_obs2.Observations_TextBox.Text;
+                    tv_elem_formula2.Tag = this.CS.Get_Second_Formula().ToString();
+
+                    
+                    CauseStatementView.numberOfCouseStatements += 1;
+
+                    tv_elem.Items.Add(tv_elem_formula1);
+                    tv_elem.Items.Add(tv_elem_formula2);
+
                     tv_elem.Tag = statement.GetId();
                     Statements_TreeViewItem.Items.Add(tv_elem);
 
@@ -644,8 +660,17 @@ namespace KnowledgeRepresentationInterface
 
                     IStatement statementIAS = new ImpossibleAtStatement(actionIAS, timeIAS);
                     TreeViewItem tv_elemIAS = new TreeViewItem();
-                    tv_elemIAS.Header = this.IAS.ImpossibleAtStatement_ComboBox.SelectedItem.ToString() + statementIAS.GetId();
+                    tv_elemIAS.Header = "Imposssible At Statement " + ImpossibleAtStatementView.numberOfImpossibleAtStatements;
                     tv_elemIAS.Tag = statementIAS.GetId();
+
+                    TreeViewItem tv_elem_timeIAS = new TreeViewItem();
+                    tv_elem_timeIAS.Header = "time: " + timeIAS;
+                    tv_elem_timeIAS.Tag = timeIAS.ToString();
+
+                    tv_elemIAS.Items.Add(tv_elem_timeIAS);
+
+                    ImpossibleAtStatementView.numberOfImpossibleAtStatements += 1;
+
                     Statements_TreeViewItem.Items.Add(tv_elemIAS);
 
                     statements.Add(statementIAS);
@@ -669,9 +694,20 @@ namespace KnowledgeRepresentationInterface
 
                     IStatement statementIIS = new ImpossibleIfStatement(actionIIS, this.IIS.Get_Formula());
                     TreeViewItem tv_elemIIS = new TreeViewItem();
-                    tv_elemIIS.Header = this.IIS.ImpossibleIfStatement_ComboBox.SelectedItem.ToString() + statementIIS.GetId();
+                    tv_elemIIS.Header = "Impossible If Statement " + ImpossibleIfStatementView.numberOfImpossibleifStatements; 
                     tv_elemIIS.Tag = statementIIS.GetId();
+
+                    TreeViewItem tv_elem_formulaIIS = new TreeViewItem();
+                    tv_elem_formulaIIS.Header = this.IIS.scenario_obs.Observations_TextBox.Text;
+                    tv_elem_formulaIIS.Tag = this.IIS.Get_Formula().ToString();
+
+                    ImpossibleIfStatementView.numberOfImpossibleifStatements += 1;
+
+                    tv_elemIIS.Items.Add(tv_elem_formulaIIS);
+
                     Statements_TreeViewItem.Items.Add(tv_elemIIS);
+
+
 
                     statements.Add(statementIIS);
                     engine.AddStatement(statementIIS);
@@ -707,8 +743,16 @@ namespace KnowledgeRepresentationInterface
                     IStatement statementIS = new InvokeStatement(actionTimeIS1, actionTimeIS2, this.IS.Get_Formula(), waitTimeValue);
                     TreeViewItem tv_elemIS = new TreeViewItem();
 
-                    tv_elemIS.Header = this.IS.InvokeStatementFirst_ComboBox.SelectedItem.ToString() + statementIS.GetId(); // sa 2 statementy, mozna 2 wrzucic
+                    tv_elemIS.Header = "Invoke Statement " + InvokeStatementView.numberOfIvokeStatements;
                     tv_elemIS.Tag = statementIS.GetId();
+
+                    TreeViewItem tv_elem_formulaIS = new TreeViewItem();
+                    tv_elem_formulaIS.Header = this.IS.scenario_obs.Observations_TextBox.Text;
+                    tv_elem_formulaIS.Tag = this.IS.Get_Formula().ToString();
+
+                    tv_elemIS.Items.Add(tv_elem_formulaIS);
+
+                    InvokeStatementView.numberOfIvokeStatements += 1;
                     Statements_TreeViewItem.Items.Add(tv_elemIS);
 
                     statements.Add(statementIS);
@@ -741,8 +785,16 @@ namespace KnowledgeRepresentationInterface
 
                     TreeViewItem tv_elemRS = new TreeViewItem();
 
-                    tv_elemRS.Header = this.RS.ReleaseStatementActions_ComboBox.SelectedItem.ToString() + statementRS.GetId(); // sa 2 statementy, mozna 2 wrzucic
+                    tv_elemRS.Header = "Release Statement " + ReleaseStatementView.numberOfReleaseStatements; 
                     tv_elemRS.Tag = statementRS.GetId();
+
+                    TreeViewItem tv_elem_formulaRS = new TreeViewItem();
+                    tv_elem_formulaRS.Header = this.RS.scenario_obs.Observations_TextBox.Text;
+                    tv_elem_formulaRS.Tag = this.RS.Get_Formula().ToString();
+
+                    tv_elemRS.Items.Add(tv_elem_formulaRS);
+                    ReleaseStatementView.numberOfReleaseStatements += 1;
+
                     Statements_TreeViewItem.Items.Add(tv_elemRS);
 
                     statements.Add(statementRS);
@@ -767,8 +819,16 @@ namespace KnowledgeRepresentationInterface
 
                     TreeViewItem tv_elemTS = new TreeViewItem();
 
-                    tv_elemTS.Header = this.TS.TriggerStatementAction_ComboBox.SelectedItem.ToString() + statementTS.GetId(); // sa 2 statementy, mozna 2 wrzucic
+                    tv_elemTS.Header = "Trigger Statement " + TriggerStatementView.numberOfTriggerStatements;
                     tv_elemTS.Tag = statementTS.GetId();
+
+                    TreeViewItem tv_elem_formulaTS = new TreeViewItem();
+                    tv_elem_formulaTS.Header = this.TS.scenario_obs.Observations_TextBox.Text;
+                    tv_elem_formulaTS.Tag = this.TS.Get_Formula().ToString();
+
+                    tv_elemTS.Items.Add(tv_elem_formulaTS);
+                    TriggerStatementView.numberOfTriggerStatements += 1;
+
                     Statements_TreeViewItem.Items.Add(tv_elemTS);
 
                     statements.Add(statementTS);

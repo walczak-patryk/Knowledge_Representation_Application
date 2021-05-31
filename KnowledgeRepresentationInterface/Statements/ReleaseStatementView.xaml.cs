@@ -24,6 +24,7 @@ namespace KnowledgeRepresentationInterface.Statements
     /// </summary>
     public partial class ReleaseStatementView : UserControl
     {
+        public static int numberOfReleaseStatements = 0;
         public ObservationCreator scenario_obs { get; set; }
         public ReleaseStatementView(List<Fluent> fluents)
         {

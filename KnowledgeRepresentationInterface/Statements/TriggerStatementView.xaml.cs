@@ -24,6 +24,7 @@ namespace KnowledgeRepresentationInterface.Statements
     /// </summary>
     public partial class TriggerStatementView : UserControl
     {
+        public static int numberOfTriggerStatements = 0;
         public ObservationCreator scenario_obs { get; set; }
         public TriggerStatementView(List<Fluent> fluents)
         {

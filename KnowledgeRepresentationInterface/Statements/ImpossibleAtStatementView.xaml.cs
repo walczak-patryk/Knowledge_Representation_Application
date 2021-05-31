@@ -21,6 +21,7 @@ namespace KnowledgeRepresentationInterface.Statements
     /// </summary>
     public partial class ImpossibleAtStatementView : UserControl
     {
+        public static int numberOfImpossibleAtStatements = 0;
         public ImpossibleAtStatementView()
         {
             InitializeComponent();

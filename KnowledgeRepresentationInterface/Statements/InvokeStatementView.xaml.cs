@@ -24,6 +24,7 @@ namespace KnowledgeRepresentationInterface.Statements
     /// </summary>
     public partial class InvokeStatementView : UserControl
     {
+        public static int numberOfIvokeStatements = 0;
         public ObservationCreator scenario_obs { get; set; }
         public InvokeStatementView(List<Fluent> fluents)
         {

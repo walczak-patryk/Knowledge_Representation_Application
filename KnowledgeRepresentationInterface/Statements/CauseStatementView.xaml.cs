@@ -24,6 +24,8 @@ namespace KnowledgeRepresentationInterface.Statements
     /// </summary>
     public partial class CauseStatementView : UserControl
     {
+        public static int numberOfCouseStatements = 0;
+
         public ObservationCreator scenario_obs { get; set; }
         public ObservationCreator scenario_obs2 { get; set; }
         public CauseStatementView()
