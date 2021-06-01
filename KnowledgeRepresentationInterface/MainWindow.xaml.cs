@@ -92,6 +92,39 @@ namespace KnowledgeRepresentationInterface
                 {
                     Actions_TreeViewItem.Items.Remove(item);
                     this.actions.RemoveAll(x => x.Id.ToString() == item.Tag.ToString());
+                    List<ScenarioGUI> scenarios_to_remove = new List<ScenarioGUI>();
+                    foreach (ScenarioGUI scenario_tmp in scenarios)
+                    {
+                        foreach (ScenarioItem item_tmp in scenario_tmp.items)
+                        {
+                            if (item_tmp.ActionOccurence != null)
+                            {
+                                if (item_tmp.ActionOccurence_engine.Id.ToString() == item.Tag.ToString())
+                                {
+                                    scenarios_to_remove.Add(scenario_tmp);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    foreach(var scenario_tmp in scenarios_to_remove)
+                    {
+                        TreeViewItem scenario_to_remove = null;
+                        foreach (TreeViewItem scenario_tv in Scenarios_TreeViewItem.Items)
+                        {
+                            if (scenario_tv.Tag.ToString() == scenario_tmp.Id.ToString())
+                            {
+                                scenario_to_remove = scenario_tv;
+                                break;
+                            }
+                        }
+                        Scenarios_TreeViewItem.Items.Remove(scenario_to_remove);
+                        this.scenarios.RemoveAll(x => x.Id.ToString() == scenario_tmp.Id.ToString());
+                        Query_Scenario_ComboBox.ItemsSource = this.scenarios;
+                        Query_Scenario_ComboBox.Items.Refresh();
+                        this.engine.RemoveScenario(scenario_tmp.Id);
+                    }
+
                     Action_Occurences_ComboBox.Items.Refresh();
                     this.AQ.Set_Actions(this.actions);
                     this.CS.Set_Actions(this.actions);
@@ -104,6 +137,55 @@ namespace KnowledgeRepresentationInterface
                 {
                     Fluents_TreeViewItem.Items.Remove(item);
                     this.fluents.RemoveAll(x => x.Id.ToString() == item.Tag.ToString());
+
+                    List<ScenarioGUI> scenarios_to_remove = new List<ScenarioGUI>();
+                    foreach (ScenarioGUI scenario_tmp in scenarios)
+                    {
+                        foreach (ScenarioItem item_tmp in scenario_tmp.items)
+                        {
+                            bool found = false;
+                            if(found)
+                            {
+                                break;
+                            }
+                            if (item_tmp.observationElements != null)
+                            {
+                                foreach (var obsElem in item_tmp.observationElements)
+                                {
+                                    if (obsElem.isFluent)
+                                    {
+                                        if (obsElem.fluent.Id.ToString() == item.Tag.ToString())
+                                        {
+                                            scenarios_to_remove.Add(scenario_tmp);
+                                            found = true;
+                                            break;
+                                        }
+                                    }
+
+                                }
+                            }
+
+                        }
+                    }
+                    foreach (var scenario_tmp in scenarios_to_remove)
+                    {
+                        TreeViewItem scenario_to_remove = null;
+                        foreach (TreeViewItem scenario_tv in Scenarios_TreeViewItem.Items)
+                        {
+                            if (scenario_tv.Tag.ToString() == scenario_tmp.Id.ToString())
+                            {
+                                scenario_to_remove = scenario_tv;
+                                break;
+                            }
+                        }
+                        Scenarios_TreeViewItem.Items.Remove(scenario_to_remove);
+                        this.scenarios.RemoveAll(x => x.Id.ToString() == scenario_tmp.Id.ToString());
+                        Query_Scenario_ComboBox.ItemsSource = this.scenarios;
+                        Query_Scenario_ComboBox.Items.Refresh();
+                        this.engine.RemoveScenario(scenario_tmp.Id);
+                    }
+
+
                     this.scenario_obs.RefreshControl();
                     this.TQ.Refresh_Fluents();
                     this.FQ.Refresh_Fluents();
@@ -123,9 +205,21 @@ namespace KnowledgeRepresentationInterface
                 if (item.IsSelected)
                 {
                     Scenarios_TreeViewItem.Items.Remove(item);
+                    ScenarioGUI scenario_to_remove = null;
+                    foreach (ScenarioGUI scenario_tmp in scenarios)
+                    {
+                        if (scenario_tmp.Id.ToString() == item.Tag.ToString())
+                        {
+                            scenario_to_remove = scenario_tmp;
+                            break;
+                        }
+                    }
+                    this.engine.RemoveScenario(scenario_to_remove.Id);
                     this.scenarios.RemoveAll(x => x.Id.ToString() == item.Tag.ToString());
                     Query_Scenario_ComboBox.ItemsSource = this.scenarios;
                     Query_Scenario_ComboBox.Items.Refresh();
+
+
                     return;
                 }
             }
@@ -379,7 +473,7 @@ namespace KnowledgeRepresentationInterface
             }
             int moment = (int)Action_Occurences_Moment_UIntUpDown.Value;
             int duration = (int)Action_Occurences_Duration_UIntUpDown.Value;
-            this.scenario.items.Add(new ScenarioItem(action.Name,action,moment,duration, "", null));
+            this.scenario.items.Add(new ScenarioItem(action.Name,action,moment,duration, "", null, null));
             Scenario_ListView.Items.Refresh();
         }
 
@@ -405,7 +499,7 @@ namespace KnowledgeRepresentationInterface
                 return;
             }
             int moment = (int)Observations_UIntUpDown.Value;
-            this.scenario.items.Add(new ScenarioItem(null,null,moment,0,this.scenario_obs.GetContent(), formula));
+            this.scenario.items.Add(new ScenarioItem(null,null,moment,0,this.scenario_obs.GetContent(), formula, observation));
             Scenario_ListView.Items.Refresh();
             this.scenario_obs.Clear_Control();
         }

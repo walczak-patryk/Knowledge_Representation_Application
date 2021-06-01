@@ -19,8 +19,9 @@ namespace KR_Lib.DataStructures
         public IFormula formula { get; set; }
         public int Moment_int { get; set; }
         public int Duration_int { get; set; }
+        public List<ObservationElement> observationElements { get; set; }
 
-        public ScenarioItem(string ActionOccurence,Action Action, int Moment_int, int Duration_int, string Observation, IFormula formula)
+        public ScenarioItem(string ActionOccurence,Action Action, int Moment_int, int Duration_int, string Observation, IFormula formula, List<ObservationElement> observationElements)
         {
             this.Id = Guid.NewGuid();
             this.Moment = Moment_int.ToString();
@@ -38,6 +39,7 @@ namespace KR_Lib.DataStructures
             this.formula = formula;
             this.Moment_int = Moment_int;
             this.Duration_int = Duration_int;
+            this.observationElements = observationElements;
         }
     }
 }
