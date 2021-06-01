@@ -714,17 +714,22 @@ namespace KnowledgeRepresentationInterface
                     tv_elem.Header = "Cause Statement " + CauseStatementView.numberOfCouseStatements;
                     tv_elem.Tag = statement.GetId();
 
+                    TreeViewItem tv_elem_action = new TreeViewItem();
+                    tv_elem_action.Header = "Action: " + this.CS.CauseStatement_ComboBox.Text;
+                    tv_elem_action.Tag = action.Id.ToString();
+
                     TreeViewItem tv_elem_formula1 = new TreeViewItem();
-                    tv_elem_formula1.Header = this.CS.scenario_obs.Observations_TextBox.Text;
+                    tv_elem_formula1.Header = "Formula1: " + this.CS.scenario_obs.Observations_TextBox.Text;
                     tv_elem_formula1.Tag = this.CS.Get_First_Formula().ToString();
 
                     TreeViewItem tv_elem_formula2 = new TreeViewItem();
-                    tv_elem_formula2.Header = this.CS.scenario_obs2.Observations_TextBox.Text;
+                    tv_elem_formula2.Header = "Formula2: " + this.CS.scenario_obs2.Observations_TextBox.Text;
                     tv_elem_formula2.Tag = this.CS.Get_Second_Formula().ToString();
 
                     
                     CauseStatementView.numberOfCouseStatements += 1;
 
+                    tv_elem.Items.Add(tv_elem_action);
                     tv_elem.Items.Add(tv_elem_formula1);
                     tv_elem.Items.Add(tv_elem_formula2);
 
@@ -757,10 +762,15 @@ namespace KnowledgeRepresentationInterface
                     tv_elemIAS.Header = "Imposssible At Statement " + ImpossibleAtStatementView.numberOfImpossibleAtStatements;
                     tv_elemIAS.Tag = statementIAS.GetId();
 
+                    TreeViewItem tv_elem_actionIAS = new TreeViewItem();
+                    tv_elem_actionIAS.Header = "Action: " + this.IAS.ImpossibleAtStatement_ComboBox.Text;
+                    tv_elem_actionIAS.Tag = actionIAS.Id.ToString();
+
                     TreeViewItem tv_elem_timeIAS = new TreeViewItem();
-                    tv_elem_timeIAS.Header = "time: " + timeIAS;
+                    tv_elem_timeIAS.Header = "Time: " + timeIAS;
                     tv_elem_timeIAS.Tag = timeIAS.ToString();
 
+                    tv_elemIAS.Items.Add(tv_elem_actionIAS);
                     tv_elemIAS.Items.Add(tv_elem_timeIAS);
 
                     ImpossibleAtStatementView.numberOfImpossibleAtStatements += 1;
@@ -791,12 +801,18 @@ namespace KnowledgeRepresentationInterface
                     tv_elemIIS.Header = "Impossible If Statement " + ImpossibleIfStatementView.numberOfImpossibleifStatements; 
                     tv_elemIIS.Tag = statementIIS.GetId();
 
+                    TreeViewItem tv_elemIIS_action = new TreeViewItem();
+                    tv_elemIIS_action.Header = "Action: " + this.IIS.ImpossibleIfStatement_ComboBox.Text;
+                    tv_elemIIS_action.Tag = actionIIS.Id.ToString();
+
+
                     TreeViewItem tv_elem_formulaIIS = new TreeViewItem();
-                    tv_elem_formulaIIS.Header = this.IIS.scenario_obs.Observations_TextBox.Text;
+                    tv_elem_formulaIIS.Header = "Formula: " + this.IIS.scenario_obs.Observations_TextBox.Text;
                     tv_elem_formulaIIS.Tag = this.IIS.Get_Formula().ToString();
 
                     ImpossibleIfStatementView.numberOfImpossibleifStatements += 1;
 
+                    tv_elemIIS.Items.Add(tv_elemIIS_action);
                     tv_elemIIS.Items.Add(tv_elem_formulaIIS);
 
                     Statements_TreeViewItem.Items.Add(tv_elemIIS);
@@ -840,10 +856,20 @@ namespace KnowledgeRepresentationInterface
                     tv_elemIS.Header = "Invoke Statement " + InvokeStatementView.numberOfIvokeStatements;
                     tv_elemIS.Tag = statementIS.GetId();
 
+                    TreeViewItem tv_elemIS_action1 = new TreeViewItem();
+                    tv_elemIS_action1.Header = "Action1: " + this.IS.InvokeStatementFirst_ComboBox.Text;
+                    tv_elemIS_action1.Tag = actionIS1.Id.ToString();
+
+                    TreeViewItem tv_elemIS_action2 = new TreeViewItem();
+                    tv_elemIS_action2.Header = "Action2: " + this.IS.InvokeStatementSecend_ComboBox.Text;
+                    tv_elemIS_action2.Tag = actionIS2.Id.ToString();
+
                     TreeViewItem tv_elem_formulaIS = new TreeViewItem();
-                    tv_elem_formulaIS.Header = this.IS.scenario_obs.Observations_TextBox.Text;
+                    tv_elem_formulaIS.Header = "Formula: " + this.IS.scenario_obs.Observations_TextBox.Text;
                     tv_elem_formulaIS.Tag = this.IS.Get_Formula().ToString();
 
+                    tv_elemIS.Items.Add(tv_elemIS_action1);
+                    tv_elemIS.Items.Add(tv_elemIS_action2);
                     tv_elemIS.Items.Add(tv_elem_formulaIS);
 
                     InvokeStatementView.numberOfIvokeStatements += 1;
@@ -882,10 +908,20 @@ namespace KnowledgeRepresentationInterface
                     tv_elemRS.Header = "Release Statement " + ReleaseStatementView.numberOfReleaseStatements; 
                     tv_elemRS.Tag = statementRS.GetId();
 
+                    TreeViewItem tv_elemRS_action = new TreeViewItem();
+                    tv_elemRS_action.Header = "Action: " + this.RS.ReleaseStatementActions_ComboBox.Text;
+                    tv_elemRS_action.Tag = actionRS.Id.ToString();
+
+                    TreeViewItem tv_elemRS_fluent = new TreeViewItem();
+                    tv_elemRS_fluent.Header = "Fluent: " + this.RS.ReleaseStatementFluents_ComboBox.Text;
+                    tv_elemRS_fluent.Tag = fluentRS.Id.ToString();
+
                     TreeViewItem tv_elem_formulaRS = new TreeViewItem();
-                    tv_elem_formulaRS.Header = this.RS.scenario_obs.Observations_TextBox.Text;
+                    tv_elem_formulaRS.Header = "Formula: " + this.RS.scenario_obs.Observations_TextBox.Text;
                     tv_elem_formulaRS.Tag = this.RS.Get_Formula().ToString();
 
+                    tv_elemRS.Items.Add(tv_elemRS_action);
+                    tv_elemRS.Items.Add(tv_elemRS_fluent);
                     tv_elemRS.Items.Add(tv_elem_formulaRS);
                     ReleaseStatementView.numberOfReleaseStatements += 1;
 
@@ -908,18 +944,23 @@ namespace KnowledgeRepresentationInterface
                         MessageBox.Show($"Incorrect formula");
                         return;
                     }
-                    
-                    IStatement statementTS = new TriggerStatement((Action)this.TS.TriggerStatementAction_ComboBox.SelectedItem, this.TS.Get_Formula());
+                    Action actionTS = (Action)this.TS.TriggerStatementAction_ComboBox.SelectedItem;
+                    IStatement statementTS = new TriggerStatement(actionTS, this.TS.Get_Formula());
 
                     TreeViewItem tv_elemTS = new TreeViewItem();
 
                     tv_elemTS.Header = "Trigger Statement " + TriggerStatementView.numberOfTriggerStatements;
                     tv_elemTS.Tag = statementTS.GetId();
 
+                    TreeViewItem tv_elemTS_action = new TreeViewItem();
+                    tv_elemTS_action.Header = "Action: " + this.TS.TriggerStatementAction_ComboBox.Text;
+                    tv_elemTS_action.Tag = actionTS.Id.ToString();
+
                     TreeViewItem tv_elem_formulaTS = new TreeViewItem();
-                    tv_elem_formulaTS.Header = this.TS.scenario_obs.Observations_TextBox.Text;
+                    tv_elem_formulaTS.Header = "Formula: " + this.TS.scenario_obs.Observations_TextBox.Text;
                     tv_elem_formulaTS.Tag = this.TS.Get_Formula().ToString();
 
+                    tv_elemTS.Items.Add(tv_elemTS_action);
                     tv_elemTS.Items.Add(tv_elem_formulaTS);
                     TriggerStatementView.numberOfTriggerStatements += 1;
 
