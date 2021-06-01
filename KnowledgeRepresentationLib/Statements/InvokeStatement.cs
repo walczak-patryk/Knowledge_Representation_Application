@@ -11,6 +11,7 @@ namespace KR_Lib.Statements
     public class InvokeStatement : Statement
     {
         private Action actionInvoked;
+        private ActionWithTimes actionInvokedWithTimes;
         private IFormula formulaIf;
         private int waitTime;
         bool ifFlag = false;
@@ -47,7 +48,7 @@ namespace KR_Lib.Statements
 
             if (result)
             {
-                this.actionInvoked = new ActionWithTimes(actionInvoked, (actionInvoked as ActionTime).Time, startTime.Value);
+                this.actionInvokedWithTimes = new ActionWithTimes(actionInvoked, (actionInvoked as ActionTime).Time, startTime.Value);
             }
             return result;
         }
@@ -56,11 +57,10 @@ namespace KR_Lib.Statements
         {
             foreach (var state in newStates)
             {
-                var act = actionInvoked as ActionWithTimes;
-                if (act.StartTime == time)
-                    state.CurrentActions.Add(act);
+                if (actionInvokedWithTimes.StartTime == time)
+                    state.CurrentActions.Add(actionInvokedWithTimes);
                 else
-                    state.FutureActions.Add(act);
+                    state.FutureActions.Add(actionInvokedWithTimes);
             }
         }
 
