@@ -216,6 +216,8 @@ namespace KnowledgeRepresentationInterface
                 if (item.IsSelected)
                 {
                     Statements_TreeViewItem.Items.Remove(item);
+                    Statements_TreeViewItem.Items.Refresh();
+                    Statements_TreeViewItem.UpdateLayout();
                     return;
                 }
             }
