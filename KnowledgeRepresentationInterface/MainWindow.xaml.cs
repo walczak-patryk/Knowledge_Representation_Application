@@ -91,6 +91,16 @@ namespace KnowledgeRepresentationInterface
                 if(item.IsSelected)
                 {
                     Actions_TreeViewItem.Items.Remove(item);
+                    Action to_remove = null;
+                    foreach(var elem in this.actions)
+                    {
+                        if(elem.Id.ToString()==item.Tag.ToString())
+                        {
+                            to_remove = elem;
+                            break;
+                        }
+                    }
+                    this.engine.RemoveAction(to_remove.Id);
                     this.actions.RemoveAll(x => x.Id.ToString() == item.Tag.ToString());
                     List<ScenarioGUI> scenarios_to_remove = new List<ScenarioGUI>();
                     foreach (ScenarioGUI scenario_tmp in scenarios)
@@ -136,6 +146,15 @@ namespace KnowledgeRepresentationInterface
                 if (item.IsSelected)
                 {
                     Fluents_TreeViewItem.Items.Remove(item);
+                    Fluent to_remove = null;
+                    foreach(var elem in this.fluents)
+                    {
+                        if(elem.Id.ToString()==item.Tag.ToString())
+                        {
+                            to_remove = elem;
+                        }
+                    }
+                    this.engine.RemoveFluent(to_remove.Id);
                     this.fluents.RemoveAll(x => x.Id.ToString() == item.Tag.ToString());
 
                     List<ScenarioGUI> scenarios_to_remove = new List<ScenarioGUI>();
