@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:local="clr-namespace:KnowledgeRepresentationInterface.Statements"
+             xmlns:toggleSwitch="clr-namespace:ToggleSwitch;assembly=ToggleSwitch"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
@@ -40,8 +41,9 @@
         </xctk:UIntegerUpDown>
 
         <Label Grid.Row="4" Grid.Column="3" Grid.ColumnSpan="3" Content="if" HorizontalAlignment="Center" FontSize="15"/>
-        
+        <toggleSwitch:HorizontalToggleSwitch Name="HorizonstalToggleSwitchForExpression" Grid.Row="4" Grid.Column="5" Grid.ColumnSpan="3" IsChecked="True" CheckedContent="Always true" UncheckedContent="Need to specify" Width="150"/>
         <GroupBox  Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="9" Grid.RowSpan="2" Name="Observation_GroupBox" BorderThickness="0"/>
+        
 
     </Grid>
 </UserControl>
