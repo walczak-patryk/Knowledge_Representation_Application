@@ -178,9 +178,12 @@ namespace KR_Lib
             List<DataStructures.ActionWithTimes> actions = new List<DataStructures.ActionWithTimes>();
             foreach (DataStructures.ActionWithTimes action in parentState.CurrentActions)
             {
-                if (action.GetEndTime() > time)
+                if (action != null)
                 {
-                    actions.Add(action);
+                    if (action.GetEndTime() > time)
+                    {
+                        actions.Add(action);
+                    }
                 }
             }
             actions.AddRange(scenario.GetStartingActions(time));
