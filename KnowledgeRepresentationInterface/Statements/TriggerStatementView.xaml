@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:local="clr-namespace:KnowledgeRepresentationInterface.Statements"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -35,6 +36,9 @@
 
         <Label Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="3" Content="Triggers action" HorizontalAlignment="Center" FontSize="15"/>
         <ComboBox Name="TriggerStatementAction_ComboBox" Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="3"/>
+        <xctk:UIntegerUpDown Name="TriggerStatementAction_Numeric" Grid.Row="3" Grid.Column="6" Margin="3,3,3,3" >
+        </xctk:UIntegerUpDown>
+
         <Label Grid.Row="4" Grid.Column="3" Grid.ColumnSpan="3" Content="if" HorizontalAlignment="Center" FontSize="15"/>
         
         <GroupBox  Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="9" Grid.RowSpan="2" Name="Observation_GroupBox" BorderThickness="0"/>

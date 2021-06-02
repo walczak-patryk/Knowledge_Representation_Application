@@ -10,7 +10,7 @@ namespace KR_Lib.Statements
     {
         IFormula formulaIf;
 
-        public TriggerStatement(Action action, IFormula formulaIf) : base(action)
+        public TriggerStatement(ActionTime action, IFormula formulaIf) : base(action)
         {
             this.formulaIf = formulaIf;
         }
@@ -21,9 +21,10 @@ namespace KR_Lib.Statements
             return formulaIf.Evaluate();
         }
 
-        public void DoStatement(State state)
+        public void DoStatement(State state, int time)
         {
-            state.CurrentActions.Add(action as ActionWithTimes);
+            ActionWithTimes actionWTimes = new ActionWithTimes(action, (action as ActionTime).Time, time);
+            state.CurrentActions.Add(actionWTimes);
             
             return;
         }
@@ -33,7 +34,7 @@ namespace KR_Lib.Statements
             foreach(var state in newStates)
             {
                 if(CheckStatement(state.CurrentActions.FirstOrDefault(), state.Fluents, state.ImpossibleActions, time))
-                    this.DoStatement(state);           
+                    this.DoStatement(state, time);           
             }
             return;
         }
