@@ -1042,8 +1042,16 @@ namespace KnowledgeRepresentationInterface
                         MessageBox.Show($"Incorrect formula");
                         return;
                     }
+                    int time2 = -1;
+                    if (this.TS.TriggerStatementAction_Numeric.Value == null)
+                    {
+                        MessageBox.Show($"Incorrect action duration");
+                        return;
+                    }
+                    time2 = (int)this.TS.TriggerStatementAction_Numeric.Value;
                     Action actionTS = (Action)this.TS.TriggerStatementAction_ComboBox.SelectedItem;
-                    IStatement statementTS = new TriggerStatement(actionTS, this.TS.Get_Formula());
+                    var actionT = new ActionTime(actionTS, time2);
+                    IStatement statementTS = new TriggerStatement(actionT, this.TS.Get_Formula());
 
                     TreeViewItem tv_elemTS = new TreeViewItem();
 
