@@ -100,6 +100,8 @@ namespace KnowledgeRepresentationInterface
                             break;
                         }
                     }
+                    
+                    Guid action_to_remove_guid = to_remove.Id;
                     this.engine.RemoveAction(to_remove.Id);
                     this.actions.RemoveAll(x => x.Id.ToString() == item.Tag.ToString());
                     List<ScenarioGUI> scenarios_to_remove = new List<ScenarioGUI>();
@@ -135,6 +137,30 @@ namespace KnowledgeRepresentationInterface
                         this.engine.RemoveScenario(scenario_tmp.Id);
                     }
 
+                    List<TreeViewItem> statementTreeViewItemsToRemove = new List<TreeViewItem>();
+                    foreach(TreeViewItem statementItem in Statements_TreeViewItem.Items)
+                    {
+                        foreach(TreeViewItem statementParameter in statementItem.Items)
+                        {
+                            if(action_to_remove_guid.ToString() == statementParameter.Tag.ToString())
+                            {
+                                statementTreeViewItemsToRemove.Add(statementItem);
+
+                                this.engine.RemoveStatement(Guid.Parse(statementItem.Tag.ToString()));
+                                this.statements.RemoveAll(x => x.GetId().ToString() == statementItem.Tag.ToString());
+                                break;
+                            } 
+                        }
+                    }
+                    foreach (TreeViewItem statementTreeViewItems in statementTreeViewItemsToRemove) {
+                        Statements_TreeViewItem.Items.Remove(statementTreeViewItems);
+                    }
+                    if (statementTreeViewItemsToRemove.Count > 0)
+                    {
+                        Statements_TreeViewItem.Items.Refresh();
+                        Statements_TreeViewItem.UpdateLayout();
+                    }
+
                     Action_Occurences_ComboBox.Items.Refresh();
                     this.AQ.Set_Actions(this.actions);
                     this.CS.Set_Actions(this.actions);
@@ -147,13 +173,15 @@ namespace KnowledgeRepresentationInterface
                 {
                     Fluents_TreeViewItem.Items.Remove(item);
                     Fluent to_remove = null;
-                    foreach(var elem in this.fluents)
+                    
+                    foreach (var elem in this.fluents)
                     {
                         if(elem.Id.ToString()==item.Tag.ToString())
                         {
                             to_remove = elem;
                         }
                     }
+                    Guid fluent_to_remove_guid = to_remove.Id;
                     this.engine.RemoveFluent(to_remove.Id);
                     this.fluents.RemoveAll(x => x.Id.ToString() == item.Tag.ToString());
 
@@ -204,10 +232,50 @@ namespace KnowledgeRepresentationInterface
                         this.engine.RemoveScenario(scenario_tmp.Id);
                     }
 
+                    List<TreeViewItem> statementTreeViewItemsToRemove = new List<TreeViewItem>();
+                    foreach (TreeViewItem statementItem in Statements_TreeViewItem.Items)
+                    {
+                        foreach (TreeViewItem statementParameter in statementItem.Items)
+                        {
+                            if (fluent_to_remove_guid.ToString() == statementParameter.Tag.ToString())
+                            {
+                                statementTreeViewItemsToRemove.Add(statementItem);
+
+                                this.engine.RemoveStatement(Guid.Parse(statementItem.Tag.ToString()));
+                                this.statements.RemoveAll(x => x.GetId().ToString() == statementItem.Tag.ToString());
+                                break;
+                            } 
+                            if(statementParameter.Header.ToString().Contains(item.Header.ToString()))
+                            {
+                                statementTreeViewItemsToRemove.Add(statementItem);
+
+                                this.engine.RemoveStatement(Guid.Parse(statementItem.Tag.ToString()));
+                                this.statements.RemoveAll(x => x.GetId().ToString() == statementItem.Tag.ToString());
+                                break;
+                            }
+
+                        }
+                    }
+                    foreach (TreeViewItem statementTreeViewItems in statementTreeViewItemsToRemove)
+                    {
+                        Statements_TreeViewItem.Items.Remove(statementTreeViewItems);
+                    }
+                    if (statementTreeViewItemsToRemove.Count > 0)
+                    {
+                        Statements_TreeViewItem.Items.Refresh();
+                        Statements_TreeViewItem.UpdateLayout();
+                    }
+
 
                     this.scenario_obs.RefreshControl();
                     this.TQ.Refresh_Fluents();
                     this.FQ.Refresh_Fluents();
+
+                    this.CS.Refresh_Fluents();
+                    this.IIS.Refresh_Fluents();
+                    this.IS.Refresh_Fluents();
+                    this.RS.Refresh_Fluents();
+                    this.TS.Refresh_Fluents();
                     return;
                 }
             }
@@ -218,6 +286,9 @@ namespace KnowledgeRepresentationInterface
                     Statements_TreeViewItem.Items.Remove(item);
                     Statements_TreeViewItem.Items.Refresh();
                     Statements_TreeViewItem.UpdateLayout();
+
+                    this.engine.RemoveStatement(Guid.Parse(item.Tag.ToString()));
+                    this.statements.RemoveAll(x => x.GetId().ToString() == item.Tag.ToString());
                     return;
                 }
             }
@@ -640,6 +711,12 @@ namespace KnowledgeRepresentationInterface
             scenario_obs.RefreshControl();
             this.FQ.Refresh_Fluents();
             this.TQ.Refresh_Fluents();
+
+            this.CS.Refresh_Fluents();
+            this.IIS.Refresh_Fluents();
+            this.IS.Refresh_Fluents();
+            this.RS.Refresh_Fluents();
+            this.TS.Refresh_Fluents();
         }
 
         private void AddActionButton_Click(object sender, RoutedEventArgs e)
