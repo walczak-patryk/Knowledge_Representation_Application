@@ -166,7 +166,7 @@ namespace KR_Tests
             IQuery posibleScenarioQuery = new PossibleScenarioQuery(QueryType.Always, scenario.Id);
             IQuery posibleScenarioQuery2 = new PossibleScenarioQuery(QueryType.Ever, scenario.Id);
             IQuery actionQuery = new ActionQuery(2, escape, scenario.Id);
-            IQuery formulaQuery = new FormulaQuery(4, aliveFormula, scenario.Id); 
+            IQuery formulaQuery = new FormulaQuery(4, aliveFormula, scenario.Id, QueryType.Ever); 
 
             #endregion
 
