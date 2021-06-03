@@ -59,5 +59,17 @@ namespace KnowledgeRepresentationInterface.Statements
             ImpossibleIfStatement_ComboBox.ItemsSource = actions;
             ImpossibleIfStatement_ComboBox.Items.Refresh();
         }
+
+        private void HorizonstalToggleSwitchForExpression_Checked(object sender, RoutedEventArgs e)
+        {
+            if (Observation_GroupBox == null)
+                return;
+            Observation_GroupBox.Visibility = Visibility.Hidden;
+        }
+
+        private void HorizonstalToggleSwitchForExpression_Unchecked(object sender, RoutedEventArgs e)
+        {
+            Observation_GroupBox.Visibility = Visibility.Visible;
+        }
     }
 }

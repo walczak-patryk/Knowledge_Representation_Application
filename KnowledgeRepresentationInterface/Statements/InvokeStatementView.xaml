@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:KnowledgeRepresentationInterface.Statements"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:toggleSwitch="clr-namespace:ToggleSwitch;assembly=ToggleSwitch"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
@@ -34,13 +35,18 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <Label Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="3" Content="Action" HorizontalAlignment="Center" FontSize="15"/>
+        <Label Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="3" Content="Action" HorizontalAlignment="Center" FontSize="15" FontWeight="Bold"/>
         <ComboBox Name="InvokeStatementFirst_ComboBox" Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="3"/>
-        <Label Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="3" Content="invokes action" HorizontalAlignment="Center" FontSize="15"/>
+        <Label Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="3" Content="invokes action" HorizontalAlignment="Center" FontSize="15" FontWeight="Bold"/>
         <ComboBox Name="InvokeStatementSecend_ComboBox" Grid.Row="4" Grid.Column="3" Grid.ColumnSpan="3"/>
-        <Label Grid.Row="5" Grid.Column="3" Grid.ColumnSpan="3" Content="if" HorizontalAlignment="Center" FontSize="15"/>
+        <Label Grid.Row="5" Grid.Column="3" Grid.ColumnSpan="3" Content="if" HorizontalAlignment="Center" FontSize="15" FontWeight="Bold"/>
+        <toggleSwitch:HorizontalToggleSwitch Name="HorizonstalToggleSwitchForExpression" Grid.Row="5" Grid.Column="5" Grid.ColumnSpan="3" 
+                                             IsChecked="True" CheckedContent="Always true" UncheckedContent="Need to specify" Width="150"
+                                             Checked="HorizonstalToggleSwitchForExpression_Checked"
+                                             Unchecked="HorizonstalToggleSwitchForExpression_Unchecked"/>
         <!--<TextBox  Grid.Row="6" Grid.Column="3" Grid.ColumnSpan="3" /> -->
-        <GroupBox  Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="9" Grid.RowSpan="2" Name="Observation_GroupBox" BorderThickness="0"/>
+        <GroupBox  Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="9" Grid.RowSpan="2" Name="Observation_GroupBox" BorderThickness="0"
+                   Visibility="Hidden"/>
         <xctk:UIntegerUpDown Name="Action_Duration_UIntUpDown"
                                          Grid.Row="9" Grid.Column="3" Grid.ColumnSpan="3" Margin="30,3,30,3" Watermark="Enter wait time"/>
     </Grid>

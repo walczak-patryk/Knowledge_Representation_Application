@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:KnowledgeRepresentationInterface.Statements"
+             xmlns:toggleSwitch="clr-namespace:ToggleSwitch;assembly=ToggleSwitch"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
@@ -33,14 +34,25 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <Label Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="3" Content="Action" HorizontalAlignment="Center" FontSize="15"/>
+        <Label Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="3" Content="Action" HorizontalAlignment="Center" FontSize="15" FontWeight="Bold"/>
         <ComboBox Name="CauseStatement_ComboBox" Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="3"/>
-        <Label Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="3" Content="causes" HorizontalAlignment="Center" FontSize="15"/>
+        <Label Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="3" Content="causes" HorizontalAlignment="Center" FontSize="15" FontWeight="Bold"/>
         <GroupBox  Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="9" Grid.RowSpan="2" Name="Observation_GroupBox" BorderThickness="0"/>
         <!--
         <TextBox Name="CauseStatementFirstExpression" Grid.Row="4" Grid.Column="3" Grid.ColumnSpan="3" /> -->
-        <Label Grid.Row="6" Grid.Column="3" Grid.ColumnSpan="3" Content="if" HorizontalAlignment="Center" FontSize="15"/>
+        <Label Grid.Row="6" Grid.Column="3" Grid.ColumnSpan="3" Content="if" HorizontalAlignment="Center" FontSize="15" FontWeight="Bold"/>
+
         <GroupBox  Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="9" Grid.RowSpan="2" Name="Observation_GroupBox2" BorderThickness="0"/>
+        <toggleSwitch:HorizontalToggleSwitch Name="HorizonstalToggleSwitchForExpression" Grid.Row="6" Grid.Column="5" Grid.ColumnSpan="3" 
+                                             IsChecked="True" CheckedContent="Always true" UncheckedContent="Need to specify" Width="150"
+                                             Checked="HorizonstalToggleSwitchForExpression_Checked"
+                                             Unchecked="HorizonstalToggleSwitchForExpression_Unchecked"
+                                             
+                                             />
+                                            <!-- MouseDown="HorizonstalToggleSwitchForExpression_MouseDown"
+                                             MouseEnter="HorizonstalToggleSwitchForExpression_MouseEnter"  -->
+                                             
+
         <!--
         <TextBox Name="CauseStatementSecondExpression" Grid.Row="6" Grid.Column="3" Grid.ColumnSpan="3" /> -->
     </Grid>
