@@ -88,6 +88,10 @@ namespace KR_Lib.Formulas
 
         public static List<ObservationElement> infix_to_ONP(List<ObservationElement> observation)
         {
+            if(observation.Count==0)
+            {
+                return null;
+            }
             if(observation[observation.Count -1].operator_ == "NOT")
             {
                 return null;
