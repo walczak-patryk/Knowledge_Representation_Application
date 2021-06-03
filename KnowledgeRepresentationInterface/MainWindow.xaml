@@ -40,7 +40,6 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="30" />
                 <RowDefinition Height="*" />
-                <RowDefinition Height="25" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
@@ -51,7 +50,7 @@
             <xctk:UIntegerUpDown Name="TimeInfinity_UpDown" Grid.Column="1" Grid.Row="0" HorizontalContentAlignment="Left" Value="100" ValueChanged="TimeInfinity_UpDown_ValueChanged"/>
 
             <!--Tree view-->
-            <TreeView Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Name="Panel_TreeView" Margin="5,5,5,5" >
+            <TreeView Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2"  Name="Panel_TreeView" Margin="5,5,5,5" >
                 <TreeViewItem Name="Actions_TreeViewItem" Header="Actions" Focusable="False">
                     <TreeViewItem.ContextMenu>
                         <ContextMenu>
@@ -82,8 +81,6 @@
                 </TreeViewItem>
             </TreeView>
 
-            <!--Remove button in tree view-->
-            <Button Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Name="Remove_Button" Margin="70,0,70,5" Click="Delete_TreeView_Click">Remove</Button>
         </Grid>
 
         <!--Panel splitter-->
@@ -320,7 +317,7 @@
             </TabItem>
 
             <!--Queries tab-->
-            <TabItem Name="Queries_Tab" Header="Queries" Width="{c:Binding ElementName=Panel_TabControl, Path=ActualWidth/4 - 1}">
+            <TabItem Name="Queries_Tab" Selector.Selected="Queries_Tab_Selected" Header="Queries" Width="{c:Binding ElementName=Panel_TabControl, Path=ActualWidth/4 - 1}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -370,7 +367,13 @@
                     <Label Grid.Row="8" Grid.Column="2">Result</Label>
 
                     <!--Result label-->
-                    <Label Name="Result_label" FontWeight="Bold" Grid.Row="8" Grid.Column="3" />
+                    <Label Name="Result_label" FontWeight="Bold" Grid.Row="8" Grid.Column="3" >
+                        <Label.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Clear" Click="Queries_Tab_Selected" />
+                            </ContextMenu>
+                        </Label.ContextMenu>
+                    </Label>
 
                 </Grid>
             </TabItem>
