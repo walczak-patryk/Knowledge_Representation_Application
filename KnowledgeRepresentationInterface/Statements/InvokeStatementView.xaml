@@ -35,11 +35,11 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <Label Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="3" Content="Action" HorizontalAlignment="Center" FontSize="15"/>
+        <Label Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="3" Content="Action" HorizontalAlignment="Center" FontSize="15" FontWeight="Bold"/>
         <ComboBox Name="InvokeStatementFirst_ComboBox" Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="3"/>
-        <Label Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="3" Content="invokes action" HorizontalAlignment="Center" FontSize="15"/>
+        <Label Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="3" Content="invokes action" HorizontalAlignment="Center" FontSize="15" FontWeight="Bold"/>
         <ComboBox Name="InvokeStatementSecend_ComboBox" Grid.Row="4" Grid.Column="3" Grid.ColumnSpan="3"/>
-        <Label Grid.Row="5" Grid.Column="3" Grid.ColumnSpan="3" Content="if" HorizontalAlignment="Center" FontSize="15"/>
+        <Label Grid.Row="5" Grid.Column="3" Grid.ColumnSpan="3" Content="if" HorizontalAlignment="Center" FontSize="15" FontWeight="Bold"/>
         <toggleSwitch:HorizontalToggleSwitch Name="HorizonstalToggleSwitchForExpression" Grid.Row="5" Grid.Column="5" Grid.ColumnSpan="3" 
                                              IsChecked="True" CheckedContent="Always true" UncheckedContent="Need to specify" Width="150"
                                              Checked="HorizonstalToggleSwitchForExpression_Checked"

@@ -35,13 +35,13 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <Label Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="3" Content="Triggers action" HorizontalAlignment="Center" FontSize="15"/>
+        <Label Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="3" Content="Triggers action" HorizontalAlignment="Center" FontSize="15" FontWeight="Bold"/>
         <ComboBox Name="TriggerStatementAction_ComboBox" Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="3"/>
         <xctk:UIntegerUpDown Name="TriggerStatementAction_Numeric" Grid.Row="3" Grid.Column="6" Margin="3,3,3,3" >
         </xctk:UIntegerUpDown>
 
-        <Label Grid.Row="4" Grid.Column="3" Grid.ColumnSpan="3" Content="if" HorizontalAlignment="Center" FontSize="15"/>
-        <toggleSwitch:HorizontalToggleSwitch Name="HorizonstalToggleSwitchForExpression" Grid.Row="4" Grid.Column="5" Grid.ColumnSpan="3" IsChecked="True" CheckedContent="Always true" UncheckedContent="Need to specify" Width="150"/>
+        <Label Grid.Row="4" Grid.Column="3" Grid.ColumnSpan="3" Content="if" HorizontalAlignment="Center" FontSize="15" FontWeight="Bold"/>
+        <!--<toggleSwitch:HorizontalToggleSwitch Name="HorizonstalToggleSwitchForExpression" Grid.Row="4" Grid.Column="5" Grid.ColumnSpan="3" IsChecked="True" CheckedContent="Always true" UncheckedContent="Need to specify" Width="150"/> -->
         <GroupBox  Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="9" Grid.RowSpan="2" Name="Observation_GroupBox" BorderThickness="0"/>
         
 
