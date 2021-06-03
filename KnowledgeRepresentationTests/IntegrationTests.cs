@@ -153,8 +153,8 @@ namespace KR_Tests
 
             IQuery posibleScenarioQuery = new PossibleScenarioQuery(QueryType.Always, scenario.Id);
             IQuery posibleScenarioQuery2 = new PossibleScenarioQuery(QueryType.Ever, scenario.Id);
-            IQuery formulaQuery = new FormulaQuery(5, negfFormula, scenario.Id);
-            IQuery formulaQuery2 = new FormulaQuery(6, negfFormula, scenario.Id);
+            IQuery formulaQuery = new FormulaQuery(5, negfFormula, scenario.Id, QueryType.Ever);
+            IQuery formulaQuery2 = new FormulaQuery(6, negfFormula, scenario.Id, QueryType.Ever);
 
             #endregion
 
@@ -193,13 +193,13 @@ namespace KR_Tests
              * Tak
              * 
              * Kwerenda 3:
-             * Czy ¬f w chwili 3 zawsze?
+             * Czy f w chwili 3 zawsze?
              * 
              * Odpowiedź 3:
              * Nie
              * 
              * Kwerenda 4:
-             * Czy ¬f w chwili 3 kiedykolwiek?
+             * Czy f w chwili 3 kiedykolwiek?
              * 
              * Odpowiedź 4:
              * Tak
@@ -228,8 +228,8 @@ namespace KR_Tests
 
             IQuery posibleScenarioQuery = new PossibleScenarioQuery(QueryType.Always, scenario.Id);
             IQuery posibleScenarioQuery2 = new PossibleScenarioQuery(QueryType.Ever, scenario.Id);
-            IQuery formulaQuery = new FormulaQuery(3, fFormula, scenario.Id);
-            IQuery formulaQuery2 = new FormulaQuery(3, gFormula, scenario.Id);
+            IQuery formulaQuery = new FormulaQuery(3, fFormula, scenario.Id, QueryType.Always);
+            IQuery formulaQuery2 = new FormulaQuery(3, fFormula, scenario.Id, QueryType.Ever);
 
             #endregion
 
@@ -241,7 +241,7 @@ namespace KR_Tests
             bool responsePosibleScenarioQuery2 = engine.ExecuteQuery(posibleScenarioQuery2);
             responsePosibleScenarioQuery2.Should().BeTrue();
             bool responseFormulaQuery = engine.ExecuteQuery(formulaQuery);
-            responseFormulaQuery.Should().BeTrue();
+            responseFormulaQuery.Should().BeFalse();
             bool responseFormulaQuery2 = engine.ExecuteQuery(formulaQuery2);
             responseFormulaQuery2.Should().BeTrue();
 
