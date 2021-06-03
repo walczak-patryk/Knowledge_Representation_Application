@@ -890,13 +890,23 @@ namespace KnowledgeRepresentationInterface
                     TreeViewItem tv_elem_actionIAS = new TreeViewItem();
                     tv_elem_actionIAS.Header = "Action: " + this.IAS.ImpossibleAtStatement_ComboBox.Text;
                     tv_elem_actionIAS.Tag = actionIAS.Id.ToString();
+                    tv_elem_actionIAS.Visibility = Visibility.Collapsed;
 
                     TreeViewItem tv_elem_timeIAS = new TreeViewItem();
                     tv_elem_timeIAS.Header = "Time: " + timeIAS;
                     tv_elem_timeIAS.Tag = timeIAS.ToString();
+                    tv_elem_timeIAS.Visibility = Visibility.Collapsed;
 
                     tv_elemIAS.Items.Add(tv_elem_actionIAS);
                     tv_elemIAS.Items.Add(tv_elem_timeIAS);
+
+                    string treeViewStatementFormulaSummaryIAS =
+                        this.IAS.ImpossibleAtStatement_ComboBox.Text + " IMPOSSIBLE AT TIME: " + this.IAS.Action_Duration_UIntUpDown.Value;
+
+                    TreeViewItem tv_statement_summaryIAS = new TreeViewItem();
+                    tv_statement_summaryIAS.Header = treeViewStatementFormulaSummaryIAS;
+                    tv_statement_summaryIAS.Tag = "";
+                    tv_elemIAS.Items.Add(tv_statement_summaryIAS);
 
                     ImpossibleAtStatementView.numberOfImpossibleAtStatements += 1;
 
