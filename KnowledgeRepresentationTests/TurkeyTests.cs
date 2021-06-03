@@ -98,7 +98,7 @@ namespace KR_Tests
 
             engine.AddStatement(new CauseStatement(new ActionTime(load, 1), loadedFormula));
             engine.AddStatement(new InvokeStatement(new ActionTime(load, 1), new ActionTime(escape, 1)));
-            engine.AddStatement(new ReleaseStatement(new ActionTime(escape, 1), hidden, hiddenFormula));
+            engine.AddStatement(new ReleaseStatement(new ActionTime(escape, 1), hidden, null));
             engine.AddStatement(new CauseStatement(new ActionTime(shoot, 1), negaliveFormula, new ConjunctionFormula(neghiddenFormula, loadedFormula)));
             engine.AddStatement(new CauseStatement(new ActionTime(shoot, 1), negloadedFormula));
 
@@ -116,19 +116,31 @@ namespace KR_Tests
              * Czy scenariusz jest osiagany zawsze?
              * 
              * Odpowiedź 1:
-             * Tak
+             * Nie
              * 
-             * Kwerenda:
-             * Czy akcja escape dzieje sie w 2 chwili czasowej?
+             * Kwerenda 2:
+             * Czy scenariusz jest osiagany kiedykolwiek?
              * 
-             * Odpowiedź:
+             * Odpowiedź 2:
              * Tak
              * 
              * Kwerenda 3:
-             * Czy indyk żyje w czasie 4
+             * Czy akcja escape dzieje sie w 2 chwili czasowej?
              * 
              * Odpowiedź 3:
+             * Tak
+             * 
+             * Kwerenda 4:
+             * Czy indyk żyje zawsze w czasie 4?
+             * 
+             * Odpowiedź 4:
              * Nie
+             * 
+             * Kwerenda 5:
+             * Czy indyk żyje kiedykolwiek w czasie 4?
+             * 
+             * Odpowiedź 5:
+             * Tak
              */
 
             #region Add specific formulas
@@ -152,6 +164,7 @@ namespace KR_Tests
             #region Add querry
 
             IQuery posibleScenarioQuery = new PossibleScenarioQuery(QueryType.Always, scenario.Id);
+            IQuery posibleScenarioQuery2 = new PossibleScenarioQuery(QueryType.Ever, scenario.Id);
             IQuery actionQuery = new ActionQuery(2, escape, scenario.Id);
             IQuery formulaQuery = new FormulaQuery(4, aliveFormula, scenario.Id); 
 
@@ -161,7 +174,9 @@ namespace KR_Tests
             engine.SetMaxTime(4);
             
             bool responsePosibleScenarioQuery = engine.ExecuteQuery(posibleScenarioQuery);
-            responsePosibleScenarioQuery.Should().BeTrue();
+            responsePosibleScenarioQuery.Should().BeFalse();
+            bool responsePosibleScenarioQuery2 = engine.ExecuteQuery(posibleScenarioQuery2);
+            responsePosibleScenarioQuery2.Should().BeTrue();
             bool responseActionQuery = engine.ExecuteQuery(actionQuery);
             responseActionQuery.Should().BeTrue();
             bool responseFormulaQuery = engine.ExecuteQuery(formulaQuery);
@@ -179,6 +194,12 @@ namespace KR_Tests
              * 
              * Kwerenda 1:
              * Czy scenariusz jest osiagany kiedykolwiek?
+             * 
+             * Odpowiedź 1:
+             * Nie, mamy dwie współliniowe akcje w chwili czasowej 1.
+             * 
+             * Kwerenda 2:
+             * Czy scenariusz jest osiagany zawsze?
              * 
              * Odpowiedź 1:
              * Nie, mamy dwie współliniowe akcje w chwili czasowej 1.
@@ -205,6 +226,7 @@ namespace KR_Tests
             #region Add querry
 
             IQuery posibleScenarioQuery = new PossibleScenarioQuery(QueryType.Ever, scenario.Id);
+            IQuery posibleScenarioQuery2 = new PossibleScenarioQuery(QueryType.Always, scenario.Id);
 
             #endregion
 
@@ -213,6 +235,8 @@ namespace KR_Tests
 
             bool responsePosibleScenarioQuery = engine.ExecuteQuery(posibleScenarioQuery);
             responsePosibleScenarioQuery.Should().BeFalse();
+            bool responsePosibleScenarioQuery2 = engine.ExecuteQuery(posibleScenarioQuery2);
+            responsePosibleScenarioQuery2.Should().BeFalse();
 
             #endregion
         }
