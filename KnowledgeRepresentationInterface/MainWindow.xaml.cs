@@ -790,7 +790,7 @@ namespace KnowledgeRepresentationInterface
                         return;
                     }
 
-                    if(this.CS.Get_First_Formula() == null)
+                    if (this.CS.Get_First_Formula() == null)
                     {
                         MessageBox.Show($"Incorrect first formula");
                         return;
@@ -809,7 +809,7 @@ namespace KnowledgeRepresentationInterface
 
                     IStatement statement;
                     if (this.CS.HorizonstalToggleSwitchForExpression.IsChecked) {
-                    statement =  new CauseStatement(actionTime, this.CS.Get_First_Formula());
+                        statement = new CauseStatement(actionTime, this.CS.Get_First_Formula());
                     }
                     else
                     {
@@ -830,7 +830,7 @@ namespace KnowledgeRepresentationInterface
                     tv_elem_formula1.Tag = this.CS.Get_First_Formula().ToString();
                     tv_elem_formula1.Visibility = Visibility.Collapsed;
 
-                    string treeViewStatementFormulaSummary = 
+                    string treeViewStatementFormulaSummary =
                         this.CS.CauseStatement_ComboBox.Text + " CAUSES ( " +
                         this.CS.scenario_obs.Observations_TextBox.Text + ")";
 
@@ -843,6 +843,10 @@ namespace KnowledgeRepresentationInterface
                         tv_elem.Items.Add(tv_elem_formula2);
 
                         treeViewStatementFormulaSummary += " IF ( " + this.CS.scenario_obs2.Observations_TextBox.Text + ")";
+                    }
+                    else
+                    {
+                        treeViewStatementFormulaSummary += " IF ( TRUE )";
                     }
                     TreeViewItem tv_statement_summary = new TreeViewItem();
                     tv_statement_summary.Header = treeViewStatementFormulaSummary;
@@ -859,7 +863,7 @@ namespace KnowledgeRepresentationInterface
 
                     statements.Add(statement);
                     engine.AddStatement(statement);
-                    
+
 
                     break;
                 case 1: //IAS
@@ -869,7 +873,7 @@ namespace KnowledgeRepresentationInterface
                         MessageBox.Show("No Action chosen for 'impossible at' statement type.");
                         return;
                     }
-                    if(this.IAS.Action_Duration_UIntUpDown.Value == null || this.IAS.Action_Duration_UIntUpDown.Value == 0)
+                    if (this.IAS.Action_Duration_UIntUpDown.Value == null || this.IAS.Action_Duration_UIntUpDown.Value == 0)
                     {
                         MessageBox.Show("Specify time for 'impossible at' statement type.");
                         return;
@@ -909,7 +913,7 @@ namespace KnowledgeRepresentationInterface
                         return;
                     }
 
-                    if (this.IIS.Get_Formula()== null)
+                    if (this.IIS.Get_Formula() == null && !this.IIS.HorizonstalToggleSwitchForExpression.IsChecked)
                     {
                         MessageBox.Show($"Incorrect second formula");
                         return;
@@ -917,24 +921,49 @@ namespace KnowledgeRepresentationInterface
 
                     Action actionIIS = (Action)this.IIS.ImpossibleIfStatement_ComboBox.SelectedItem;
 
-                    IStatement statementIIS = new ImpossibleIfStatement(actionIIS, this.IIS.Get_Formula());
+                    IStatement statementIIS;
+                    if (this.IIS.HorizonstalToggleSwitchForExpression.IsChecked)
+                    {
+                        statementIIS = new ImpossibleIfStatement(actionIIS);
+                    }
+                    else
+                    {
+                        statementIIS = new ImpossibleIfStatement(actionIIS, this.IIS.Get_Formula());
+                    }
                     TreeViewItem tv_elemIIS = new TreeViewItem();
-                    tv_elemIIS.Header = "Impossible If Statement " + ImpossibleIfStatementView.numberOfImpossibleifStatements; 
+                    tv_elemIIS.Header = "Impossible If Statement " + ImpossibleIfStatementView.numberOfImpossibleifStatements;
                     tv_elemIIS.Tag = statementIIS.GetId();
 
                     TreeViewItem tv_elemIIS_action = new TreeViewItem();
                     tv_elemIIS_action.Header = "Action: " + this.IIS.ImpossibleIfStatement_ComboBox.Text;
                     tv_elemIIS_action.Tag = actionIIS.Id.ToString();
+                    tv_elemIIS_action.Visibility = Visibility.Collapsed;
 
+                    string treeViewStatementFormulaSummaryIIS = this.IIS.ImpossibleIfStatement_ComboBox.Text + " IMPOSSIBLE IF ( ";
 
-                    TreeViewItem tv_elem_formulaIIS = new TreeViewItem();
-                    tv_elem_formulaIIS.Header = "Formula: " + this.IIS.scenario_obs.Observations_TextBox.Text;
-                    tv_elem_formulaIIS.Tag = this.IIS.Get_Formula().ToString();
+                    if (this.IIS.HorizonstalToggleSwitchForExpression.IsChecked == false) {
+                        TreeViewItem tv_elem_formulaIIS = new TreeViewItem();
+                        tv_elem_formulaIIS.Header = "Formula: " + this.IIS.scenario_obs.Observations_TextBox.Text;
+                        tv_elem_formulaIIS.Tag = this.IIS.Get_Formula().ToString();
+                        tv_elem_formulaIIS.Visibility = Visibility.Collapsed;
+                        tv_elemIIS.Items.Add(tv_elem_formulaIIS);
+
+                        treeViewStatementFormulaSummaryIIS += this.IIS.scenario_obs.Observations_TextBox.Text + ")";
+                    }
+                    else
+                    {
+                        treeViewStatementFormulaSummaryIIS += "TRUE )";
+                    }
+
+                    TreeViewItem tv_statement_summaryIIS = new TreeViewItem();
+                    tv_statement_summaryIIS.Header = treeViewStatementFormulaSummaryIIS;
+                    tv_statement_summaryIIS.Tag = "";
 
                     ImpossibleIfStatementView.numberOfImpossibleifStatements += 1;
 
                     tv_elemIIS.Items.Add(tv_elemIIS_action);
-                    tv_elemIIS.Items.Add(tv_elem_formulaIIS);
+                    tv_elemIIS.Items.Add(tv_statement_summaryIIS);
+
 
                     Statements_TreeViewItem.Items.Add(tv_elemIIS);
 
@@ -955,7 +984,7 @@ namespace KnowledgeRepresentationInterface
                         MessageBox.Show("No action chosen for 'invoke' statement type.");
                         return;
                     }
-                    if (this.IS.Get_Formula() == null)
+                    if (this.IS.Get_Formula() == null && !this.IS.HorizonstalToggleSwitchForExpression.IsChecked)
                     {
                         MessageBox.Show($"Incorrect formula");
                         return;
@@ -971,7 +1000,13 @@ namespace KnowledgeRepresentationInterface
 
                     int waitTimeValue = Convert.ToInt32(this.IS.Action_Duration_UIntUpDown.Value);
 
-                    IStatement statementIS = new InvokeStatement(actionTimeIS1, actionTimeIS2, this.IS.Get_Formula(), waitTimeValue);
+                    IStatement statementIS;
+                    if (this.IS.HorizonstalToggleSwitchForExpression.IsChecked) { 
+                        statementIS = new InvokeStatement(actionTimeIS1, actionTimeIS2, null, waitTimeValue); }
+                    else
+                    {
+                        statementIS = new InvokeStatement(actionTimeIS1, actionTimeIS2, this.IS.Get_Formula(), waitTimeValue);
+                    }
                     TreeViewItem tv_elemIS = new TreeViewItem();
 
                     tv_elemIS.Header = "Invoke Statement " + InvokeStatementView.numberOfIvokeStatements;
@@ -980,18 +1015,37 @@ namespace KnowledgeRepresentationInterface
                     TreeViewItem tv_elemIS_action1 = new TreeViewItem();
                     tv_elemIS_action1.Header = "Action1: " + this.IS.InvokeStatementFirst_ComboBox.Text;
                     tv_elemIS_action1.Tag = actionIS1.Id.ToString();
+                    tv_elemIS_action1.Visibility = Visibility.Collapsed;
 
                     TreeViewItem tv_elemIS_action2 = new TreeViewItem();
                     tv_elemIS_action2.Header = "Action2: " + this.IS.InvokeStatementSecend_ComboBox.Text;
                     tv_elemIS_action2.Tag = actionIS2.Id.ToString();
+                    tv_elemIS_action2.Visibility = Visibility.Collapsed;
 
-                    TreeViewItem tv_elem_formulaIS = new TreeViewItem();
-                    tv_elem_formulaIS.Header = "Formula: " + this.IS.scenario_obs.Observations_TextBox.Text;
-                    tv_elem_formulaIS.Tag = this.IS.Get_Formula().ToString();
+                    string treeViewStatementFormulaSummaryIS =
+                        this.IS.InvokeStatementFirst_ComboBox.Text + " INVOKES " +
+                        this.IS.InvokeStatementSecend_ComboBox.Text + " IF ( ";
+                    if (this.IS.HorizonstalToggleSwitchForExpression.IsChecked == false) {
+                        TreeViewItem tv_elem_formulaIS = new TreeViewItem();
+                        tv_elem_formulaIS.Header = "Formula: " + this.IS.scenario_obs.Observations_TextBox.Text;
+                        tv_elem_formulaIS.Tag = this.IS.Get_Formula().ToString();
+                        tv_elem_formulaIS.Visibility = Visibility.Collapsed;
 
+                        tv_elemIS.Items.Add(tv_elem_formulaIS);
+                        treeViewStatementFormulaSummaryIS += this.IS.scenario_obs.Observations_TextBox.Text + ")";
+                    }
+                    else
+                    {
+                        treeViewStatementFormulaSummaryIS += "TRUE )";
+                    }
+                    
                     tv_elemIS.Items.Add(tv_elemIS_action1);
                     tv_elemIS.Items.Add(tv_elemIS_action2);
-                    tv_elemIS.Items.Add(tv_elem_formulaIS);
+
+                    TreeViewItem tv_statement_summaryIS = new TreeViewItem();
+                    tv_statement_summaryIS.Header = treeViewStatementFormulaSummaryIS;
+                    tv_statement_summaryIS.Tag = "";
+                    tv_elemIS.Items.Add(tv_statement_summaryIS);
 
                     InvokeStatementView.numberOfIvokeStatements += 1;
                     Statements_TreeViewItem.Items.Add(tv_elemIS);
