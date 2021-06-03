@@ -75,5 +75,15 @@ namespace KnowledgeRepresentationInterface.Statements
             CauseStatement_ComboBox.ItemsSource = actions;
             CauseStatement_ComboBox.Items.Refresh();
         }
+
+        private void HorizonstalToggleSwitchForExpression_Checked(object sender, RoutedEventArgs e)
+        {
+            Observation_GroupBox2.Visibility = Visibility.Hidden;
+        }
+
+        private void HorizonstalToggleSwitchForExpression_Unchecked(object sender, RoutedEventArgs e)
+        {
+            Observation_GroupBox2.Visibility = Visibility.Visible;
+        }
     }
 }
