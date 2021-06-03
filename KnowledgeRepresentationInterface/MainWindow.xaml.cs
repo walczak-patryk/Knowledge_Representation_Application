@@ -343,7 +343,7 @@ namespace KnowledgeRepresentationInterface
 
         private void Panel_TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Statement_Type_ComboBox_SelectionChanged(null, null);
+            Statement_Type_ComboBox_SelectionChanged(sender, e);
         }
 
         private void ExecuteQuery_Click(object sender, RoutedEventArgs e)
@@ -390,35 +390,49 @@ namespace KnowledgeRepresentationInterface
                         MessageBox.Show("The moment value cannot be empty!");
                         return;
                     }
-                    IFormula formula_FQ = this.FQ.Get_Formula();
-                    if (formula_FQ == null)
+                    if (this.FQ.scenario_obs.scenarioObservation.Count == 0)
                     {
-                        MessageBox.Show("The formula is not valid!");
-                        return;
+                        result = true;
                     }
-                    QueryType qt_FQ = QueryType.Always;
-                    if (this.FQ.Type.SelectedIndex == 1)
+                    else
                     {
-                        qt_FQ = QueryType.Ever;
+                        IFormula formula_FQ = this.FQ.Get_Formula();
+                        if (formula_FQ == null)
+                        {
+                            MessageBox.Show("The formula is not valid!");
+                            return;
+                        }
+                        QueryType qt_FQ = QueryType.Always;
+                        if (this.FQ.Type.SelectedIndex == 1)
+                        {
+                            qt_FQ = QueryType.Ever;
+                        }
+                        int time_FQ = (int)this.FQ.Moment_UIntUpDown.Value;
+                        query = new KR_Lib.Queries.FormulaQuery(time_FQ, formula_FQ, selected_scenario.Id, qt_FQ);
+                        result = this.engine.ExecuteQuery(query);
                     }
-                    int time_FQ = (int)this.FQ.Moment_UIntUpDown.Value;
-                    query = new KR_Lib.Queries.FormulaQuery(time_FQ, formula_FQ, selected_scenario.Id, qt_FQ);
-                    result = this.engine.ExecuteQuery(query);
                     break;
                 case 3:
-                    IFormula formula_TQ = this.TQ.Get_Formula();
-                    if (formula_TQ == null)
+                    if (this.TQ.scenario_obs.scenarioObservation.Count == 0)
                     {
-                        MessageBox.Show("The formula is not valid!");
-                        return;
+                        result = true;
                     }
-                    QueryType qt_TQ = QueryType.Always;
-                    if (this.TQ.Type.SelectedIndex == 1)
+                    else
                     {
-                        qt_TQ = QueryType.Ever;
+                        IFormula formula_TQ = this.TQ.Get_Formula();
+                        if (formula_TQ == null)
+                        {
+                            MessageBox.Show("The formula is not valid!");
+                            return;
+                        }
+                        QueryType qt_TQ = QueryType.Always;
+                        if (this.TQ.Type.SelectedIndex == 1)
+                        {
+                            qt_TQ = QueryType.Ever;
+                        }
+                        query = new KR_Lib.Queries.TargetQuery(formula_TQ, qt_TQ, selected_scenario.Id);
+                        result = this.engine.ExecuteQuery(query);
                     }
-                    query = new KR_Lib.Queries.TargetQuery(formula_TQ, qt_TQ, selected_scenario.Id);
-                    result = this.engine.ExecuteQuery(query);
                     break;
             }
 
@@ -533,7 +547,7 @@ namespace KnowledgeRepresentationInterface
                             new_subitem.Header = "Action occurrence: " + acc_elem.ActionOccurence + " D: " + acc_elem.Duration + " M: " + acc_elem.Moment;
                             new_subitem.Tag = acc_elem.Id;
                             elem.items.Add(acc_elem);
-                            //TODO add action to engine scenario
+                            this.engine.AddActionOccurrence(elem.Id,acc_elem.ActionOccurence_engine);
                             ContextMenu contextMenu = new ContextMenu();
                             MenuItem menuItem = new MenuItem();
                             menuItem.Header = "Delete";
@@ -547,7 +561,7 @@ namespace KnowledgeRepresentationInterface
                             TreeViewItem new_subitem = new TreeViewItem();
                             new_subitem.Header = "Observation: " + obs_elem.Observation + " M: " + obs_elem.Moment;
                             elem.items.Add(obs_elem);
-                            this.engine.AddObservation(elem.Id, obs_elem.formula, obs_elem.Moment_int);
+                            this.engine.AddObservation(elem.Id,obs_elem.Id, obs_elem.formula, obs_elem.Moment_int);
                             ContextMenu contextMenu = new ContextMenu();
                             MenuItem menuItem = new MenuItem();
                             menuItem.Header = "Delete";
@@ -612,7 +626,7 @@ namespace KnowledgeRepresentationInterface
                 }
                 else
                 {
-                    this.engine.AddObservation(engine_scenario.Id,elem.formula, elem.Moment_int);
+                    this.engine.AddObservation(engine_scenario.Id,elem.Id,elem.formula, elem.Moment_int);
                 }
             }
 
@@ -662,7 +676,15 @@ namespace KnowledgeRepresentationInterface
                 {
                     if(tv_item_to_remove.Tag.ToString()==scenario_gui.items[index].Id.ToString())
                     {
-                        //TODO engine remove
+                        if(scenario_gui.items[index].ActionOccurence_engine==null)
+                        {
+                            this.engine.RemoveObservation(scenario_gui.Id, scenario_gui.items[index].Id);
+                        }
+                        else
+                        {
+                            this.engine.RemoveActionOccurrence(scenario_gui.Id, scenario_gui.items[index].ActionOccurence_engine.ActionOccurenceId);
+                        }
+                        
                         scenario_of_removed_item.Items.Remove(tv_item_to_remove);
                         scenario_gui.items.RemoveAt(index);
                         scenario_of_removed_item.Items.Refresh();
@@ -1298,6 +1320,11 @@ namespace KnowledgeRepresentationInterface
 
                     break;
             }
+        }
+
+        private void Queries_Tab_Selected(object sender, RoutedEventArgs e)
+        {
+            Result_label.Content = "";
         }
     }
 }
