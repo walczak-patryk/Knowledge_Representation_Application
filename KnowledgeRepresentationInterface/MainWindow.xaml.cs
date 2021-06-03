@@ -796,7 +796,7 @@ namespace KnowledgeRepresentationInterface
                         return;
                     }
 
-                    if (this.CS.Get_Second_Formula() == null)
+                    if (this.CS.Get_Second_Formula() == null && !this.CS.HorizonstalToggleSwitchForExpression.IsChecked)
                     {
                         MessageBox.Show($"Incorrect second formula");
                         return;
@@ -806,7 +806,15 @@ namespace KnowledgeRepresentationInterface
                     int time = Convert.ToInt32(TimeInfinity_UpDown.Value);
 
                     ActionTime actionTime = new ActionTime(action, time);
-                    IStatement statement = new CauseStatement(actionTime, this.CS.Get_First_Formula(), this.CS.Get_Second_Formula());
+
+                    IStatement statement;
+                    if (this.CS.HorizonstalToggleSwitchForExpression.IsChecked) {
+                    statement =  new CauseStatement(actionTime, this.CS.Get_First_Formula());
+                    }
+                    else
+                    {
+                        statement = new CauseStatement(actionTime, this.CS.Get_First_Formula(), this.CS.Get_Second_Formula());
+                    }
 
                     TreeViewItem tv_elem = new TreeViewItem();
                     tv_elem.Header = "Cause Statement " + CauseStatementView.numberOfCouseStatements;
@@ -815,21 +823,36 @@ namespace KnowledgeRepresentationInterface
                     TreeViewItem tv_elem_action = new TreeViewItem();
                     tv_elem_action.Header = "Action: " + this.CS.CauseStatement_ComboBox.Text;
                     tv_elem_action.Tag = action.Id.ToString();
+                    tv_elem_action.Visibility = Visibility.Collapsed;
 
                     TreeViewItem tv_elem_formula1 = new TreeViewItem();
                     tv_elem_formula1.Header = "Formula1: " + this.CS.scenario_obs.Observations_TextBox.Text;
                     tv_elem_formula1.Tag = this.CS.Get_First_Formula().ToString();
+                    tv_elem_formula1.Visibility = Visibility.Collapsed;
 
-                    TreeViewItem tv_elem_formula2 = new TreeViewItem();
-                    tv_elem_formula2.Header = "Formula2: " + this.CS.scenario_obs2.Observations_TextBox.Text;
-                    tv_elem_formula2.Tag = this.CS.Get_Second_Formula().ToString();
+                    string treeViewStatementFormulaSummary = 
+                        this.CS.CauseStatement_ComboBox.Text + " CAUSES ( " +
+                        this.CS.scenario_obs.Observations_TextBox.Text + ")";
 
-                    
+                    if (this.CS.HorizonstalToggleSwitchForExpression.IsChecked == false)
+                    {
+                        TreeViewItem tv_elem_formula2 = new TreeViewItem();
+                        tv_elem_formula2.Header = "Formula2: " + this.CS.scenario_obs2.Observations_TextBox.Text;
+                        tv_elem_formula2.Visibility = Visibility.Collapsed;
+                        tv_elem_formula2.Tag = this.CS.Get_Second_Formula().ToString();
+                        tv_elem.Items.Add(tv_elem_formula2);
+
+                        treeViewStatementFormulaSummary += " IF ( " + this.CS.scenario_obs2.Observations_TextBox.Text + ")";
+                    }
+                    TreeViewItem tv_statement_summary = new TreeViewItem();
+                    tv_statement_summary.Header = treeViewStatementFormulaSummary;
+                    tv_statement_summary.Tag = "";
+
                     CauseStatementView.numberOfCouseStatements += 1;
 
                     tv_elem.Items.Add(tv_elem_action);
                     tv_elem.Items.Add(tv_elem_formula1);
-                    tv_elem.Items.Add(tv_elem_formula2);
+                    tv_elem.Items.Add(tv_statement_summary);
 
                     tv_elem.Tag = statement.GetId();
                     Statements_TreeViewItem.Items.Add(tv_elem);
