@@ -23,6 +23,7 @@ namespace KR_Tests
          * 
          * 
          * (A, 1) releses f
+         * (B, 1) causes (f or g)
          */
 
         #region Variables
@@ -30,6 +31,7 @@ namespace KR_Tests
         IEngine engine;
 
         Action A;
+        Action B;
 
         Fluent f;
         Fluent g;
@@ -51,6 +53,9 @@ namespace KR_Tests
 
             A = new Action("A");
             engine.AddAction(A);
+
+            B = new Action("B");
+            engine.AddAction(B);
 
             #endregion
 
@@ -76,7 +81,8 @@ namespace KR_Tests
 
             #region Add domain
 
-            engine.AddStatement(new ReleaseStatement(new ActionTime(A, 1), f, fFormula));
+            engine.AddStatement(new ReleaseStatement(new ActionTime(A, 1), f, null));
+            engine.AddStatement(new CauseStatement(new ActionTime(B, 1), new AlternativeFormula(fFormula, gFormula)));
 
             #endregion
         }
@@ -154,6 +160,81 @@ namespace KR_Tests
 
             #region Testing
             engine.SetMaxTime(7);
+
+            bool responsePosibleScenarioQuery = engine.ExecuteQuery(posibleScenarioQuery);
+            responsePosibleScenarioQuery.Should().BeFalse();
+            bool responsePosibleScenarioQuery2 = engine.ExecuteQuery(posibleScenarioQuery2);
+            responsePosibleScenarioQuery2.Should().BeTrue();
+            bool responseFormulaQuery = engine.ExecuteQuery(formulaQuery);
+            responseFormulaQuery.Should().BeTrue();
+            bool responseFormulaQuery2 = engine.ExecuteQuery(formulaQuery2);
+            responseFormulaQuery2.Should().BeTrue();
+
+            #endregion
+        }
+
+        [TestMethod]
+        public void TestScenario2()
+        {
+            /*
+             * Obs={(¬f,0), (g, 2)}
+             * Acs={(B,1,1)}
+             * 
+             * Kwerenda 1:
+             * Czy scenariusz jest osiagany zawsze?
+             * 
+             * Odpowiedź 1:
+             * Nie
+             * 
+             * Kwerenda 2:
+             * Czy scenariusz jest osiagany kiedykolwiek?
+             * 
+             * Odpowiedź 2:
+             * Tak
+             * 
+             * Kwerenda 3:
+             * Czy ¬f w chwili 3 zawsze?
+             * 
+             * Odpowiedź 3:
+             * Nie
+             * 
+             * Kwerenda 4:
+             * Czy ¬f w chwili 3 kiedykolwiek?
+             * 
+             * Odpowiedź 4:
+             * Tak
+             * 
+             */
+
+            #region Add specific formulas
+
+            IFormula observationFormula1 = negfFormula;
+            IFormula observationFormula2 = gFormula;
+
+            #endregion
+
+            #region Add scenarios
+
+            IScenario scenario = new Scenario("testScenario1")
+            {
+                Observations = new List<Observation>() { new Observation(observationFormula1, 0), new Observation(observationFormula2, 2) },
+                ActionOccurrences = new List<ActionOccurrence> { new ActionOccurrence(B, 1, 1) }
+            };
+            engine.AddScenario(scenario);
+
+            #endregion
+
+            #region Add querry
+
+            IQuery posibleScenarioQuery = new PossibleScenarioQuery(QueryType.Always, scenario.Id);
+            IQuery posibleScenarioQuery2 = new PossibleScenarioQuery(QueryType.Ever, scenario.Id);
+            IQuery formulaQuery = new FormulaQuery(3, fFormula, scenario.Id);
+            IQuery formulaQuery2 = new FormulaQuery(3, gFormula, scenario.Id);
+
+            #endregion
+
+            #region Testing
+            engine.SetMaxTime(5);
 
             bool responsePosibleScenarioQuery = engine.ExecuteQuery(posibleScenarioQuery);
             responsePosibleScenarioQuery.Should().BeFalse();
