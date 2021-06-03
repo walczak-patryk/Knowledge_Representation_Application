@@ -22,11 +22,12 @@ namespace KR_Lib.Queries
             get;
         }
 
-        public FormulaQuery(int time, IFormula formula, Guid scenarioId)
+        public FormulaQuery(int time, IFormula formula, Guid scenarioId, QueryType queryType)
         {
             this.ScenarioId = scenarioId;
             this.time = time;
             this.formula = formula;
+            this.queryType = queryType;
         }
 
         /// <summary>
