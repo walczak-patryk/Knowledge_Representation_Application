@@ -13,10 +13,10 @@ using KnowledgeRepresentationLib.Scenarios;
 namespace KR_Tests
 {
     /// <summary>
-    /// Testy przykładów z wykładu
+    /// Testy przykładów z wykładu z indykiem
     /// </summary>
     [TestClass]
-    public class LectureTest
+    public class TurkeyTest
     {
         /*
          * Yale Shooting problem with changes
