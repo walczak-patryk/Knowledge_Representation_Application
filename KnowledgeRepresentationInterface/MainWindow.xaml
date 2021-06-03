@@ -6,8 +6,8 @@
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:local="clr-namespace:KnowledgeRepresentationInterface" xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
         mc:Ignorable="d"
-        Title="RW" Height="600" Width="1100"
-        MinWidth="403" MinHeight="270"
+        Title="RW" Height="650" Width="1100"
+        MinWidth="403" MinHeight="300"
         WindowStartupLocation="CenterScreen">
     <!--<Window.Resources>
         xmlns:viewmodels="clr-namespace:KnowledgeRepresentationInterface.ViewModels"
@@ -89,7 +89,7 @@
         <!--Panel splitter-->
         <GridSplitter Grid.Column="1" Grid.Row="1" Width="3" HorizontalAlignment="Stretch" />
 
-        <!--Left panel - tabs-->
+        <!--Right panel - tabs-->
         <TabControl Name="Panel_TabControl" Grid.Column="2" Grid.Row="1" Margin="5,5,5,5" SelectionChanged="Panel_TabControl_SelectionChanged">
 
             <!--Actions and fluents tab-->
@@ -242,7 +242,7 @@
                     </xctk:UIntegerUpDown>
 
                     <!--Action occurences - add action button-->
-                    <Button Name="Action_Occurences_Button" Grid.Row="1" Grid.Column="4" Click="Action_Occurences_Button_Click" Margin="10,2,10,2" >Add</Button>
+                    <Button Name="Action_Occurences_Button" Grid.Row="1" Grid.Column="4" Grid.ColumnSpan="2" Click="Action_Occurences_Button_Click" Margin="10,2,10,2" >Add action occurence</Button>
 
                     <!--Observations label-->
                     <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">Observations</Label>
@@ -257,24 +257,52 @@
                     </xctk:UIntegerUpDown>
 
                     <!--Observations - add observation button-->
-                    <Button Name="Observations_Button" Grid.Row="6" Grid.Column="2" Click="Observations_Button_Click" Margin="10,2,10,2" >Add</Button>
+                    <Button Name="Observations_Button" Grid.Row="6" Grid.Column="2" Grid.ColumnSpan="2" Click="Observations_Button_Click" Margin="10,2,10,2" >Add observation</Button>
+                    
+                    <!--Scenario lists -->
+                    <Grid Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="6">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="9*" />
+                        </Grid.RowDefinitions>
+                        <!--Scenario - list view with action occurences-->
+                        <Label Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center">Action occurrences</Label>
+                        <ListView Grid.Row="1" Grid.Column="0"  Name="Scenario_Acc_ListView" >
+                            <ListView.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Delete" Click="Delete_Scenario_Acc_ListView_Click" Margin="2"/>
+                                </ContextMenu>
+                            </ListView.ContextMenu>
+                            <ListView.View>
+                                <GridView AllowsColumnReorder="True" >
+                                    <GridViewColumn DisplayMemberBinding="{Binding Path=Moment}" Header="Moment" Width="{c:Binding ElementName=Scenario_Acc_ListView, Path=ActualWidth/4 - 7}"/>
+                                    <GridViewColumn DisplayMemberBinding="{Binding Path=ActionOccurence}" Header="Action Occurence" Width="{c:Binding ElementName=Scenario_Acc_ListView, Path=ActualWidth/4 * 2 - 7}" />
+                                    <GridViewColumn DisplayMemberBinding="{Binding Path=Duration}" Header="Duration" Width="{c:Binding ElementName=Scenario_Acc_ListView, Path=ActualWidth/4 - 7}" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
 
-                    <!--Scenario - list view with elements-->
-                    <ListView Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="6" Name="Scenario_ListView" >
-                        <ListView.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Header="Delete" Click="Delete_Scenario_ListView_Click" />
-                            </ContextMenu>
-                        </ListView.ContextMenu>
-                        <ListView.View>
-                            <GridView AllowsColumnReorder="True" >
-                                <GridViewColumn DisplayMemberBinding="{Binding Path=Moment}" Header="Moment" Width="{c:Binding ElementName=Scenario_ListView, Path=ActualWidth/8 - 7}"/>
-                                <GridViewColumn DisplayMemberBinding="{Binding Path=ActionOccurence}" Header="Action Occurence" Width="{c:Binding ElementName=Scenario_ListView, Path=ActualWidth/8 * 3 - 7}" />
-                                <GridViewColumn DisplayMemberBinding="{Binding Path=Observation}" Header="Observation" Width="{c:Binding ElementName=Scenario_ListView, Path=ActualWidth/8 * 3 - 7}" />
-                                <GridViewColumn DisplayMemberBinding="{Binding Path=Duration}" Header="Duration" Width="{c:Binding ElementName=Scenario_ListView, Path=ActualWidth/8 - 7}" />
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
+                        <!--Scenario - list view with observations-->
+                        <Label Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center">Observations</Label>
+                        <ListView Grid.Row="1" Grid.Column="1"  Name="Scenario_Obs_ListView" Margin="2">
+                            <ListView.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Delete" Click="Delete_Scenario_Obs_ListView_Click" />
+                                </ContextMenu>
+                            </ListView.ContextMenu>
+                            <ListView.View>
+                                <GridView AllowsColumnReorder="True">
+                                    <GridViewColumn DisplayMemberBinding="{Binding Path=Moment}" Header="Moment" Width="{c:Binding ElementName=Scenario_Obs_ListView, Path=ActualWidth/4 - 7}"/>
+                                    <GridViewColumn DisplayMemberBinding="{Binding Path=Observation}" Header="Observation" Width="{c:Binding ElementName=Scenario_Obs_ListView, Path=ActualWidth/4 * 3 - 7}" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Grid>
+
 
                     <!--Scenario name label-->
                     <Label Grid.Row="9" Grid.Column="1" HorizontalContentAlignment="Right" Margin="1,1,1,1">Scenario</Label>

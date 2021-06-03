@@ -30,6 +30,8 @@ namespace KnowledgeRepresentationInterface
         FormulaQueryView FQ;
         TargetQueryView TQ;
         ScenarioGUI scenario;
+        List<ScenarioItem> action_occurences_items;
+        List<ScenarioItem> observations_items;
         List<Action> actions;
         List<Fluent> fluents;
         List<IStatement> statements;
@@ -52,13 +54,16 @@ namespace KnowledgeRepresentationInterface
             this.FontSize = 14;
             this.scenario = new ScenarioGUI();
             this.scenarios = new List<ScenarioGUI>();
+            this.action_occurences_items = new List<ScenarioItem>();
+            this.observations_items = new List<ScenarioItem>();
             this.actions = new List<Action>();
             this.fluents = new List<Fluent>();
             this.statements = new List<IStatement>();
             this.scenario_obs = new ObservationCreator(this.fluents);
             Initialize_Query_Types();
             Initialize_Statement_Types();
-            Scenario_ListView.ItemsSource = this.scenario.items;
+            Scenario_Acc_ListView.ItemsSource = this.action_occurences_items;
+            Scenario_Obs_ListView.ItemsSource = this.observations_items;
             Query_GroupBox.Content = this.PSQ;
 
             Action_Occurences_ComboBox.ItemsSource = this.actions;
@@ -315,22 +320,30 @@ namespace KnowledgeRepresentationInterface
                     return;
                 }
             }
-
         }
 
-        private void Delete_Scenario_ListView_Click(object sender, RoutedEventArgs e)
+        private void Delete_Scenario_Acc_ListView_Click(object sender, RoutedEventArgs e)
         {
-            foreach(ScenarioItem item in Scenario_ListView.SelectedItems)
+            foreach (ScenarioItem item in Scenario_Acc_ListView.SelectedItems)
             {
-                this.scenario.items.RemoveAll(x => x.Id == item.Id);
+                this.action_occurences_items.RemoveAll(x => x.Id == item.Id);
             }
-            Scenario_ListView.Items.Refresh();
+            Scenario_Acc_ListView.Items.Refresh();
+        }
+
+        private void Delete_Scenario_Obs_ListView_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (ScenarioItem item in Scenario_Obs_ListView.SelectedItems)
+            {
+                this.observations_items.RemoveAll(x => x.Id == item.Id);
+            }
+            Scenario_Obs_ListView.Items.Refresh();
 
         }
 
         private void Panel_TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Statement_Type_ComboBox_SelectionChanged(sender, e);
+            Statement_Type_ComboBox_SelectionChanged(null, null);
         }
 
         private void ExecuteQuery_Click(object sender, RoutedEventArgs e)
@@ -383,8 +396,13 @@ namespace KnowledgeRepresentationInterface
                         MessageBox.Show("The formula is not valid!");
                         return;
                     }
+                    QueryType qt_FQ = QueryType.Always;
+                    if (this.FQ.Type.SelectedIndex == 1)
+                    {
+                        qt_FQ = QueryType.Ever;
+                    }
                     int time_FQ = (int)this.FQ.Moment_UIntUpDown.Value;
-                    query = new KR_Lib.Queries.FormulaQuery(time_FQ, formula_FQ, selected_scenario.Id);
+                    query = new KR_Lib.Queries.FormulaQuery(time_FQ, formula_FQ, selected_scenario.Id, qt_FQ);
                     result = this.engine.ExecuteQuery(query);
                     break;
                 case 3:
@@ -395,7 +413,7 @@ namespace KnowledgeRepresentationInterface
                         return;
                     }
                     QueryType qt_TQ = QueryType.Always;
-                    if (this.PSQ.Type_ComboBox.SelectedIndex == 1)
+                    if (this.TQ.Type.SelectedIndex == 1)
                     {
                         qt_TQ = QueryType.Ever;
                     }
@@ -496,13 +514,70 @@ namespace KnowledgeRepresentationInterface
             {
                 if(elem.name == ScenarioName_TextBox.Text)
                 {
-                    MessageBox.Show("A scenario with this name already exists!");
-                    return;
+                    var result = MessageBox.Show("A scenario with this name already exists. Do you want to update it?", "Existing scenario warning", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
+                    if(result == MessageBoxResult.Yes)
+                    {
+                        TreeViewItem tv_scenario = null;
+                        //TODO add to engine
+                        foreach(TreeViewItem elem_tv in Scenarios_TreeViewItem.Items)
+                        {
+                            if(elem_tv.Tag.ToString()==elem.Id.ToString())
+                            {
+                                tv_scenario = elem_tv;
+                                break;
+                            }
+                        }
+                        foreach (var acc_elem in this.action_occurences_items)
+                        {
+                            TreeViewItem new_subitem = new TreeViewItem();
+                            new_subitem.Header = "Action occurrence: " + acc_elem.ActionOccurence + " D: " + acc_elem.Duration + " M: " + acc_elem.Moment;
+                            new_subitem.Tag = acc_elem.Id;
+                            elem.items.Add(acc_elem);
+                            //TODO add action to engine scenario
+                            ContextMenu contextMenu = new ContextMenu();
+                            MenuItem menuItem = new MenuItem();
+                            menuItem.Header = "Delete";
+                            menuItem.Click += delete_scenario_element_Click;
+                            contextMenu.Items.Add(menuItem);
+                            new_subitem.ContextMenu = contextMenu;
+                            tv_scenario.Items.Add(new_subitem);
+                        }
+                        foreach(var obs_elem in this.observations_items)
+                        {
+                            TreeViewItem new_subitem = new TreeViewItem();
+                            new_subitem.Header = "Observation: " + obs_elem.Observation + " M: " + obs_elem.Moment;
+                            elem.items.Add(obs_elem);
+                            this.engine.AddObservation(elem.Id, obs_elem.formula, obs_elem.Moment_int);
+                            ContextMenu contextMenu = new ContextMenu();
+                            MenuItem menuItem = new MenuItem();
+                            menuItem.Header = "Delete";
+                            menuItem.Click += delete_scenario_element_Click;
+                            contextMenu.Items.Add(menuItem);
+                            new_subitem.ContextMenu = contextMenu;
+                            new_subitem.Tag = obs_elem.Id;
+                            tv_scenario.Items.Add(new_subitem);
+                        }
+                        this.scenario = new ScenarioGUI();
+                        this.action_occurences_items = new List<ScenarioItem>();
+                        this.observations_items = new List<ScenarioItem>();
+                        Scenario_Acc_ListView.ItemsSource = this.action_occurences_items;
+                        Scenario_Acc_ListView.Items.Refresh();
+                        Scenario_Obs_ListView.ItemsSource = this.observations_items;
+                        Scenario_Obs_ListView.Items.Refresh();
+                        Query_Scenario_ComboBox.Items.Refresh();
+                        return;
+                    }
+                    else
+                    {
+                        return;
+                    }
                 }
             }
             this.scenario.name = ScenarioName_TextBox.Text;
             TreeViewItem new_scenario = new TreeViewItem();
             new_scenario.Header = ScenarioName_TextBox.Text;
+            this.scenario.items.AddRange(this.action_occurences_items);
+            this.scenario.items.AddRange(this.observations_items);
             //new_scenario.Tag = scenario.Id.ToString();
             foreach(var item in this.scenario.items)
             {
@@ -515,7 +590,12 @@ namespace KnowledgeRepresentationInterface
                 {
                     new_subitem.Header = "Action occurrence: " + item.ActionOccurence + " D: " + item.Duration + " M: " + item.Moment;
                 }
-                
+                ContextMenu contextMenu = new ContextMenu();
+                MenuItem menuItem = new MenuItem();
+                menuItem.Header="Delete";
+                menuItem.Click += delete_scenario_element_Click;
+                contextMenu.Items.Add(menuItem);
+                new_subitem.ContextMenu = contextMenu;
                 new_subitem.Tag = item.Id;
                 new_scenario.Items.Add(new_subitem);
             }
@@ -538,11 +618,59 @@ namespace KnowledgeRepresentationInterface
 
             this.scenarios.Add(this.scenario);
             this.scenario = new ScenarioGUI();
-            Scenario_ListView.ItemsSource = this.scenario.items;
-            Scenario_ListView.Items.Refresh();
+            this.action_occurences_items = new List<ScenarioItem>();
+            this.observations_items = new List<ScenarioItem>();
+            Scenario_Acc_ListView.ItemsSource = this.action_occurences_items;
+            Scenario_Acc_ListView.Items.Refresh();
+            Scenario_Obs_ListView.ItemsSource = this.observations_items;
+            Scenario_Obs_ListView.Items.Refresh();
             Scenarios_TreeViewItem.Items.Add(new_scenario);
             Query_Scenario_ComboBox.Items.Refresh();
+            ScenarioName_TextBox.Text = "";
 
+        }
+
+        private void delete_scenario_element_Click(object sender, RoutedEventArgs e)
+        {
+            TreeViewItem tv_item_to_remove = null;
+            TreeViewItem scenario_of_removed_item = null;
+            bool found = false;
+            foreach (TreeViewItem scenario_tv in Scenarios_TreeViewItem.Items)
+            {
+                if (found)
+                {
+                    break;
+                }
+                foreach (TreeViewItem scenario_elem_tv in scenario_tv.Items)
+                {
+                    if (scenario_elem_tv.IsSelected)
+                    {
+                        found = true;
+                        scenario_of_removed_item = scenario_tv;
+                        tv_item_to_remove = scenario_elem_tv;
+                        break;
+                    }
+                }
+            }
+            if(!found)
+            {
+                return;
+            }
+            foreach (var scenario_gui in this.scenarios)
+            {
+                for(int index = 0;index < scenario_gui.items.Count;index++)
+                {
+                    if(tv_item_to_remove.Tag.ToString()==scenario_gui.items[index].Id.ToString())
+                    {
+                        //TODO engine remove
+                        scenario_of_removed_item.Items.Remove(tv_item_to_remove);
+                        scenario_gui.items.RemoveAt(index);
+                        scenario_of_removed_item.Items.Refresh();
+                        tv_item_to_remove.Items.Refresh();
+                        return;
+                    }
+                }
+            }
         }
 
         private void Action_Occurences_Button_Click(object sender, RoutedEventArgs e)
@@ -565,8 +693,11 @@ namespace KnowledgeRepresentationInterface
             }
             int moment = (int)Action_Occurences_Moment_UIntUpDown.Value;
             int duration = (int)Action_Occurences_Duration_UIntUpDown.Value;
-            this.scenario.items.Add(new ScenarioItem(action.Name,action,moment,duration, "", null, null));
-            Scenario_ListView.Items.Refresh();
+            this.action_occurences_items.Add(new ScenarioItem(action.Name,action,moment,duration, "", null, null));
+            Scenario_Acc_ListView.Items.Refresh();
+            Action_Occurences_Moment_UIntUpDown.Value = null;
+            Action_Occurences_Duration_UIntUpDown.Value = null;
+            Action_Occurences_ComboBox.SelectedIndex = -1;
         }
 
         private void Observations_Button_Click(object sender, RoutedEventArgs e)
@@ -591,9 +722,10 @@ namespace KnowledgeRepresentationInterface
                 return;
             }
             int moment = (int)Observations_UIntUpDown.Value;
-            this.scenario.items.Add(new ScenarioItem(null,null,moment,0,this.scenario_obs.GetContent(), formula, observation));
-            Scenario_ListView.Items.Refresh();
+            this.observations_items.Add(new ScenarioItem(null,null,moment,0,this.scenario_obs.GetContent(), formula, observation));
+            Scenario_Obs_ListView.Items.Refresh();
             this.scenario_obs.Clear_Control();
+            Observations_UIntUpDown.Value=null;
         }
 
         private void ScenarioName_TextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -717,6 +849,7 @@ namespace KnowledgeRepresentationInterface
             this.IS.Refresh_Fluents();
             this.RS.Refresh_Fluents();
             this.TS.Refresh_Fluents();
+            fluentName.Text = "";
         }
 
         private void AddActionButton_Click(object sender, RoutedEventArgs e)
@@ -739,6 +872,7 @@ namespace KnowledgeRepresentationInterface
             engine.AddAction(action);
             Action_Occurences_ComboBox.Items.Refresh();
             this.AQ.Actions_ComboBox.Items.Refresh();
+            actionNameTextBox.Text = "";
         }
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
