@@ -1282,10 +1282,22 @@ namespace KnowledgeRepresentationInterface
                     TreeViewItem tv_elemTS_action = new TreeViewItem();
                     tv_elemTS_action.Header = "Action: " + this.TS.TriggerStatementAction_ComboBox.Text;
                     tv_elemTS_action.Tag = actionTS.Id.ToString();
+                    tv_elemTS_action.Visibility = Visibility.Collapsed;
 
                     TreeViewItem tv_elem_formulaTS = new TreeViewItem();
                     tv_elem_formulaTS.Header = "Formula: " + this.TS.scenario_obs.Observations_TextBox.Text;
                     tv_elem_formulaTS.Tag = this.TS.Get_Formula().ToString();
+                    tv_elem_formulaTS.Visibility = Visibility.Collapsed;
+
+                    string treeViewStatementFormulaSummaryTS =
+                        "TRIGGERS " + this.TS.TriggerStatementAction_ComboBox.Text +
+                        " IF " + "( " + this.TS.scenario_obs.Observations_TextBox.Text + "), D: " + time2;
+
+
+                    TreeViewItem tv_statement_summaryTS = new TreeViewItem();
+                    tv_statement_summaryTS.Header = treeViewStatementFormulaSummaryTS;
+                    tv_statement_summaryTS.Tag = "";
+                    tv_elemTS.Items.Add(tv_statement_summaryTS);
 
                     tv_elemTS.Items.Add(tv_elemTS_action);
                     tv_elemTS.Items.Add(tv_elem_formulaTS);
