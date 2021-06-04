@@ -33,6 +33,7 @@ namespace KR_Lib.DataStructures
             else
             {
                 this.ActionOccurence_engine = new ActionOccurrence(Action, Duration_int, Moment_int);
+                this.ActionOccurence_engine.ActionOccurenceId = this.Id;
             }
             this.Observation = Observation;
             this.Duration = Duration_int.ToString();
