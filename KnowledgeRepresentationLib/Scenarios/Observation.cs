@@ -21,6 +21,7 @@ namespace KR_Lib.DataStructures
             get;
             set;
         }
+        public Guid ObservationId { get; set; }
 
         public Observation() { }
         public Observation(IFormula formula, int time)
@@ -28,6 +29,13 @@ namespace KR_Lib.DataStructures
             this.Formula = formula;
             this.Time = time;
             this.Id = Guid.NewGuid();
+        }
+        public Observation(Guid observationId, IFormula formula, int time)
+        {
+            this.Formula = formula;
+            this.Time = time;
+            this.Id = Guid.NewGuid();
+            this.ObservationId = observationId;
         }
         public override bool Equals(object obj)
         {
