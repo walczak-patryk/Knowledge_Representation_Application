@@ -1232,7 +1232,7 @@ namespace KnowledgeRepresentationInterface
                         return;
                     }
 
-                    if (this.RS.Get_Formula() == null)
+                    if (this.RS.Get_Formula() == null && !this.RS.HorizonstalToggleSwitchForExpression.IsChecked)
                     {
                         MessageBox.Show($"Incorrect formula");
                         return;
@@ -1241,8 +1241,15 @@ namespace KnowledgeRepresentationInterface
                     Action actionRS = (Action)this.RS.ReleaseStatementActions_ComboBox.SelectedItem;
                     Fluent fluentRS = (Fluent)this.RS.ReleaseStatementFluents_ComboBox.SelectedItem;
 
-                    IStatement statementRS = new ReleaseStatement(actionRS, fluentRS, this.RS.Get_Formula());
-
+                    IStatement statementRS;
+                    if(this.RS.HorizonstalToggleSwitchForExpression.IsChecked)
+                    {
+                        statementRS = new ReleaseStatement(actionRS, fluentRS, null);
+                    }
+                    else
+                    {
+                        statementRS = new ReleaseStatement(actionRS, fluentRS, this.RS.Get_Formula());
+                    }
 
                     TreeViewItem tv_elemRS = new TreeViewItem();
 
@@ -1252,18 +1259,42 @@ namespace KnowledgeRepresentationInterface
                     TreeViewItem tv_elemRS_action = new TreeViewItem();
                     tv_elemRS_action.Header = "Action: " + this.RS.ReleaseStatementActions_ComboBox.Text;
                     tv_elemRS_action.Tag = actionRS.Id.ToString();
+                    tv_elemRS_action.Visibility = Visibility.Collapsed;
 
                     TreeViewItem tv_elemRS_fluent = new TreeViewItem();
                     tv_elemRS_fluent.Header = "Fluent: " + this.RS.ReleaseStatementFluents_ComboBox.Text;
                     tv_elemRS_fluent.Tag = fluentRS.Id.ToString();
+                    tv_elemRS_fluent.Visibility = Visibility.Collapsed;
 
-                    TreeViewItem tv_elem_formulaRS = new TreeViewItem();
-                    tv_elem_formulaRS.Header = "Formula: " + this.RS.scenario_obs.Observations_TextBox.Text;
-                    tv_elem_formulaRS.Tag = this.RS.Get_Formula().ToString();
+                    string treeViewStatementFormulaSummaryRS =
+                        this.RS.ReleaseStatementActions_ComboBox.Text + " RELEASES " +
+                        this.RS.ReleaseStatementFluents_ComboBox.Text + " IF ( ";
+
+                    if (this.RS.HorizonstalToggleSwitchForExpression.IsChecked == false)
+                    {
+                        TreeViewItem tv_elem_formulaRS = new TreeViewItem();
+                        tv_elem_formulaRS.Header = "Formula: " + this.RS.scenario_obs.Observations_TextBox.Text;
+                        tv_elem_formulaRS.Tag = this.RS.Get_Formula().ToString();
+                        tv_elem_formulaRS.Visibility = Visibility.Collapsed;
+
+                        tv_elemRS.Items.Add(tv_elem_formulaRS);
+
+                        treeViewStatementFormulaSummaryRS += this.RS.scenario_obs.Observations_TextBox.Text + ")";
+                    }
+                    else
+                    {
+                        treeViewStatementFormulaSummaryRS += "TRUE )";
+                    }
+                    
 
                     tv_elemRS.Items.Add(tv_elemRS_action);
                     tv_elemRS.Items.Add(tv_elemRS_fluent);
-                    tv_elemRS.Items.Add(tv_elem_formulaRS);
+
+                    TreeViewItem tv_statement_summaryRS = new TreeViewItem();
+                    tv_statement_summaryRS.Header = treeViewStatementFormulaSummaryRS;
+                    tv_statement_summaryRS.Tag = "";
+                    tv_elemRS.Items.Add(tv_statement_summaryRS);
+
                     ReleaseStatementView.numberOfReleaseStatements += 1;
 
                     Statements_TreeViewItem.Items.Add(tv_elemRS);
@@ -1304,10 +1335,22 @@ namespace KnowledgeRepresentationInterface
                     TreeViewItem tv_elemTS_action = new TreeViewItem();
                     tv_elemTS_action.Header = "Action: " + this.TS.TriggerStatementAction_ComboBox.Text;
                     tv_elemTS_action.Tag = actionTS.Id.ToString();
+                    tv_elemTS_action.Visibility = Visibility.Collapsed;
 
                     TreeViewItem tv_elem_formulaTS = new TreeViewItem();
                     tv_elem_formulaTS.Header = "Formula: " + this.TS.scenario_obs.Observations_TextBox.Text;
                     tv_elem_formulaTS.Tag = this.TS.Get_Formula().ToString();
+                    tv_elem_formulaTS.Visibility = Visibility.Collapsed;
+
+                    string treeViewStatementFormulaSummaryTS =
+                        "TRIGGERS " + this.TS.TriggerStatementAction_ComboBox.Text +
+                        " IF " + "( " + this.TS.scenario_obs.Observations_TextBox.Text + "), D: " + time2;
+
+
+                    TreeViewItem tv_statement_summaryTS = new TreeViewItem();
+                    tv_statement_summaryTS.Header = treeViewStatementFormulaSummaryTS;
+                    tv_statement_summaryTS.Tag = "";
+                    tv_elemTS.Items.Add(tv_statement_summaryTS);
 
                     tv_elemTS.Items.Add(tv_elemTS_action);
                     tv_elemTS.Items.Add(tv_elem_formulaTS);
