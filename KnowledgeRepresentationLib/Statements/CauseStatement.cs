@@ -39,24 +39,25 @@ namespace KR_Lib.Statements
             return doFlag;
         }
 
-        private List<(State, bool)> DoStatement(State newState)
+        private List<(State, HashSet<Fluent>)> DoStatement(State newState)
         {                
-            List<State> states = new List<State> ();       
+            List<(State, HashSet<Fluent>)> states = new List<(State, HashSet<Fluent>)>();       
 
             var combinations = formulaCaused.GetStatesFluents(true);
+            HashSet<Fluent> affectedFluents = formulaCaused.GetFluents().ToHashSet();
             foreach(var listOfFluents in combinations){
                 var state = new State(newState.CurrentActions, newState.Fluents.Select(f => (Fluent)f.Clone()).ToList(), newState.ImpossibleActions, newState.FutureActions);
                 foreach (Fluent fluent in listOfFluents)
                 {
                     state.Fluents.Find(f => f == fluent).State = fluent.State;
                 }
-                states.Add(state);
+                states.Add((state, listOfFluents));
             }
 
-            return states.Select(s=>(s,true)).ToList();
+            return states;
         }
 
-        public override List<(State, bool)> CheckAndDo(State parentState, State newState, int time)
+        public override List<(State, HashSet<Fluent>)> CheckAndDo(State parentState, State newState, int time)
         {
             if(CheckStatement(parentState.CurrentActions.FirstOrDefault(), parentState.Fluents, parentState.ImpossibleActions, time))
                 return this.DoStatement(newState);
