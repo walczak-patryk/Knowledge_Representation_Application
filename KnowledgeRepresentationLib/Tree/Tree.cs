@@ -130,7 +130,7 @@ namespace KR_Lib
 
             return combinations;
         }
-
+        
         /// <summary>
         /// Tworzy dzieci danego liścia na podstawie domeny, scenariusza i aktualnego czasu
         /// </summary>
@@ -158,13 +158,64 @@ namespace KR_Lib
 
         public static List<State> CheckDescription(IScenario scenario, List<IStatement> statements, State parentState, State newState, int time)
         {
-            List<State> newStates = new List<State>() { newState };
+            List<List<(State, bool)>> statementsStates = new List<List<(State, bool)>>();
             foreach (Statement statement in statements)
             {
-                statement.CheckAndDo(parentState, ref newStates, time);          
+                var result = statement.CheckAndDo(parentState, newState, time);        
+                if(result != null)
+                    statementsStates.Add(result);  
             }
-            return newStates;
+            if(statementsStates.Count == 0)
+                return new List<State>() { newState };
+            
+            List<(State, bool)> listOfStates = statementsStates[0];
+            for(int i = 1; i<statementsStates.Count; i++){
+                var iterationState = statementsStates[i];
+                var tmpList = new List<(State, bool)>();
+                foreach(var f in listOfStates){
+                    for(int j = 0; j<iterationState.Count; j++){
+                        var copyState = f.Item1.Clone() as State;
+                        if(f.Item2 && iterationState[j].Item2 && CheckFluentsInStatesAreValid(copyState, iterationState[j].Item1)){
+                            copyState.Union(iterationState[j].Item1);
+                            tmpList.Add((copyState,f.Item2 && iterationState[j].Item2));
+                        }
+                    }
+                }
+                listOfStates = tmpList;
+            }
+
+            if(listOfStates.Count == 0){
+                var state = new State(parentState.CurrentActions, parentState.Fluents.Select(f => (Fluent)f.Clone()).ToList(), parentState.ImpossibleActions, parentState.FutureActions);
+                state.InvalidDescription = true;
+                listOfStates.Add((state, false));
+            }
+
+            return listOfStates.Select(s => s.Item1).ToList();
+
+
+            // List<State> newStates = new List<State>() { newState };
+            // foreach (Statement statement in statements)
+            // {
+            //     statement.CheckAndDo(parentState, ref newStates, time);          
+            // }
+            // return newStates;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="state1"></param>
+        /// <param name="state2"></param>
+        /// <returns></returns>
+        private static bool CheckFluentsInStatesAreValid(State state1, State state2){
+            foreach(var f1 in state1.Fluents){
+                var s2 = state2.Fluents.Where(f2 => f2.Id == f1.Id).SingleOrDefault();
+                if(s2 != null && s2.State != f1.State)
+                    return false;
+            }
+            return true;
+        }
+
 
         /// <summary>
         /// Zwraca listę wszystkich akcji, które będą trwały w danej chwili
@@ -218,7 +269,7 @@ namespace KR_Lib
         /// <param name="structures"></param>
         public static void TreeToStructures(Node node, Structure structure, List<IStructure> structures, IScenario scenario)
         {
-            if (node == null || node.CurrentState.CurrentActions.Count > 1)
+            if (node == null || node.CurrentState.InvalidDescription || node.CurrentState.CurrentActions.Count > 1)
             {
                 ChangeStructureToInconsistent(structure, structures);
                 return;
@@ -237,6 +288,7 @@ namespace KR_Lib
                 if (!o.Formula.Evaluate())
                 {
                     ChangeStructureToInconsistent(structure, structures);
+                    //structures.Remove(structure);
                     return;
                 }
             }
