@@ -41,6 +41,7 @@ namespace KR_Lib.Queries
             bool atLeatOneFalse = false;
             bool atLeastOneModel = false;
             var models = modeledStructures.Where(s => s is Model);
+            if (models.Count() == 0) return false;
             foreach (var structure in models)
             {
                 possibleTimes.Clear();

@@ -34,6 +34,7 @@ namespace KR_Lib.Queries
         public bool GetAnswer(List<IStructure> modeledStructures)
         {
             var models = modeledStructures.Where(s => s is Model);
+            if (models.Count() == 0) return false;
             foreach (var model in models)
             {
                 if (model.CheckActionBelongingToE(this.action, this.time) != true)
