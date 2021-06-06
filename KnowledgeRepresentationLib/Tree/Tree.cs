@@ -175,9 +175,23 @@ namespace KR_Lib
                 foreach(var f in listOfStates){
                     for(int j = 0; j<iterationState.Count; j++){
                         var copyState = f.Item1.Clone() as State;
-                        if(f.Item2 && iterationState[j].Item2 && CheckFluentsInStatesAreValid(copyState, iterationState[j].Item1)){
+                        if(f.Item2 && iterationState[j].Item2 && CheckFluentsInStatesAreValid(copyState, iterationState[j].Item1))
+                        {
                             copyState.Union(iterationState[j].Item1);
                             tmpList.Add((copyState,f.Item2 && iterationState[j].Item2));
+                        } 
+                        else if(!(f.Item2 && iterationState[j].Item2))
+                        {
+                            if (iterationState[j].Item2)
+                            {
+                                copyState = iterationState[j].Item1.Clone() as State;
+                                copyState.Union(f.Item1);  
+                            }
+                            else
+                            {
+                                copyState.Union(iterationState[j].Item1);
+                            }
+                            tmpList.Add((copyState, f.Item2 || iterationState[j].Item2));
                         }
                     }
                 }
