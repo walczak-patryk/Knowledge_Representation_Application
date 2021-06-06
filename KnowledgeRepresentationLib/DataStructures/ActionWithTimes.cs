@@ -92,5 +92,10 @@ namespace KR_Lib.DataStructures
         {
             return new ActionWithTimes(this);
         }
+
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode() ^ Name.GetHashCode();
+        }
     }
 }

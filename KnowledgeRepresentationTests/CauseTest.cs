@@ -17,7 +17,7 @@ using Action = KR_Lib.DataStructures.Action;
 namespace KR_Tests
 {
     [TestClass]
-    class CauseTest
+    public class CauseTest
     {
         /// <summary>
         /// (a, 1) causes f1
@@ -70,8 +70,8 @@ namespace KR_Tests
 
             f1Formula = new Formula(f1);
             f2Formula = new Formula(f2);
-            f1Formula = new NegationFormula(f1Formula);
-            f2Formula = new NegationFormula(f2Formula);
+            negf1Formula = new NegationFormula(f1Formula);
+            negf2Formula = new NegationFormula(f2Formula);
 
             #endregion
 
@@ -90,7 +90,7 @@ namespace KR_Tests
         {
             /*
              *Obs={(-f1 ^ -f2, 0)}
-             *Acs={(b,1,0)}
+             *Acs={(a,1,0)}
              *
              *Kwerenda:
              *Czy osiągalny jest stan f1∧f2 dla zadanego zbioru obserwacji?
@@ -109,7 +109,7 @@ namespace KR_Tests
             IScenario scenario = new Scenario("testScenario1")
             {
                 Observations = new List<Observation>() { new Observation(observationFormula1, 0) },
-                ActionOccurrences = new List<ActionOccurrence> { new ActionOccurrence(b, 1, 0) }
+                ActionOccurrences = new List<ActionOccurrence> { new ActionOccurrence(a, 1, 0) }
             };
             engine.AddScenario(scenario);
 

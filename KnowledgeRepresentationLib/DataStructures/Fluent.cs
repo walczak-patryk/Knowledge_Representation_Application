@@ -2,7 +2,7 @@
 
 namespace KR_Lib.DataStructures
 {
-    public class Fluent : ICloneable
+    public class Fluent : ICloneable, IEquatable<Fluent>
     {
         public Guid Id
         {
@@ -84,6 +84,11 @@ namespace KR_Lib.DataStructures
         public override bool Equals(object obj)
         {
             return Equals(obj as Fluent);
+        }
+
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode() ^ Name.GetHashCode();
         }
     }
 }

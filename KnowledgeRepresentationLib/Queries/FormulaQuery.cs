@@ -46,7 +46,8 @@ namespace KR_Lib.Queries
             foreach (var model in models)
             {
                 bool evaluationResult = model.EvaluateFormula(this.formula, this.time);
-                if (evaluationResult) atLeastOneTrue = true;
+                if (evaluationResult)
+                    atLeastOneTrue = true;
                 else atLeastOneFalse = true;
 
             }
