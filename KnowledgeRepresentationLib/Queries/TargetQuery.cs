@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using KR_Lib.DataStructures;
 using KR_Lib.Formulas;
 using KR_Lib.Structures;
@@ -39,24 +40,22 @@ namespace KR_Lib.Queries
             bool atLeatOneTrue = false;
             bool atLeatOneFalse = false;
             bool atLeastOneModel = false;
-            foreach (var structure in modeledStructures)
+            var models = modeledStructures.Where(s => s is Model);
+            foreach (var structure in models)
             {
-                if (structure is Model)
+                possibleTimes.Clear();
+                int time = structure.EndTime;
+                for (int i = 0; i < time; i++)
                 {
-                    atLeastOneModel = true;
-                    possibleTimes.Clear();
-                    int time = structure.EndTime;
-                    for (int i = 0; i < time; i++)
-                    {
-                        bool evaluationResult = structure.EvaluateFormula(this.formula, i);
-                        if (evaluationResult) possibleTimes.Add(i);
-                    }
-                    if (possibleTimes.Count > 0) atLeatOneTrue = true;
-                    else atLeatOneFalse = true;
+                    bool evaluationResult = structure.EvaluateFormula(this.formula, i);
+                    if (evaluationResult) possibleTimes.Add(i);
                 }
+                if (possibleTimes.Count > 0) atLeatOneTrue = true;
+                else atLeatOneFalse = true;
+                
             }
-            if (this.queryType == QueryType.Ever) return atLeastOneModel &&  atLeatOneTrue;
-            else return atLeastOneModel && !atLeatOneFalse;
+            if (this.queryType == QueryType.Ever) return atLeatOneTrue;
+            else return !atLeatOneFalse;
         }
     }
 }

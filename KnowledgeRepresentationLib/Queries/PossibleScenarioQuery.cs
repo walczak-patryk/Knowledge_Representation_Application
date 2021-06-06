@@ -44,7 +44,7 @@ namespace KR_Lib.Queries
                 }
             }
             if (this.queryType == QueryType.Ever) return atLeatOneModel;
-            else return !atLeatOneInconsistent;
+            else return !atLeatOneInconsistent && atLeatOneModel;
         }
     }
 }

@@ -11,21 +11,21 @@ namespace KR_Lib.Formulas
         {
             this.formula = formula;
         }
-        public bool Evaluate()
+        public override bool Evaluate()
         {
             return !this.formula.Evaluate();
         }
-        public List<Fluent> GetFluents()
+        public override HashSet<Fluent> GetFluents()
         {
             return this.formula.GetFluents();
         }
 
-        public List<List<Fluent>> GetStatesFluents(bool state)
+        public override List<HashSet<Fluent>> GetStatesFluents(bool state)
         {
             return formula.GetStatesFluents(!state);
         }
 
-        public void SetFluentsStates(List<Fluent> fluents)
+        public override void SetFluentsStates(List<Fluent> fluents)
         {
             this.formula.SetFluentsStates(fluents);
         }

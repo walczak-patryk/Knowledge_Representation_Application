@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using KR_Lib.DataStructures;
 
 namespace KR_Lib.Formulas
@@ -24,7 +25,7 @@ namespace KR_Lib.Formulas
             this.formulas.Add(formula4);
         }
 
-        public bool Evaluate()
+        public override bool Evaluate()
         {
             if (this.formulas.Count == 0)
                 new Exception("Invalid Conjuction Formula");
@@ -34,23 +35,37 @@ namespace KR_Lib.Formulas
                     return false;
             return true;
         }
-        public List<Fluent> GetFluents()
+        public override HashSet<Fluent> GetFluents()
         {
 
-            List<Fluent> fluents = new List<Fluent>();
+            HashSet<Fluent> fluents = new HashSet<Fluent>();
             foreach (var formula in formulas)
-                fluents.AddRange(formula.GetFluents());
+                fluents.Union(formula.GetFluents());
 
             return fluents;
         }
 
-        public List<List<Fluent>> GetStatesFluents(bool state)
+        public override List<HashSet<Fluent>> GetStatesFluents(bool state)
         {
-            List<List<Fluent>> listOfFluents = new List<List<Fluent>>();
+            List<HashSet<Fluent>> listOfFluents = new List<HashSet<Fluent>>();
             if (state)
-            {
-                foreach (var formula in formulas)
-                    listOfFluents.AddRange(formula.GetStatesFluents(state));
+            {   
+                listOfFluents = this.formulas[0].GetStatesFluents(true);
+                for(int i = 1; i<formulas.Count; i++){
+                    var statesFluents = this.formulas[i].GetStatesFluents(true);
+                    var tmpList = new List<HashSet<Fluent>>();
+                    foreach(var f in listOfFluents){
+                        for(int j = 0; j<statesFluents.Count; j++){
+                            var newSet = f.Select(flu => (flu.Clone() as Fluent)).ToHashSet();
+                            if(this.CheckSetsAreValid(newSet, statesFluents[j])){
+                                newSet.Union(statesFluents[j]);
+                                tmpList.Add(newSet);
+                            }
+                        }
+                    }
+                    listOfFluents = tmpList;
+                }
+                    
             }
             else
             {
@@ -58,8 +73,22 @@ namespace KR_Lib.Formulas
                 foreach (var combination in combinations)
                 {
                     if(combination.Contains(false)){
-                        for(int i = 0; i< combination.Count; i++)
-                            listOfFluents.AddRange(this.formulas[i].GetStatesFluents(combination[i]));
+                        var iterationListOfFluents = this.formulas[0].GetStatesFluents(combination[0]);
+                        for(int j = 1; j<formulas.Count; j++){
+                            var statesFluents = this.formulas[j].GetStatesFluents(combination[j]);
+                            var tmpList = new List<HashSet<Fluent>>();
+                            foreach(var f in iterationListOfFluents){
+                                for(int k = 0; k<statesFluents.Count; k++){
+                                    var newSet = f.Select(flu => (flu.Clone() as Fluent)).ToHashSet();
+                                    if(this.CheckSetsAreValid(newSet, statesFluents[k])){
+                                        newSet.Union(statesFluents[k]);
+                                        tmpList.Add(newSet);
+                                    }
+                                }
+                            }
+                            iterationListOfFluents = tmpList;
+                        }
+                        listOfFluents.AddRange(iterationListOfFluents);
                     }                       
                 }
             }           
@@ -67,7 +96,7 @@ namespace KR_Lib.Formulas
             return listOfFluents;
         }
 
-        public void SetFluentsStates(List<Fluent> fluents)
+        public override void SetFluentsStates(List<Fluent> fluents)
         {
             foreach (var formula in formulas)
                 formula.SetFluentsStates(fluents);
