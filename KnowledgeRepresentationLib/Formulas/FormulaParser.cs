@@ -9,6 +9,10 @@ namespace KR_Lib.Formulas
     {
         public static IFormula ParseToFormula(List<ObservationElement> observationElements)
         {
+            if(observationElements == null)
+            {
+                return null;
+            }
             Stack<ObservationElement> stack = new Stack<ObservationElement>();
             List<ObservationElement> observationElements_copy = observationElements.GetRange(0, observationElements.Count);
             foreach(var elem in observationElements_copy)
@@ -65,13 +69,17 @@ namespace KR_Lib.Formulas
                     }
                 }
             }
+            if(stack.Count > 1)
+            {
+                return null;
+            }
             //show(stack.Peek().formula);
             return stack.Pop().formula;
         }
 
         static void show(IFormula formula)
         {
-            List<Fluent> list = formula.GetFluents();
+            HashSet<Fluent> list = formula.GetFluents();
             foreach(var elem in list)
             {
                 Console.WriteLine(elem.Name);
@@ -80,6 +88,14 @@ namespace KR_Lib.Formulas
 
         public static List<ObservationElement> infix_to_ONP(List<ObservationElement> observation)
         {
+            if(observation.Count==0)
+            {
+                return null;
+            }
+            if(observation[observation.Count -1].operator_ == "NOT")
+            {
+                return null;
+            }
             Dictionary<string, int> priorities = new Dictionary<string, int>();
             priorities.Add("AND", 2);
             priorities.Add("(", 0);
@@ -98,7 +114,7 @@ namespace KR_Lib.Formulas
                 {
                     result.Add(elem);
                 }
-                else if (elem.operator_ == "(")
+                else if (elem.operator_ == "(" || elem.operator_ == "NOT")
                 {
                     stack.Push(elem);
                 }

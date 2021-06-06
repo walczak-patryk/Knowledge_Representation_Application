@@ -52,6 +52,9 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="ToggleSwitch, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ToggleSwitch.1.2.0\lib\net46\ToggleSwitch.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -91,23 +94,23 @@
     <Compile Include="Queries\TargetQueryView.xaml.cs">
       <DependentUpon>TargetQueryView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Statements\CauseStatement.xaml.cs">
-      <DependentUpon>CauseStatement.xaml</DependentUpon>
+    <Compile Include="Statements\CauseStatementView.xaml.cs">
+      <DependentUpon>CauseStatementView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Statements\ImpossibleAtStatement.xaml.cs">
-      <DependentUpon>ImpossibleAtStatement.xaml</DependentUpon>
+    <Compile Include="Statements\ImpossibleAtStatementView.xaml.cs">
+      <DependentUpon>ImpossibleAtStatementView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Statements\ImpossibleIfStatement.xaml.cs">
-      <DependentUpon>ImpossibleIfStatement.xaml</DependentUpon>
+    <Compile Include="Statements\ImpossibleIfStatementView.xaml.cs">
+      <DependentUpon>ImpossibleIfStatementView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Statements\InvokeStatement.xaml.cs">
-      <DependentUpon>InvokeStatement.xaml</DependentUpon>
+    <Compile Include="Statements\InvokeStatementView.xaml.cs">
+      <DependentUpon>InvokeStatementView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Statements\ReleaseStatement.xaml.cs">
-      <DependentUpon>ReleaseStatement.xaml</DependentUpon>
+    <Compile Include="Statements\ReleaseStatementView.xaml.cs">
+      <DependentUpon>ReleaseStatementView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Statements\TriggerStatement.xaml.cs">
-      <DependentUpon>TriggerStatement.xaml</DependentUpon>
+    <Compile Include="Statements\TriggerStatementView.xaml.cs">
+      <DependentUpon>TriggerStatementView.xaml</DependentUpon>
     </Compile>
     <Page Include="General\ObservationCreator.xaml">
       <SubType>Designer</SubType>
@@ -141,27 +144,27 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Statements\CauseStatement.xaml">
+    <Page Include="Statements\CauseStatementView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Statements\ImpossibleAtStatement.xaml">
+    <Page Include="Statements\ImpossibleAtStatementView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Statements\ImpossibleIfStatement.xaml">
+    <Page Include="Statements\ImpossibleIfStatementView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Statements\InvokeStatement.xaml">
+    <Page Include="Statements\InvokeStatementView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Statements\ReleaseStatement.xaml">
+    <Page Include="Statements\ReleaseStatementView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Statements\TriggerStatement.xaml">
+    <Page Include="Statements\TriggerStatementView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

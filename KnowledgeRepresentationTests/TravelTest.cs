@@ -73,7 +73,7 @@ namespace KR_Tests
 
             #endregion
 
-            #region Add actions
+            #region Add fluents
 
             late = new Fluent("late");
             engine.AddFluent(late);
@@ -113,7 +113,7 @@ namespace KR_Tests
             engine.AddStatement(new CauseStatement(new ActionTime(drivingFast, 6), negLateFormula));
             engine.AddStatement(new CauseStatement(new ActionTime(drivingFast, 1), deerDeadFormula, deerOnRoadFormula));
             engine.AddStatement(new CauseStatement(new ActionTime(drivingFast, 1), negDeerOnRoadFormula, deerOnRoadFormula));
-
+            //TODO: Uspójnić domenę z opisem u góry i (chyba) z opisem testów potem przeanalizować testy
             #endregion
         }
 
@@ -121,7 +121,7 @@ namespace KR_Tests
         public void TestScenario1()
         {
             /*
-             * Obs={(¬late∧¬arrived∧ ¬dead_deer∧ ¬deer_on_road,0),¬late∧arrived∧ 6=dead_deer∧ ¬deer_on_road,14)}
+             * Obs={(¬late∧¬arrived∧ ¬dead_deer∧ ¬deer_on_road,0), (¬late∧arrived∧ ¬dead_deer∧ ¬deer_on_road,14)}
              * Acs:{(sleep,6,0),(driving_slow,8,6)}
              * 
              * Kwerenda:

@@ -11,11 +11,15 @@ namespace KR_Lib.Scenarios
     {
         string Name { get; set; }
         Guid Id { get; }
+
         int GetScenarioDuration();
         (List<Observation>, List<DataStructures.Action>) GetScenarios(int time);
         List<Observation> GetObservationsAtTime(int time);
         List<ActionWithTimes> GetStartingActions(int time);
         void AddObservation(Observation observation);
+        void RemoveObservation(Guid observationId);
+        void AddActionOccurrence(ActionOccurrence actionOccurrence);
+        void RemoveActionOccurrence(Guid actionOccurrenceId);
     }
     public class Scenario : IScenario
     {
@@ -44,11 +48,26 @@ namespace KR_Lib.Scenarios
             Observation OBS = new Observation(formula, time);
             Observations.Add(OBS);
         }
+        public void RemoveObservation(Guid observationId)
+        {
+            Observations.RemoveAll((elem) => elem.ObservationId == observationId);
+        }
+        public void AddActionOccurrence(ActionOccurrence actionOccurrence)
+        {
+            ActionOccurrences.Add(actionOccurrence);
+        }
+        public void RemoveActionOccurrence(Guid actionOccurrenceId)
+        {
+            ActionOccurrences.RemoveAll((elem) => elem.ActionOccurenceId == actionOccurrenceId);
+
+        }
+
         public void addAction(string name, int startTime, int durationTime)
         {
             var actionOccurrence = new ActionOccurrence(name, startTime, durationTime);
             ActionOccurrences.Add(actionOccurrence);
         }
+
         public (List<Observation>, List<DataStructures.Action>) GetScenarios(int time)
         {
             List<Observation> reObservations = new List<Observation>();

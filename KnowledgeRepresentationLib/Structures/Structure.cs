@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using KnowledgeRepresentationLib.Scenarios;
 using KR_Lib.DataStructures;
 using KR_Lib.Formulas;
@@ -136,8 +137,12 @@ namespace KR_Lib.Structures
 
         public bool CheckActionBelongingToE(Action action, int time)
         {
-            var result = E.FindAll(x => x.Id == action.Id);
-            return result.Count > 0;
+            var result = E.Where(x => x == action).FirstOrDefault();
+            if(result != null){
+                if(time >= result.StartTime && time < result.GetEndTime())
+                    return true;
+            }
+            return false;    
         }
 
         public bool EvaluateFormula(IFormula formula, int time) // = H

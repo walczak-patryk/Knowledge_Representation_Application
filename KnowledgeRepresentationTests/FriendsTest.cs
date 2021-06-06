@@ -112,7 +112,7 @@ namespace KR_Tests
             engine.AddStatement(new CauseStatement(new ActionTime(commute, 3), angryDadFormula));
             engine.AddStatement(new CauseStatement(new ActionTime(commute, 8), negLateFormula));
             engine.AddStatement(new CauseStatement(new ActionTime(commute, 2), negLateFormula, negtramFormula));
-            engine.AddStatement(new CauseStatement(new ActionTime(commute, 2), negmoneyFormula, negtramFormula));
+            engine.AddStatement(new CauseStatement(new ActionTime(commute, 2), negmoneyFormula, tramFormula));
             engine.AddStatement(new CauseStatement(new ActionTime(commute, 2), negLateFormula, tramFormula));
             engine.AddStatement(new ImpossibleIfStatement(new ActionTime(commute, 2), negmoneyFormula));
 
@@ -127,16 +127,16 @@ namespace KR_Tests
              * Acs={(watching,3,0),(commute,3,3)}
              * 
              * Kwerenda:
-             * Czy osiągalny jest stanmoney∧¬angry_daddla zadanego zbioru obserwacji?
+             * Czy osiągalny jest stan money∧¬angry_dad dla zadanego zbioru obserwacji?
              * 
              * Odpowiedź:
-             * Stanmoney∧¬angry_dadjest osiągalny w czasie 0. 
+             * Stan money∧¬angry_dadjest osiągalny w czasie 0. 
              * Później w scenariuszu ujęto akcję commute trwającą 3, która powoduje rozzłoszczenie taty.
              */
 
             #region Add specific formulas
 
-            IFormula observationFormula1 = new ConjunctionFormula(negLateFormula, negangryDadFormula, moneyFormula);
+            IFormula observationFormula1 = new ConjunctionFormula(negLateFormula, negangryDadFormula, moneyFormula, tramFormula);
 
             #endregion
 
@@ -161,6 +161,7 @@ namespace KR_Tests
             engine.SetMaxTime(8);
             bool response = engine.ExecuteQuery(query);
             response.Should().BeTrue();
+            //TODO: brak rozgałęzienia dla tram i błędne sprawdzanie stanów zamiast fluentów
 
             #endregion
         }
@@ -173,7 +174,7 @@ namespace KR_Tests
              *Acs={(watching,2,0),(commute,2,2)}
              *
              *Kwerenda:
-             *Czy osiągalny jest stanmoney∧¬angry_daddla zadanego zbioru obserwacji?
+             *Czy osiągalny jest stan money∧¬angry_dad dla zadanego zbioru obserwacji?
              *
              *Odpowiedź:
              *Stanmoney∧¬angry_dadosiągalny jest w czasie 0 i w czasie 4

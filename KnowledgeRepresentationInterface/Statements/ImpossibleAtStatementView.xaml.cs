@@ -12,17 +12,25 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Action = KR_Lib.DataStructures.Action;
 
 namespace KnowledgeRepresentationInterface.Statements
 {
     /// <summary>
-    /// Interaction logic for InvokeStatement.xaml
+    /// Interaction logic for ImpossibleAtStatement.xaml
     /// </summary>
-    public partial class InvokeStatement : UserControl
+    public partial class ImpossibleAtStatementView : UserControl
     {
-        public InvokeStatement()
+        public static int numberOfImpossibleAtStatements = 0;
+        public ImpossibleAtStatementView()
         {
             InitializeComponent();
+        }
+
+        public void Set_Actions(List<Action> actions)
+        {
+            ImpossibleAtStatement_ComboBox.ItemsSource = actions;
+            ImpossibleAtStatement_ComboBox.Items.Refresh();
         }
     }
 }

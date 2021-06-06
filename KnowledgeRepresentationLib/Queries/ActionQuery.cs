@@ -2,6 +2,7 @@
 using KR_Lib.Structures;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace KR_Lib.Queries
 {
@@ -32,17 +33,13 @@ namespace KR_Lib.Queries
         /// <returns>Prawda jeżeli akcja A jest wykonywana w chwili t w każdej stukturze z listy, fałsz w.p.p.<returns>
         public bool GetAnswer(List<IStructure> modeledStructures)
         {
-            bool atLeastOneModel = false;
-            foreach (var structure in modeledStructures)
+            var models = modeledStructures.Where(s => s is Model);
+            foreach (var model in models)
             {
-                if (structure is Model)
-                {
-                    atLeastOneModel = true;
-                    if (structure.CheckActionBelongingToE(this.action, this.time) != true)
-                        return false;
-                }
+                if (model.CheckActionBelongingToE(this.action, this.time) != true)
+                    return false;
             }
-            return atLeastOneModel && true;
+            return true;
         }
     }
 }

@@ -1,15 +1,28 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using KR_Lib.DataStructures;
 
 namespace KR_Lib.Formulas
 {
-    public interface IFormula
+    public abstract class IFormula
     {
-        bool Evaluate();
+        public abstract bool Evaluate();
 
-        List<Fluent> GetFluents();
+        public abstract HashSet<Fluent> GetFluents();
 
-        void SetFluentsStates(List<Fluent> fluents);
+        public abstract void SetFluentsStates(List<Fluent> fluents);
+
+        public abstract List<HashSet<Fluent>> GetStatesFluents(bool state);
+
+        protected bool CheckSetsAreValid(HashSet<Fluent> set1, HashSet<Fluent> set2){
+            foreach(var fluent in set1){
+                var v = set2.Where(s => s.Id == fluent.Id).SingleOrDefault();
+                if(v != null && v.State != fluent.State){
+                    return false;
+                }
+            }
+            return true;
+        }
 
     }
 
@@ -21,23 +34,30 @@ namespace KR_Lib.Formulas
         {
             this.fluent = fluent;
         }
-        public bool Evaluate()
+        public override bool Evaluate()
         {
             return this.fluent.State;
         }
 
-        public List<Fluent> GetFluents()
+        public override HashSet<Fluent> GetFluents()
         {
-            return new List<Fluent>() { this.fluent };
+            return new HashSet<Fluent>() { this.fluent };
         }
 
-        public  void SetFluentsStates(List<Fluent> fluents)
+        public override void SetFluentsStates(List<Fluent> fluents)
         {
             foreach(var f in fluents)
             {
                 if (this.fluent == f)
                     this.fluent.State = f.State;
             }
+        }
+
+        public override List<HashSet<Fluent>> GetStatesFluents(bool state)
+        {
+            var copyFluent = this.fluent.Clone() as Fluent;
+            copyFluent.State = state;
+            return new List<HashSet<Fluent>>() { new HashSet<Fluent>() { copyFluent } };
         }
     }
 }

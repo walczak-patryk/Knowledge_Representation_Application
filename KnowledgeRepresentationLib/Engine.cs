@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Action = KR_Lib.DataStructures.Action;
 using KR_Lib.Formulas;
+using KnowledgeRepresentationLib.Scenarios;
 
 namespace KR_Lib
 {
@@ -68,7 +69,25 @@ namespace KR_Lib
         /// Adds scenario to list of scenarios
         /// </summary>
         /// <param IScenario="scenario"></param>
-        void AddObservation(Guid scenarioId, IFormula formula, int time);
+        void AddObservation(Guid scenarioId, Guid observationId, IFormula formula, int time);
+
+        /// <summary>
+        /// Removes an observation from a scenario
+        /// </summary>
+        /// <param IScenario="scenario"></param>
+        void RemoveObservation(Guid scenarioId, Guid observationId);
+
+        /// <summary>
+        /// Adds an action occurrence to a scenario
+        /// </summary>
+        /// <param IScenario="scenario"></param>
+        void AddActionOccurrence(Guid scenarioId,ActionOccurrence actionOccurrence);
+
+        /// <summary>
+        /// Removes an action occurrence from a scenario
+        /// </summary>
+        /// <param IScenario="scenario"></param>
+        void RemoveActionOccurrence(Guid scenarioId, Guid actionId);
 
         /// <summary>
         /// Checks if query is correct
@@ -105,7 +124,7 @@ namespace KR_Lib
 
         private void GenerateModels(IScenario scenario) 
         {
-            var root = TreeMethods.GenerateTree(description, scenario, maxTime);
+            var root = TreeMethods.GenerateTree(description, scenario, fluents, maxTime);
             var structures = TreeMethods.GenerateStructues(root, scenario, maxTime);
             this.modeledStructures = structures.ToModels();
         }
@@ -239,6 +258,54 @@ namespace KR_Lib
             }
 
             return query.GetAnswer(modeledStructures);           
+        }
+
+        /// <summary>
+        /// Adds scenario to list of scenarios
+        /// </summary>
+        /// <param IScenario="scenario"></param>
+        public void AddObservation(Guid scenarioId, Guid observationId, IFormula formula, int time)
+        {
+            newChangesFlag = true;
+            var scenario = scenarios.Where(s => s.Id == scenarioId).FirstOrDefault();
+            if (scenario != null)
+                scenario.AddObservation(new Observation(observationId, formula, time));
+        }
+
+        /// <summary>
+        /// Removes an observation from a scenario
+        /// </summary>
+        /// <param IScenario="scenario"></param>
+        public void RemoveObservation(Guid scenarioId, Guid observationId)
+        {
+            newChangesFlag = true;
+            var scenario = scenarios.Where(s => s.Id == scenarioId).FirstOrDefault();
+            if (scenario != null)
+                scenario.RemoveObservation(observationId);
+        }
+
+        /// <summary>
+        /// Adds an action occurrence to a scenario
+        /// </summary>
+        /// <param IScenario="scenario"></param>
+        public void AddActionOccurrence(Guid scenarioId, ActionOccurrence actionOccurrence)
+        {
+            newChangesFlag = true;
+            var scenario = scenarios.Where(s => s.Id == scenarioId).FirstOrDefault();
+            if (scenario != null)
+                scenario.AddActionOccurrence(actionOccurrence);
+        }
+
+        /// <summary>
+        /// Removes an action occurrence from a scenario
+        /// </summary>
+        /// <param IScenario="scenario"></param>
+        public void RemoveActionOccurrence(Guid scenarioId, Guid actionId)
+        {
+            newChangesFlag = true;
+            var scenario = scenarios.Where(s => s.Id == scenarioId).FirstOrDefault();
+            if (scenario != null)
+                scenario.RemoveActionOccurrence(actionId);
         }
     }
 }

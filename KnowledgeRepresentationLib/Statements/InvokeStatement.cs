@@ -4,15 +4,16 @@ using KR_Lib.Tree;
 using Action = KR_Lib.DataStructures.Action;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace KR_Lib.Statements
 {
     public class InvokeStatement : Statement
     {
         private Action actionInvoked;
+        private ActionWithTimes actionInvokedWithTimes;
         private IFormula formulaIf;
         private int waitTime;
-        private bool doFlag = false;
         bool ifFlag = false;
 
         public InvokeStatement(ActionTime action, ActionTime actionInvoked, IFormula formulaIf = null, int waitTime = 0) : base(action)
@@ -27,12 +28,11 @@ namespace KR_Lib.Statements
             this.waitTime = waitTime;
         }
 
-        public override bool CheckStatement(ActionWithTimes currentAction, List<Fluent> fluents, List<ActionWithTimes> impossibleActions, int currentTime)
+        public bool CheckStatement(ActionWithTimes currentAction, List<Fluent> fluents, List<ActionWithTimes> impossibleActions, int currentTime)
         {
             if (action != currentAction)
             {
-                doFlag = false;
-                return doFlag;
+                return false;
             }
 
             bool result = true;
@@ -48,20 +48,25 @@ namespace KR_Lib.Statements
 
             if (result)
             {
-                this.actionInvoked = new ActionWithTimes(actionInvoked, (actionInvoked as ActionTime).Time, startTime.Value);
+                this.actionInvokedWithTimes = new ActionWithTimes(actionInvoked, (actionInvoked as ActionTime).Time, startTime.Value);
             }
-            doFlag = result;
-            return doFlag;
+            return result;
         }
 
-        public override State DoStatement(List<ActionWithTimes> currentActions, List<Fluent> fluents, List<ActionWithTimes> impossibleActions, List<ActionWithTimes> futureActions)
+        public List<(State, bool)> DoStatement(State newState, int time)
         {
-            if (doFlag)
-            {
-                futureActions.Add(actionInvoked as ActionWithTimes);
-            }
+            if (actionInvokedWithTimes.StartTime == time)
+                newState.CurrentActions.Add(actionInvokedWithTimes);
+            else
+                newState.FutureActions.Add(actionInvokedWithTimes);
+            return new List<(State, bool)>() { (newState, false) };
+        }
 
-            return new State(currentActions, fluents, impossibleActions, futureActions);
+        public override List<(State, bool)> CheckAndDo(State parentState, State newState, int time)
+        {
+            if(CheckStatement(parentState.CurrentActions.FirstOrDefault(), parentState.Fluents, parentState.ImpossibleActions, time))
+                return this.DoStatement(newState, time);
+            return null;
         }
     }
 }

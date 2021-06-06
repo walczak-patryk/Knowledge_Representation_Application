@@ -57,6 +57,9 @@
   <ItemGroup>
     <Compile Include="FoodTest.cs" />
     <Compile Include="FriendsTest.cs" />
+    <Compile Include="IntegrationTests.cs" />
+    <Compile Include="SkipTests.cs" />
+    <Compile Include="TurkeyTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TravelTest.cs" />
     <Compile Include="WorkTest.cs" />

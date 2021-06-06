@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using KR_Lib.DataStructures;
 using KR_Lib.Formulas;
 using KR_Lib.Scenarios;
@@ -22,11 +23,12 @@ namespace KR_Lib.Queries
             get;
         }
 
-        public FormulaQuery(int time, IFormula formula, Guid scenarioId)
+        public FormulaQuery(int time, IFormula formula, Guid scenarioId, QueryType queryType)
         {
             this.ScenarioId = scenarioId;
             this.time = time;
             this.formula = formula;
+            this.queryType = queryType;
         }
 
         /// <summary>
@@ -37,21 +39,19 @@ namespace KR_Lib.Queries
         /// <returns>Prawda jeżeli podana formuła jest prawdziwa przy każdej/przynajmniej jednej strukturze z listy, fałsz w.p.p.<returns>
         public bool GetAnswer(List<IStructure> modeledStructures)
         {
-            bool atLeatOneTrue = false;
+            bool atLeastOneTrue = false;
             bool atLeastOneFalse = false;
-            bool atLeastOneModel = false;
-            foreach (var structure in modeledStructures)
+            var models = modeledStructures.Where(s => s is Model);
+            if (models.Count() == 0) return false;
+            foreach (var model in models)
             {
-                if (structure is Model)
-                {
-                    atLeastOneModel = true;
-                    bool evaluationResult = structure.EvaluateFormula(this.formula, this.time);
-                    if (evaluationResult) atLeatOneTrue = true;
-                    else atLeastOneFalse = true;
-                }
+                bool evaluationResult = model.EvaluateFormula(this.formula, this.time);
+                if (evaluationResult) atLeastOneTrue = true;
+                else atLeastOneFalse = true;
+
             }
-            if (this.queryType == QueryType.Ever) return atLeastOneModel && atLeatOneTrue;
-            else return atLeastOneModel && !atLeastOneFalse;
+            if (this.queryType == QueryType.Ever) return atLeastOneTrue;
+            else return !atLeastOneFalse;
         }
     }
     

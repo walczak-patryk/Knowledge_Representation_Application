@@ -18,9 +18,9 @@ namespace KR_Lib
         /// <param name="scenario"></param>
         /// <param name="maxTime"></param>
         /// <returns>Korzeń powstałego drzewa możliwości.</returns>
-        public static Node GenerateTree(IDescription description, IScenario scenario, int maxTime)
+        public static Node GenerateTree(IDescription description, IScenario scenario, List<Fluent> fluents, int maxTime)
         {
-            Node root = CreateRoot(description, scenario);
+            Node root = CreateRoot(description, scenario, fluents);
             List<Node> lastLevelNodes = root.Children;
             List<Node> nextLevelNodes = new List<Node>();
             for (int i = 1; i <= maxTime; i++)
@@ -42,22 +42,39 @@ namespace KR_Lib
         /// <param name="description"></param>
         /// <param name="scenario"></param>
         /// <returns></returns>
-        public static Node CreateRoot(IDescription description, IScenario scenario)
+        public static Node CreateRoot(IDescription description, IScenario scenario, List<Fluent>fluents)
         {
             Node root = new Node(null, new State(new List<ActionWithTimes>(), new List<Fluent>(), new List<ActionWithTimes>(), new List<ActionWithTimes>()), -1);
             List<DataStructures.ActionWithTimes> actions = scenario.GetStartingActions(0);
             List<Observation> observations = scenario.GetObservationsAtTime(0);
-            foreach(Observation observation in observations)
+            if (observations.Count == 0)
             {
-                List<List<Fluent>> fluentsPermutations = GetAllFluentsCombinations(observation);
-                foreach(List<Fluent> fluents in fluentsPermutations)
+                List<List<Fluent>> fluentsCombinations = GetAllFluentsCombinations(null, fluents);
+                foreach (List<Fluent> fluentsCombination in fluentsCombinations)
                 {
-                    State newState = new State(actions, fluents, new List<ActionWithTimes>(), new List<ActionWithTimes>());
+                    State newState = new State(actions, fluentsCombination, new List<ActionWithTimes>(), new List<ActionWithTimes>());
                     List<State> newStates = CheckDescription(scenario, description.GetStatements(), root.CurrentState, newState, 0);
                     foreach (State state in newStates)
                     {
                         Node newNode = new Node(root, state, 0);
                         root.addChild(newNode);
+                    }
+                }
+            }
+            else
+            {
+                foreach (Observation observation in observations)
+                {
+                    List<List<Fluent>> fluentsCombinations = GetAllFluentsCombinations(observation, fluents);
+                    foreach (List<Fluent> fluentsCombination in fluentsCombinations)
+                    {
+                        State newState = new State(actions, fluentsCombination, new List<ActionWithTimes>(), new List<ActionWithTimes>());
+                        List<State> newStates = CheckDescription(scenario, description.GetStatements(), root.CurrentState, newState, 0);
+                        foreach (State state in newStates)
+                        {
+                            Node newNode = new Node(root, state, 0);
+                            root.addChild(newNode);
+                        }
                     }
                 }
             }
@@ -70,20 +87,30 @@ namespace KR_Lib
         /// </summary>
         /// <param name="observation"></param>
         /// <returns></returns>
-        public static List<List<Fluent>> GetAllFluentsCombinations(Observation observation)
+        public static List<List<Fluent>> GetAllFluentsCombinations(Observation observation, List<Fluent> fluents)
         {
             List<List<Fluent>> fluentsCombinations = new List<List<Fluent>>();
-            List<Fluent> fluents = observation.Formula.GetFluents();
-            List<List<bool>> boolCombinations = GenerateBoolCombinations(fluents.Count());
+            List<Fluent> allFluents = fluents.Select(f => (Fluent)f.Clone()).ToList();
+            List<List<bool>> boolCombinations = GenerateBoolCombinations(allFluents.Count());
             foreach (List<bool> boolCombination in boolCombinations)
             {
                 List<Fluent> fluentsCombination = new List<Fluent>();
-                for (int i=0; i<fluents.Count; i++)
+                for (int i=0; i<allFluents.Count; i++)
                 {
-                    fluents[i].State = boolCombination[i];
+                    Fluent newFluent = (Fluent)allFluents[i].Clone();
+                    newFluent.State = boolCombination[i];
+                    fluentsCombination.Add(newFluent);
                 }
-                if(observation.Formula.Evaluate())
-                    fluentsCombinations.Add(fluents.Select(f => (Fluent)f.Clone()).ToList());
+                if (observation == null)
+                {
+                    fluentsCombinations.Add(fluentsCombination);
+                }
+                else
+                {
+                    observation.Formula.SetFluentsStates(fluentsCombination);
+                    if (observation.Formula.Evaluate())
+                        fluentsCombinations.Add(fluentsCombination);
+                }
             }
 
             return fluentsCombinations;
@@ -103,7 +130,7 @@ namespace KR_Lib
 
             return combinations;
         }
-
+        
         /// <summary>
         /// Tworzy dzieci danego liścia na podstawie domeny, scenariusza i aktualnego czasu
         /// </summary>
@@ -131,57 +158,78 @@ namespace KR_Lib
 
         public static List<State> CheckDescription(IScenario scenario, List<IStatement> statements, State parentState, State newState, int time)
         {
-            List<State> states = new List<State>();
+            List<List<(State, bool)>> statementsStates = new List<List<(State, bool)>>();
             foreach (Statement statement in statements)
             {
-                // w przypadkach gdy coś zachodzi w t+1 - bierze się stan rodzica
-                if (statement is CauseStatement || statement is ReleaseStatement)
-                {
-                    if (parentState.CurrentActions.Count == 0)
-                    {
-                        statement.CheckStatement(null, parentState.Fluents, parentState.ImpossibleActions, time);
-                    }
-                    else
-                    {
-                        statement.CheckStatement(parentState.CurrentActions[0], parentState.Fluents, parentState.ImpossibleActions, time);
-                    }
-                }
-                else 
-                {
-                    if (newState.CurrentActions.Count == 0)
-                    {
-                        statement.CheckStatement(null, newState.Fluents, newState.ImpossibleActions, time);
-                    }
-                    else
-                    {
-                        statement.CheckStatement(newState.CurrentActions[0], newState.Fluents, newState.ImpossibleActions, time);
-                    }
-                }
-                if (statement is ReleaseStatement)
-                {
-                    if (states.Count == 0)
-                    {
-                        // rozgałęzienie - po releasie może być stary stan albo zmieniony
-                        states.Add(statement.DoStatement(newState.CurrentActions, newState.Fluents.Select(f => (Fluent)f.Clone()).ToList(), newState.ImpossibleActions, newState.FutureActions));
-                    }
-                    else
-                    {
-                        foreach (State state in states)
-                        { 
-                            // tworzenie rozgałęzień po releasie dla każdego z obecnych już stanów
-                            states.Add(statement.DoStatement(newState.CurrentActions, newState.Fluents.Select(f => (Fluent)f.Clone()).ToList(), newState.ImpossibleActions, newState.FutureActions));
+                var result = statement.CheckAndDo(parentState, newState, time);        
+                if(result != null)
+                    statementsStates.Add(result);  
+            }
+            if(statementsStates.Count == 0)
+                return new List<State>() { newState };
+            
+            List<(State, bool)> listOfStates = statementsStates[0];
+            for(int i = 1; i<statementsStates.Count; i++){
+                var iterationState = statementsStates[i];
+                var tmpList = new List<(State, bool)>();
+                foreach(var f in listOfStates){
+                    for(int j = 0; j<iterationState.Count; j++){
+                        var copyState = f.Item1.Clone() as State;
+                        if(f.Item2 && iterationState[j].Item2 && CheckFluentsInStatesAreValid(copyState, iterationState[j].Item1))
+                        {
+                            copyState.Union(iterationState[j].Item1);
+                            tmpList.Add((copyState,f.Item2 && iterationState[j].Item2));
+                        } 
+                        else if(!(f.Item2 && iterationState[j].Item2))
+                        {
+                            if (iterationState[j].Item2)
+                            {
+                                copyState = iterationState[j].Item1.Clone() as State;
+                                copyState.Union(f.Item1);  
+                            }
+                            else
+                            {
+                                copyState.Union(iterationState[j].Item1);
+                            }
+                            tmpList.Add((copyState, f.Item2 || iterationState[j].Item2));
                         }
                     }
                 }
-                else
-                { 
-                    newState = statement.DoStatement(newState.CurrentActions, newState.Fluents, newState.ImpossibleActions, newState.FutureActions);
-                }
+                listOfStates = tmpList;
             }
-            states.Add(newState);
 
-            return states;
+            if(listOfStates.Count == 0){
+                var state = new State(parentState.CurrentActions, parentState.Fluents.Select(f => (Fluent)f.Clone()).ToList(), parentState.ImpossibleActions, parentState.FutureActions);
+                state.InvalidDescription = true;
+                listOfStates.Add((state, false));
+            }
+
+            return listOfStates.Select(s => s.Item1).ToList();
+
+
+            // List<State> newStates = new List<State>() { newState };
+            // foreach (Statement statement in statements)
+            // {
+            //     statement.CheckAndDo(parentState, ref newStates, time);          
+            // }
+            // return newStates;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="state1"></param>
+        /// <param name="state2"></param>
+        /// <returns></returns>
+        private static bool CheckFluentsInStatesAreValid(State state1, State state2){
+            foreach(var f1 in state1.Fluents){
+                var s2 = state2.Fluents.Where(f2 => f2.Id == f1.Id).SingleOrDefault();
+                if(s2 != null && s2.State != f1.State)
+                    return false;
+            }
+            return true;
+        }
+
 
         /// <summary>
         /// Zwraca listę wszystkich akcji, które będą trwały w danej chwili
@@ -195,6 +243,7 @@ namespace KR_Lib
             List<DataStructures.ActionWithTimes> actions = new List<DataStructures.ActionWithTimes>();
             foreach (DataStructures.ActionWithTimes action in parentState.CurrentActions)
             {
+ 
                 if (action.GetEndTime() > time)
                 {
                     actions.Add(action);
@@ -234,7 +283,7 @@ namespace KR_Lib
         /// <param name="structures"></param>
         public static void TreeToStructures(Node node, Structure structure, List<IStructure> structures, IScenario scenario)
         {
-            if (node == null || node.CurrentState.CurrentActions.Count > 1)
+            if (node == null || node.CurrentState.InvalidDescription || node.CurrentState.CurrentActions.Count > 1)
             {
                 ChangeStructureToInconsistent(structure, structures);
                 return;
@@ -253,6 +302,7 @@ namespace KR_Lib
                 if (!o.Formula.Evaluate())
                 {
                     ChangeStructureToInconsistent(structure, structures);
+                    //structures.Remove(structure);
                     return;
                 }
             }
