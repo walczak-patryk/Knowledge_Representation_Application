@@ -136,7 +136,7 @@ namespace KR_Tests
 
             #region Add specific formulas
 
-            IFormula observationFormula1 = new ConjunctionFormula(negLateFormula, negangryDadFormula, moneyFormula, tramFormula);
+            IFormula observationFormula1 = new ConjunctionFormula(negLateFormula, negangryDadFormula, moneyFormula);
 
             #endregion
 
@@ -161,7 +161,7 @@ namespace KR_Tests
             engine.SetMaxTime(8);
             bool response = engine.ExecuteQuery(query);
             response.Should().BeTrue();
-            //TODO: brak rozgałęzienia dla tram i błędne sprawdzanie stanów zamiast fluentów
+            //TODO: błędne sprawdzanie stanów zamiast fluentów
 
             #endregion
         }
