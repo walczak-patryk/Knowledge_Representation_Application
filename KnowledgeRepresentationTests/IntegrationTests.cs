@@ -172,7 +172,7 @@ namespace KR_Tests
             responsePosibleScenarioQuery2.Should().BeTrue();
             */
             //TODO: PossibleScenario test analysis
-            
+
             bool responseFormulaQuery = engine.ExecuteQuery(formulaQuery);
             responseFormulaQuery.Should().BeTrue();
 

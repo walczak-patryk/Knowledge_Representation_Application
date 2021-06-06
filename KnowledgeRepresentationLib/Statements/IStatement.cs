@@ -13,7 +13,7 @@ namespace KR_Lib.Statements
 
         bool GetDoFlag();
 
-        List<(State, bool)> CheckAndDo(State parentState, State newState, int time);
+        List<(State, HashSet<Fluent>)> CheckAndDo(State parentState, State newState, int time);
     }
 
     public abstract class Statement : IStatement
@@ -28,7 +28,7 @@ namespace KR_Lib.Statements
             this.action = action;
         }       
 
-        public abstract List<(State, bool)> CheckAndDo(State parentState, State newState, int time);
+        public abstract List<(State, HashSet<Fluent>)> CheckAndDo(State parentState, State newState, int time);
 
         public virtual bool GetDoFlag()
         {

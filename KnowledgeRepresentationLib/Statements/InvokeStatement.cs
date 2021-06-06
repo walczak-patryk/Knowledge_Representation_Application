@@ -53,16 +53,16 @@ namespace KR_Lib.Statements
             return result;
         }
 
-        public List<(State, bool)> DoStatement(State newState, int time)
+        public List<(State, HashSet<Fluent>)> DoStatement(State newState, int time)
         {
             if (actionInvokedWithTimes.StartTime == time)
                 newState.CurrentActions.Add(actionInvokedWithTimes);
             else
                 newState.FutureActions.Add(actionInvokedWithTimes);
-            return new List<(State, bool)>() { (newState, false) };
+            return new List<(State, HashSet<Fluent>)>() { (newState, null) };
         }
 
-        public override List<(State, bool)> CheckAndDo(State parentState, State newState, int time)
+        public override List<(State, HashSet<Fluent>)> CheckAndDo(State parentState, State newState, int time)
         {
             if(CheckStatement(parentState.CurrentActions.FirstOrDefault(), parentState.Fluents, parentState.ImpossibleActions, time))
                 return this.DoStatement(newState, time);
