@@ -53,22 +53,20 @@ namespace KR_Lib.Statements
             return result;
         }
 
-        public void DoStatement(ref List<State> newStates, int time)
+        public List<(State, bool)> DoStatement(State newState, int time)
         {
-            foreach (var state in newStates)
-            {
-                if (actionInvokedWithTimes.StartTime == time)
-                    state.CurrentActions.Add(actionInvokedWithTimes);
-                else
-                    state.FutureActions.Add(actionInvokedWithTimes);
-            }
+            if (actionInvokedWithTimes.StartTime == time)
+                newState.CurrentActions.Add(actionInvokedWithTimes);
+            else
+                newState.FutureActions.Add(actionInvokedWithTimes);
+            return new List<(State, bool)>() { (newState, false) };
         }
 
-        public override void CheckAndDo(State parentState, ref List<State> newStates, int time)
+        public override List<(State, bool)> CheckAndDo(State parentState, State newState, int time)
         {
             if(CheckStatement(parentState.CurrentActions.FirstOrDefault(), parentState.Fluents, parentState.ImpossibleActions, time))
-                this.DoStatement(ref newStates, time);
-            return;
+                return this.DoStatement(newState, time);
+            return null;
         }
     }
 }

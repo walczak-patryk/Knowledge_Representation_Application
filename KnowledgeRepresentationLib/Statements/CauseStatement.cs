@@ -39,29 +39,28 @@ namespace KR_Lib.Statements
             return doFlag;
         }
 
-        private void DoStatement(ref List<State> newStates)
+        private List<(State, bool)> DoStatement(State newState)
         {                
             List<State> states = new List<State> ();       
-            foreach (var s in newStates)
-            {                           
-                var combinations = formulaCaused.GetStatesFluents(true);
-                foreach(var listOfFluents in combinations){
-                    var state = new State(s.CurrentActions, s.Fluents.Select(f => (Fluent)f.Clone()).ToList(), s.ImpossibleActions, s.FutureActions);
-                    foreach (Fluent fluent in listOfFluents)
-                    {
-                        state.Fluents.Find(f => f == fluent).State = fluent.State;
-                    }
-                    states.Add(state);
+
+            var combinations = formulaCaused.GetStatesFluents(true);
+            foreach(var listOfFluents in combinations){
+                var state = new State(newState.CurrentActions, newState.Fluents.Select(f => (Fluent)f.Clone()).ToList(), newState.ImpossibleActions, newState.FutureActions);
+                foreach (Fluent fluent in listOfFluents)
+                {
+                    state.Fluents.Find(f => f == fluent).State = fluent.State;
                 }
+                states.Add(state);
             }
-            newStates = states;
+
+            return states.Select(s=>(s,true)).ToList();
         }
 
-        public override void CheckAndDo(State parentState, ref List<State> newStates, int time)
+        public override List<(State, bool)> CheckAndDo(State parentState, State newState, int time)
         {
             if(CheckStatement(parentState.CurrentActions.FirstOrDefault(), parentState.Fluents, parentState.ImpossibleActions, time))
-                this.DoStatement(ref newStates);
-            return;
+                return this.DoStatement(newState);
+            return null;
         }
     }
 }

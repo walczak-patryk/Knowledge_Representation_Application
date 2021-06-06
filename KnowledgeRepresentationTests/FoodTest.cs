@@ -158,6 +158,7 @@ namespace KR_Tests
             engine.SetMaxTime(5);
             bool response = engine.ExecuteQuery(query);
             response.Should().BeFalse();
+            // Zwraca błąd, niespójny opis z dodanymi danymi w domenie (impossible)
 
             #endregion
         }

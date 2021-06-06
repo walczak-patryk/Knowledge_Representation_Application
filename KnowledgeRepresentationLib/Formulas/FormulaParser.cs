@@ -79,7 +79,7 @@ namespace KR_Lib.Formulas
 
         static void show(IFormula formula)
         {
-            List<Fluent> list = formula.GetFluents();
+            HashSet<Fluent> list = formula.GetFluents();
             foreach(var elem in list)
             {
                 Console.WriteLine(elem.Name);
