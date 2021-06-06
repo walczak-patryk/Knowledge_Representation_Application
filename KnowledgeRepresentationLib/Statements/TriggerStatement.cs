@@ -21,15 +21,15 @@ namespace KR_Lib.Statements
             return formulaIf.Evaluate();
         }
 
-        public List<(State, bool)> DoStatement(State state, int time)
+        public List<(State, HashSet<Fluent>)> DoStatement(State state, int time)
         {
             ActionWithTimes actionWTimes = new ActionWithTimes(action, (action as ActionTime).Time, time);
             state.CurrentActions.Add(actionWTimes);
             
-            return new List<(State, bool)>() { (state,false) };
+            return new List<(State, HashSet<Fluent>)>() { (state, null) };
         }
 
-        public override List<(State, bool)> CheckAndDo(State parentState, State newState, int time)
+        public override List<(State, HashSet<Fluent>)> CheckAndDo(State parentState, State newState, int time)
         {
             if(CheckStatement(newState.CurrentActions.FirstOrDefault(), newState.Fluents, newState.ImpossibleActions, time))
                 return this.DoStatement(newState, time);           
