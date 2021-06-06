@@ -160,7 +160,7 @@ namespace KR_Tests
             engine.SetMaxTime(15);
             bool response = engine.ExecuteQuery(query);
             response.Should().BeTrue();
-
+            //TODO: Uspójnić domenę z opisem u góry i (chyba) z opisem testów potem przeanalizować testy
             #endregion
         }
 
@@ -168,7 +168,7 @@ namespace KR_Tests
         public void TestScenario2()
         {
             /*
-             *Obs={(¬late∧ ¬arrived∧ ¬dead_dear∧ ¬dear_on_road,0),¬late∧arrived∧ ¬dead_dear∧¬dear_on_road,14)}
+             *Obs={(¬late∧ ¬arrived∧ ¬dead_dear∧ ¬dear_on_road,0),(¬late∧arrived∧ ¬dead_dear∧¬dear_on_road,14)}
              *Acs:{(sleep,6,0),(driving_slow,8,6)}
              *
              *Kwerenda:Czy w chwili 5 scenariusza wykonywana jest akcja driving_slow?
@@ -203,6 +203,7 @@ namespace KR_Tests
             #region Testing
             engine.SetMaxTime(15);
             bool response = engine.ExecuteQuery(query);
+            //TODO: jest tylko jedna i w dodatku inconsistent structure. Ale najpierw trzeba uspójnić domenę z opisem u góry
             response.Should().BeFalse();
 
             #endregion
