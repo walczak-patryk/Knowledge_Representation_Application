@@ -75,7 +75,7 @@ namespace KR_Tests
 
             #endregion
 
-            #region Add actions
+            #region Add fluents
 
             late = new Fluent("late");
             engine.AddFluent(late);

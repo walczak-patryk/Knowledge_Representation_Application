@@ -121,10 +121,11 @@ namespace KR_Tests
         public void TestScenario1()
         {
             /*
-             * Obs={(¬late∧¬arrived∧ 6=dead_deer∧ 6=deer_on_road,0),¬late∧arrived∧ 6=dead_deer∧ 6=deer_on_road,14)}Acs:{(sleep,6,0),(driving_slow,8,6)}
+             * Obs={(¬late∧¬arrived∧ ¬dead_deer∧ ¬deer_on_road,0),¬late∧arrived∧ 6=dead_deer∧ ¬deer_on_road,14)}
+             * Acs:{(sleep,6,0),(driving_slow,8,6)}
              * 
              * Kwerenda:
-             * Czy w chwili 5 scenariusza wykonywana jest akcjasleep?
+             * Czy w chwili 5 scenariusza wykonywana jest akcja sleep?
              * 
              * 
              * Odpowiedź:
