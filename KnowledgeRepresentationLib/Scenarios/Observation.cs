@@ -56,5 +56,10 @@ namespace KR_Lib.DataStructures
 
             return Observation;
         }
+
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
+        }
     }
 }

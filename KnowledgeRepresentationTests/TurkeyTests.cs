@@ -140,7 +140,7 @@ namespace KR_Tests
              * Czy indyk żyje kiedykolwiek w czasie 4?
              * 
              * Odpowiedź 5:
-             * Tak
+             * Nie
              */
 
             #region Add specific formulas
@@ -182,14 +182,12 @@ namespace KR_Tests
             //TODO: PossibleScenario test analysis
 
             bool responseActionQuery = engine.ExecuteQuery(actionQuery);
-           // responseActionQuery.Should().BeTrue();
-            //TODO: Tworzy się tylko jedna struktura i to inconsistent. W czasie 4 ¬loaded=true ale ¬hidden=false i ¬alive=false
+            responseActionQuery.Should().BeTrue();
             bool responseFormulaQuery = engine.ExecuteQuery(formulaQuery);
             responseFormulaQuery.Should().BeFalse();
-            //TODO: Podobnie jak wyżej ale nie sprawdzałam tak głęboko, na pewno tworzy się tylko jedna struktura i to inconsistent
             bool responseFormulaQuery2 = engine.ExecuteQuery(formulaQuery2);
-            responseFormulaQuery2.Should().BeTrue();
-            //TODO: Podobnie jak wyżej ale nie sprawdzałam tak głęboko, na pewno tworzy się tylko jedna struktura i to inconsistent
+            responseFormulaQuery2.Should().BeFalse();
+            //TODO: Wcześniej tu było BeTrue ale to nie jest zgodne z obserwacjami.
             #endregion
         }
 

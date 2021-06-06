@@ -202,6 +202,10 @@ namespace KR_Lib
         private static (State, HashSet<Fluent>) UnionStates(State state1, HashSet<Fluent> affectedFluents1, State state2, HashSet<Fluent> affectedFluents2)
         {
             var copyState = state1.Clone() as State;
+            if (affectedFluents1 == null)
+                affectedFluents1 = new HashSet<Fluent>();
+            if (affectedFluents2 == null)
+                affectedFluents2 = new HashSet<Fluent>();
             HashSet<Fluent> affectedIntersection = affectedFluents1.Intersect(affectedFluents2).ToHashSet();
             if (affectedIntersection.Any() && CheckFluentsInStatesAreValid(copyState, state2, affectedIntersection))
             {

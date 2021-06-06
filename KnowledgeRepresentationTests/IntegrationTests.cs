@@ -184,7 +184,6 @@ namespace KR_Tests
 
             bool responseFormulaQuery4 = engine.ExecuteQuery(formulaQuery4);
             responseFormulaQuery4.Should().BeTrue();
-            //TODO: Inconsistent Structures
 
             #endregion
         }

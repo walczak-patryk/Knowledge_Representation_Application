@@ -47,11 +47,13 @@ namespace KR_Lib.Statements
             HashSet<Fluent> affectedFluents = formulaCaused.GetFluents().ToHashSet();
             foreach(var listOfFluents in combinations){
                 var state = new State(newState.CurrentActions, newState.Fluents.Select(f => (Fluent)f.Clone()).ToList(), newState.ImpossibleActions, newState.FutureActions);
+                HashSet<Fluent> set = new HashSet<Fluent>();
                 foreach (Fluent fluent in listOfFluents)
                 {
                     state.Fluents.Find(f => f == fluent).State = fluent.State;
+                    set.Add(fluent);
                 }
-                states.Add((state, listOfFluents));
+                states.Add((state, set));
             }
 
             return states;

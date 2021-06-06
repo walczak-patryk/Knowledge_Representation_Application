@@ -39,7 +39,6 @@ namespace KR_Lib.Queries
             List<int> possibleTimes = new List<int>();
             bool atLeatOneTrue = false;
             bool atLeatOneFalse = false;
-            bool atLeastOneModel = false;
             var models = modeledStructures.Where(s => s is Model);
             if (models.Count() == 0) return false;
             foreach (var structure in models)

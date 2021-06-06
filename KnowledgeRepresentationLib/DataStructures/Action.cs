@@ -72,5 +72,10 @@ namespace KR_Lib.DataStructures
         {
             return Equals(obj as Action);
         }
+
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode() ^ Name.GetHashCode();
+        }
     }
 }

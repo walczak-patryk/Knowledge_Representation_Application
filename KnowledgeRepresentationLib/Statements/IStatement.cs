@@ -20,7 +20,6 @@ namespace KR_Lib.Statements
     {
         public Guid guid;
         public Action action;
-        private bool doFlag;
 
         protected Statement(Action action)
         {
