@@ -39,17 +39,18 @@ namespace KR_Lib.Queries
         /// <returns>Prawda jeżeli podana formuła jest prawdziwa przy każdej/przynajmniej jednej strukturze z listy, fałsz w.p.p.<returns>
         public bool GetAnswer(List<IStructure> modeledStructures)
         {
-            bool atLeatOneTrue = false;
+            bool atLeastOneTrue = false;
             bool atLeastOneFalse = false;
             var models = modeledStructures.Where(s => s is Model);
+            if (models.Count() == 0) return false;
             foreach (var model in models)
             {
                 bool evaluationResult = model.EvaluateFormula(this.formula, this.time);
-                if (evaluationResult) atLeatOneTrue = true;
+                if (evaluationResult) atLeastOneTrue = true;
                 else atLeastOneFalse = true;
 
             }
-            if (this.queryType == QueryType.Ever) return atLeatOneTrue;
+            if (this.queryType == QueryType.Ever) return atLeastOneTrue;
             else return !atLeastOneFalse;
         }
     }

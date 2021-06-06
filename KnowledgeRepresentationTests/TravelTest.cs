@@ -113,7 +113,7 @@ namespace KR_Tests
             engine.AddStatement(new CauseStatement(new ActionTime(drivingFast, 6), negLateFormula));
             engine.AddStatement(new CauseStatement(new ActionTime(drivingFast, 1), deerDeadFormula, deerOnRoadFormula));
             engine.AddStatement(new CauseStatement(new ActionTime(drivingFast, 1), negDeerOnRoadFormula, deerOnRoadFormula));
-
+            //TODO: Uspójnić domenę z opisem u góry i (chyba) z opisem testów potem przeanalizować testy
             #endregion
         }
 

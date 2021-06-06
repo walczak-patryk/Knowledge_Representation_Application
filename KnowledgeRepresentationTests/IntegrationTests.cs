@@ -142,7 +142,7 @@ namespace KR_Tests
 
             IScenario scenario = new Scenario("testScenario1")
             {
-                Observations = new List<Observation>() { new Observation(observationFormula1, 0), new Observation(observationFormula2, 5) },
+                Observations = new List<Observation>() { new Observation(observationFormula1, 2), new Observation(observationFormula2, 5) },
                 ActionOccurrences = new List<ActionOccurrence> { new ActionOccurrence(A, 1, 3) }
             };
             engine.AddScenario(scenario);
@@ -172,18 +172,19 @@ namespace KR_Tests
             responsePosibleScenarioQuery2.Should().BeTrue();
             */
             //TODO: PossibleScenario test analysis
+            
             bool responseFormulaQuery = engine.ExecuteQuery(formulaQuery);
             responseFormulaQuery.Should().BeTrue();
 
             bool responseFormulaQuery2 = engine.ExecuteQuery(formulaQuery2);
             responseFormulaQuery2.Should().BeTrue();
-
+           
             bool responseFormulaQuery3 = engine.ExecuteQuery(formulaQuery3);
             responseFormulaQuery3.Should().BeTrue();
 
             bool responseFormulaQuery4 = engine.ExecuteQuery(formulaQuery4);
             responseFormulaQuery4.Should().BeTrue();
-
+            //TODO: Inconsistent Structures
 
             #endregion
         }
@@ -255,6 +256,7 @@ namespace KR_Tests
             responsePosibleScenarioQuery.Should().BeFalse();
             bool responsePosibleScenarioQuery2 = engine.ExecuteQuery(posibleScenarioQuery2);
             responsePosibleScenarioQuery2.Should().BeTrue();
+            //TODO: PossibleScenario test analysis
             bool responseFormulaQuery = engine.ExecuteQuery(formulaQuery);
             responseFormulaQuery.Should().BeFalse();
             bool responseFormulaQuery2 = engine.ExecuteQuery(formulaQuery2);
