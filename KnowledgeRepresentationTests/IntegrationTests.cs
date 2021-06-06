@@ -163,12 +163,12 @@ namespace KR_Tests
 
             bool responsePosibleScenarioQuery = engine.ExecuteQuery(posibleScenarioQuery);
             responsePosibleScenarioQuery.Should().BeFalse();
-            //bool responsePosibleScenarioQuery2 = engine.ExecuteQuery(posibleScenarioQuery2);
-            //responsePosibleScenarioQuery2.Should().BeTrue();
-            //bool responseFormulaQuery = engine.ExecuteQuery(formulaQuery);
-            //responseFormulaQuery.Should().BeTrue();
-            //bool responseFormulaQuery2 = engine.ExecuteQuery(formulaQuery2);
-            //responseFormulaQuery2.Should().BeTrue();
+            bool responsePosibleScenarioQuery2 = engine.ExecuteQuery(posibleScenarioQuery2);
+            responsePosibleScenarioQuery2.Should().BeTrue();
+            bool responseFormulaQuery = engine.ExecuteQuery(formulaQuery);
+            responseFormulaQuery.Should().BeTrue();
+            bool responseFormulaQuery2 = engine.ExecuteQuery(formulaQuery2);
+            responseFormulaQuery2.Should().BeTrue();
 
             #endregion
         }
