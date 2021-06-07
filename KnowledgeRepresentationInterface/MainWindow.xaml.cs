@@ -1092,18 +1092,18 @@ namespace KnowledgeRepresentationInterface
                         MessageBox.Show($"Incorrect action duration");
                         return;
                     }
-                    // tu chyba brakuje action time
+                    
 
                     Action actionIIS = (Action)this.IIS.ImpossibleIfStatement_ComboBox.SelectedItem;
-
+                    ActionTime actionTimeIIS = new ActionTime(actionIIS, time_actionIIS);
                     IStatement statementIIS;
                     if (this.IIS.HorizonstalToggleSwitchForExpression.IsChecked)
                     {
-                        statementIIS = new ImpossibleIfStatement(actionIIS);
+                        statementIIS = new ImpossibleIfStatement(actionTimeIIS);
                     }
                     else
                     {
-                        statementIIS = new ImpossibleIfStatement(actionIIS, this.IIS.Get_Formula());
+                        statementIIS = new ImpossibleIfStatement(actionTimeIIS, this.IIS.Get_Formula());
                     }
                     TreeViewItem tv_elemIIS = new TreeViewItem();
                     tv_elemIIS.Header = "Impossible If Statement " + ImpossibleIfStatementView.numberOfImpossibleifStatements;
