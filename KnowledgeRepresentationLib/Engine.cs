@@ -126,7 +126,7 @@ namespace KR_Lib
         {
             var root = TreeMethods.GenerateTree(description, scenario, fluents, maxTime);
             var structures = TreeMethods.GenerateStructues(root, scenario, maxTime);
-            this.modeledStructures = structures.ToModels();
+            this.modeledStructures = structures.ToModels().Where(s=>s is Model).ToList();
         }
 
         /// <summary>

@@ -131,15 +131,14 @@ namespace KR_Tests
 
             #region Add querry
 
-            IQuery query = new PossibleScenarioQuery(QueryType.Always, scenario.Id);
+            IQuery query = new PossibleScenarioQuery(scenario.Id);
 
             #endregion
 
             #region Testing
             engine.SetMaxTime(10);
-            //bool responsePosibleScenarioQuery = engine.ExecuteQuery(query);
-            //responsePosibleScenarioQuery.Should().BeTrue();
-            //TODO: PossibleScenario test analysis
+            bool responsePosibleScenarioQuery = engine.ExecuteQuery(query);
+            responsePosibleScenarioQuery.Should().BeTrue();
 
             #endregion
         }
@@ -179,15 +178,14 @@ namespace KR_Tests
 
             #region Add querry
 
-            IQuery query = new PossibleScenarioQuery(QueryType.Always, scenario.Id);
+            IQuery query = new PossibleScenarioQuery(scenario.Id);
 
             #endregion
 
             #region Testing
             engine.SetMaxTime(10);
-            //var responsePosibleScenarioQuery = engine.ExecuteQuery(query);
-            //responsePosibleScenarioQuery.Should().BeTrue();
-            //TODO: PossibleScenario test analysis
+            var responsePosibleScenarioQuery = engine.ExecuteQuery(query);
+            responsePosibleScenarioQuery.Should().BeTrue();
             #endregion
         }
 
@@ -228,15 +226,14 @@ namespace KR_Tests
 
             #region Add querry
 
-            IQuery query = new PossibleScenarioQuery(QueryType.Always, scenario.Id);
+            IQuery query = new PossibleScenarioQuery(scenario.Id);
 
             #endregion
 
             #region Testing
             engine.SetMaxTime(10);
-            //var responsePosibleScenarioQuery = engine.ExecuteQuery(query);
-            //responsePosibleScenarioQuery.Should().BeFalse();
-            //TODO: PossibleScenario test analysis
+            var responsePosibleScenarioQuery = engine.ExecuteQuery(query);
+            responsePosibleScenarioQuery.Should().BeFalse();
             #endregion
         }
     }
