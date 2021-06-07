@@ -453,18 +453,22 @@ namespace KnowledgeRepresentationInterface
             {
                 case 0:
                     Query_GroupBox.Content = this.PSQ;
+                    Warning_label.Content = "";
                     break;
                 case 1:
                     Query_GroupBox.Content = this.AQ;
                     this.AQ.Set_Actions(this.actions);
+                    check_scenario();
                     break;
                 case 2:
                     Query_GroupBox.Content = this.FQ;
                     this.FQ.Refresh_Fluents();
+                    check_scenario();
                     break;
                 case 3:
                     Query_GroupBox.Content = this.TQ;
                     this.TQ.Refresh_Fluents();
+                    check_scenario();
                     break;
             }
         }
@@ -1373,7 +1377,7 @@ namespace KnowledgeRepresentationInterface
 
         private void check_scenario()
         {
-            if (Query_Scenario_ComboBox.SelectedIndex < 0)
+            if (Query_Scenario_ComboBox.SelectedIndex < 0 || Query_Type_ComboBox.SelectedIndex==0)
             {
                 Warning_label.Content = "";
                 return;
