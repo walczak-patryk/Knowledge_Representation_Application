@@ -27,7 +27,8 @@ namespace KR_Tests
         * 
         * (making_szakszuka,3)causes¬jajka∧ ¬palnik∧szakszuka
         * (making_omllet,3)causes¬jajka∧ ¬palnik∧szakszuka
-        * impossible making_szakszuka, making_omlet
+        * impossible (making_szakszuka, 3) if ¬palnik or ¬eggs
+        * impossible (making_omlet, 3) if ¬palnik or ¬eggs
         * (buy_eggs,4)causes eggs
          */
 
@@ -112,6 +113,8 @@ namespace KR_Tests
             engine.AddStatement(new CauseStatement(new ActionTime(makingOmlet, 3), negjajkaFormula));
             engine.AddStatement(new CauseStatement(new ActionTime(makingOmlet, 3), negpalnikFormula));
             engine.AddStatement(new CauseStatement(new ActionTime(makingOmlet, 3), omletFormula));
+            engine.AddStatement(new ImpossibleIfStatement(new ActionTime(makingOmlet, 3), new AlternativeFormula(negpalnikFormula, negjajkaFormula)));
+            engine.AddStatement(new ImpossibleIfStatement(new ActionTime(makingSzakszuka, 3), new AlternativeFormula(negpalnikFormula, negjajkaFormula)));
             engine.AddStatement(new CauseStatement(new ActionTime(buyEggs, 1), jajkaFormula));
             #endregion
         }
@@ -127,7 +130,7 @@ namespace KR_Tests
              * Czy w chwili 4 scenariusza wykonywana jest akcja making_omllet?
              * 
              * Odpowiedź:
-             * W chwili 4 nie jest wykonywana żadna obserwacja ze względu na brak dostępnych jajek
+             * Scenariusz jest niespójny z dziedzina bo nie mozna wykonac akcji making_omlet
              */
 
             #region Add specific formulas
@@ -158,7 +161,6 @@ namespace KR_Tests
             engine.SetMaxTime(5);
             bool response = engine.ExecuteQuery(query);
             response.Should().BeFalse();
-            // Zwraca błąd, niespójny opis z dodanymi danymi w domenie (impossible)
 
             #endregion
         }

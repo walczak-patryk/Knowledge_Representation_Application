@@ -360,12 +360,7 @@ namespace KnowledgeRepresentationInterface
             switch (Query_Type_ComboBox.SelectedIndex)
             {
                 case 0:
-                    QueryType qt_PSQ = QueryType.Always;
-                    if (this.PSQ.Type_ComboBox.SelectedIndex==1)
-                    {
-                        qt_PSQ = QueryType.Ever;
-                    }
-                    query = new KR_Lib.Queries.PossibleScenarioQuery(qt_PSQ, selected_scenario.Id);
+                    query = new KR_Lib.Queries.PossibleScenarioQuery(selected_scenario.Id);
                     result = this.engine.ExecuteQuery(query);
                     break;
                 case 1:
@@ -458,18 +453,22 @@ namespace KnowledgeRepresentationInterface
             {
                 case 0:
                     Query_GroupBox.Content = this.PSQ;
+                    Warning_label.Content = "";
                     break;
                 case 1:
                     Query_GroupBox.Content = this.AQ;
                     this.AQ.Set_Actions(this.actions);
+                    check_scenario();
                     break;
                 case 2:
                     Query_GroupBox.Content = this.FQ;
                     this.FQ.Refresh_Fluents();
+                    check_scenario();
                     break;
                 case 3:
                     Query_GroupBox.Content = this.TQ;
                     this.TQ.Refresh_Fluents();
+                    check_scenario();
                     break;
             }
         }
@@ -1368,6 +1367,33 @@ namespace KnowledgeRepresentationInterface
         private void Queries_Tab_Selected(object sender, RoutedEventArgs e)
         {
             Result_label.Content = "";
+            check_scenario();
+        }
+
+        private void Query_Scenario_ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            check_scenario();
+        }
+
+        private void check_scenario()
+        {
+            if (Query_Scenario_ComboBox.SelectedIndex < 0 || Query_Type_ComboBox.SelectedIndex==0)
+            {
+                Warning_label.Content = "";
+                return;
+            }
+
+            ScenarioGUI selected_scenario = (ScenarioGUI)Query_Scenario_ComboBox.SelectedItem;
+
+            IQuery query = new KR_Lib.Queries.PossibleScenarioQuery(selected_scenario.Id);
+            if (this.engine.ExecuteQuery(query))
+            {
+                Warning_label.Content = "";
+            }
+            else
+            {
+                Warning_label.Content = "Warning! This scenario is impossible to realize!";
+            }
         }
     }
 }

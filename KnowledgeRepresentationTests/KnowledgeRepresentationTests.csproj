@@ -55,6 +55,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CauseTest.cs" />
     <Compile Include="FoodTest.cs" />
     <Compile Include="FriendsTest.cs" />
     <Compile Include="IntegrationTests.cs" />

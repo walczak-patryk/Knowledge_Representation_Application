@@ -9,27 +9,40 @@ namespace KR_Lib.Statements
     public class ImpossibleIfStatement : Statement
     {
         IFormula formulaIf;
+        private bool ifFlag = false;
 
         public ImpossibleIfStatement(Action action, IFormula formulaIf = null) : base(action)
         {
-            this.formulaIf = formulaIf;
+            if (formulaIf == null)
+            {
+                ifFlag = true;
+                this.formulaIf = formulaIf;
+            }       
         }
 
         public bool CheckStatement(ActionWithTimes currentAction, List<Fluent> fluents, List<ActionWithTimes> impossibleActions, int time)
         {
-            formulaIf.SetFluentsStates(fluents);
-            return formulaIf.Evaluate();
+            if (ifFlag)
+            {
+                formulaIf.SetFluentsStates(fluents);
+                return formulaIf.Evaluate();
+            }
+            return true;
         }
 
-        public List<(State, bool)> DoStatement(State newState)
+        public List<(State, HashSet<Fluent>)> DoStatement(State newState)
         {
-            var actionWTime = (action as ActionWithTimes);
-            newState.ImpossibleActions.Add(actionWTime);
-
-            return new List<(State, bool)>() {(newState,false)};
+            var a = newState.ImpossibleActions.Where(act => act == action).SingleOrDefault();
+            if (a == null)
+            {
+                var actionWTime = (action as ActionWithTimes);
+                newState.ImpossibleActions.Add(actionWTime);
+            }
+               
+            return new List<(State, HashSet<Fluent>)>() {(newState, null)};
         }
         
-        public override List<(State, bool)> CheckAndDo(State parentState, State newState, int time)
+        public override List<(State, HashSet<Fluent>)> CheckAndDo(State parentState, State newState, int time)
         {
             if(CheckStatement(newState.CurrentActions.FirstOrDefault(), parentState.Fluents, parentState.ImpossibleActions, time))
                 return this.DoStatement(newState);

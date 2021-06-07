@@ -40,7 +40,7 @@ namespace KR_Lib.Formulas
 
             HashSet<Fluent> fluents = new HashSet<Fluent>();
             foreach (var formula in formulas)
-                fluents.Union(formula.GetFluents());
+                fluents.UnionWith(formula.GetFluents());
 
             return fluents;
         }
@@ -58,7 +58,7 @@ namespace KR_Lib.Formulas
                         for(int j = 0; j<statesFluents.Count; j++){
                             var newSet = f.Select(flu => (flu.Clone() as Fluent)).ToHashSet();
                             if(this.CheckSetsAreValid(newSet, statesFluents[j])){
-                                newSet.Union(statesFluents[j]);
+                                newSet.UnionWith(statesFluents[j]);
                                 tmpList.Add(newSet);
                             }
                         }
@@ -69,19 +69,23 @@ namespace KR_Lib.Formulas
             }
             else
             {
-                var combinations = TreeMethods.GenerateBoolCombinations(this.formulas.Count);
+                //HashSet<Fluent> tmp = new HashSet<Fluent>();
+                //foreach (var f in formulas)
+                //    tmp.UnionWith(f.GetFluents());
+                //var combinations = TreeMethods.GenerateBoolCombinations(tmp.Count);
+                var combinations = TreeMethods.GenerateBoolCombinations(formulas.Count);
                 foreach (var combination in combinations)
                 {
                     if(combination.Contains(false)){
                         var iterationListOfFluents = this.formulas[0].GetStatesFluents(combination[0]);
-                        for(int j = 1; j<formulas.Count; j++){
+                        for(int j = 1; j< combination.Count; j++){
                             var statesFluents = this.formulas[j].GetStatesFluents(combination[j]);
                             var tmpList = new List<HashSet<Fluent>>();
                             foreach(var f in iterationListOfFluents){
                                 for(int k = 0; k<statesFluents.Count; k++){
                                     var newSet = f.Select(flu => (flu.Clone() as Fluent)).ToHashSet();
                                     if(this.CheckSetsAreValid(newSet, statesFluents[k])){
-                                        newSet.Union(statesFluents[k]);
+                                        newSet.UnionWith(statesFluents[k]);
                                         tmpList.Add(newSet);
                                     }
                                 }

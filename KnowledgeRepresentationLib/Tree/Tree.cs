@@ -158,7 +158,7 @@ namespace KR_Lib
 
         public static List<State> CheckDescription(IScenario scenario, List<IStatement> statements, State parentState, State newState, int time)
         {
-            List<List<(State, bool)>> statementsStates = new List<List<(State, bool)>>();
+            List<List<(State, HashSet<Fluent>)>> statementsStates = new List<List<(State, HashSet<Fluent>)>>();
             foreach (Statement statement in statements)
             {
                 var result = statement.CheckAndDo(parentState, newState, time);        
@@ -168,31 +168,15 @@ namespace KR_Lib
             if(statementsStates.Count == 0)
                 return new List<State>() { newState };
             
-            List<(State, bool)> listOfStates = statementsStates[0];
+            List<(State, HashSet<Fluent>)> listOfStates = statementsStates[0];
             for(int i = 1; i<statementsStates.Count; i++){
                 var iterationState = statementsStates[i];
-                var tmpList = new List<(State, bool)>();
+                var tmpList = new List<(State, HashSet<Fluent>)>();
                 foreach(var f in listOfStates){
                     for(int j = 0; j<iterationState.Count; j++){
-                        var copyState = f.Item1.Clone() as State;
-                        if(f.Item2 && iterationState[j].Item2 && CheckFluentsInStatesAreValid(copyState, iterationState[j].Item1))
-                        {
-                            copyState.Union(iterationState[j].Item1);
-                            tmpList.Add((copyState,f.Item2 && iterationState[j].Item2));
-                        } 
-                        else if(!(f.Item2 && iterationState[j].Item2))
-                        {
-                            if (iterationState[j].Item2)
-                            {
-                                copyState = iterationState[j].Item1.Clone() as State;
-                                copyState.Union(f.Item1);  
-                            }
-                            else
-                            {
-                                copyState.Union(iterationState[j].Item1);
-                            }
-                            tmpList.Add((copyState, f.Item2 || iterationState[j].Item2));
-                        }
+                        var statesUnion = UnionStates(f.Item1, f.Item2, iterationState[j].Item1, iterationState[j].Item2);
+                        if (statesUnion.Item1 != null)
+                            tmpList.Add(statesUnion);
                     }
                 }
                 listOfStates = tmpList;
@@ -201,7 +185,7 @@ namespace KR_Lib
             if(listOfStates.Count == 0){
                 var state = new State(parentState.CurrentActions, parentState.Fluents.Select(f => (Fluent)f.Clone()).ToList(), parentState.ImpossibleActions, parentState.FutureActions);
                 state.InvalidDescription = true;
-                listOfStates.Add((state, false));
+                listOfStates.Add((state, null));
             }
 
             return listOfStates.Select(s => s.Item1).ToList();
@@ -215,19 +199,60 @@ namespace KR_Lib
             // return newStates;
         }
 
+        private static (State, HashSet<Fluent>) UnionStates(State state1, HashSet<Fluent> affectedFluents1, State state2, HashSet<Fluent> affectedFluents2)
+        {
+            var copyState = state1.Clone() as State;
+            if (affectedFluents1 == null)
+                affectedFluents1 = new HashSet<Fluent>();
+            if (affectedFluents2 == null)
+                affectedFluents2 = new HashSet<Fluent>();
+            HashSet<Fluent> affectedIntersection = affectedFluents1.Intersect(affectedFluents2).ToHashSet();
+            if (affectedIntersection.Any() && CheckFluentsInStatesAreValid(copyState, state2, affectedIntersection))
+            {
+                copyState.Union(state2);
+                //tmpList.Add((copyState, affectedFluents1 && affectedFluents2));
+                return (copyState, affectedFluents1.Union(affectedFluents2).ToHashSet());
+            }
+            else if (!affectedIntersection.Any())
+            {
+                copyState.Union(state2);
+                var affectedUnion = affectedFluents1.Union(affectedFluents2).ToHashSet();
+                foreach (var f in affectedUnion)
+                {
+                    var f2 = copyState.Fluents.Where(f1 => f1.Id == f.Id).SingleOrDefault();
+                    if(f2!= null)
+                        f2.State = f.State;
+                }
+                return (copyState, affectedUnion);
+            }
+            return (null, null);
+        }
+            // 1 i 2 - suma ich, 
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="state1"></param>
         /// <param name="state2"></param>
         /// <returns></returns>
-        private static bool CheckFluentsInStatesAreValid(State state1, State state2){
-            foreach(var f1 in state1.Fluents){
-                var s2 = state2.Fluents.Where(f2 => f2.Id == f1.Id).SingleOrDefault();
-                if(s2 != null && s2.State != f1.State)
+        private static bool CheckFluentsInStatesAreValid(State state1, State state2, HashSet<Fluent> intersection){
+            foreach (var f in intersection)
+            {
+                var s1 = state1.Fluents.Where(f1 => f1.Id == f.Id).SingleOrDefault();
+                var s2 = state2.Fluents.Where(f2 => f2.Id == f.Id).SingleOrDefault();
+                if (s1.State != s2.State)
+                {
                     return false;
+                }
             }
+
             return true;
+            //foreach(var f1 in state1.Fluents){
+            //    var s2 = state2.Fluents.Where(f2 => f2.Id == f1.Id).SingleOrDefault();
+            //    if(s2 != null && s2.State != f1.State)
+            //        return false;
+            //}
+            //return true;
         }
 
 

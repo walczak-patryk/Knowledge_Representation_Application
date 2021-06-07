@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using KR_Lib.DataStructures;
 using KR_Lib.Structures;
 
@@ -10,18 +11,14 @@ namespace KR_Lib.Queries
     /// </summary>
     public class PossibleScenarioQuery : IQuery
     {
-
-        private QueryType queryType; 
-
         public Guid ScenarioId
         {
             get;
         }
 
-        public PossibleScenarioQuery(QueryType queryType, Guid scenarioId)
+        public PossibleScenarioQuery(Guid scenarioId)
         {
             this.ScenarioId = scenarioId;
-            this.queryType = queryType;
         }
 
         /// <summary>
@@ -31,20 +28,10 @@ namespace KR_Lib.Queries
         /// <returns>Prawda jeżeli podany scenariusz jest możliwy do realizacji zawsze/kiedykolwiek w stukturach z listy, fałsz w.p.p.<returns>
         public bool GetAnswer(List<IStructure> modeledStructures)
         {
-            bool atLeatOneModel = false;
-            bool atLeatOneInconsistent = false;
-            foreach (var model in modeledStructures)
-            {
-                if (model is InconsistentStructure) 
-                    atLeatOneInconsistent = true;
-                else
-                {
-                    if (model is Model) 
-                        atLeatOneModel = true;
-                }
-            }
-            if (this.queryType == QueryType.Ever) return atLeatOneModel;
-            else return !atLeatOneInconsistent && atLeatOneModel;
+            //var models = modeledStructures.Where(s => s is Model);
+            if (modeledStructures.Any())
+                return true;
+            return false;
         }
     }
 }

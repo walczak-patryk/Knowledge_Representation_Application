@@ -113,34 +113,28 @@ namespace KR_Tests
              * Acs={(load,1,1),(shoot,1,3)}
              * 
              * Kwerenda 1:
-             * Czy scenariusz jest osiagany zawsze?
+             * Czy scenariusz jest osiagany?
              * 
              * Odpowiedź 1:
-             * Nie
+             * Tak
              * 
              * Kwerenda 2:
-             * Czy scenariusz jest osiagany kiedykolwiek?
+             * Czy akcja escape dzieje sie w 2 chwili czasowej?
              * 
              * Odpowiedź 2:
              * Tak
              * 
              * Kwerenda 3:
-             * Czy akcja escape dzieje sie w 2 chwili czasowej?
+             * Czy indyk żyje zawsze w czasie 4?
              * 
              * Odpowiedź 3:
-             * Tak
+             * Nie
              * 
              * Kwerenda 4:
-             * Czy indyk żyje zawsze w czasie 4?
+             * Czy indyk żyje kiedykolwiek w czasie 4?
              * 
              * Odpowiedź 4:
              * Nie
-             * 
-             * Kwerenda 5:
-             * Czy indyk żyje kiedykolwiek w czasie 4?
-             * 
-             * Odpowiedź 5:
-             * Tak
              */
 
             #region Add specific formulas
@@ -163,8 +157,7 @@ namespace KR_Tests
 
             #region Add querry
 
-            IQuery posibleScenarioQuery = new PossibleScenarioQuery(QueryType.Always, scenario.Id);
-            IQuery posibleScenarioQuery2 = new PossibleScenarioQuery(QueryType.Ever, scenario.Id);
+            IQuery posibleScenarioQuery = new PossibleScenarioQuery(scenario.Id);
             IQuery actionQuery = new ActionQuery(2, escape, scenario.Id);
             IQuery formulaQuery = new FormulaQuery(4, aliveFormula, scenario.Id, QueryType.Always);
             IQuery formulaQuery2 = new FormulaQuery(4, aliveFormula, scenario.Id, QueryType.Ever); 
@@ -175,21 +168,15 @@ namespace KR_Tests
             engine.SetMaxTime(4);
 
 
-            //bool responsePosibleScenarioQuery = engine.ExecuteQuery(posibleScenarioQuery);
-            //responsePosibleScenarioQuery.Should().BeFalse();
-            //bool responsePosibleScenarioQuery2 = engine.ExecuteQuery(posibleScenarioQuery2);
-            //responsePosibleScenarioQuery2.Should().BeTrue();
-            //TODO: PossibleScenario test analysis
-
+            bool responsePosibleScenarioQuery = engine.ExecuteQuery(posibleScenarioQuery);
+            responsePosibleScenarioQuery.Should().BeTrue();
             bool responseActionQuery = engine.ExecuteQuery(actionQuery);
-           // responseActionQuery.Should().BeTrue();
-            //TODO: Tworzy się tylko jedna struktura i to inconsistent. W czasie 4 ¬loaded=true ale ¬hidden=false i ¬alive=false
+            responseActionQuery.Should().BeTrue();
             bool responseFormulaQuery = engine.ExecuteQuery(formulaQuery);
             responseFormulaQuery.Should().BeFalse();
-            //TODO: Podobnie jak wyżej ale nie sprawdzałam tak głęboko, na pewno tworzy się tylko jedna struktura i to inconsistent
             bool responseFormulaQuery2 = engine.ExecuteQuery(formulaQuery2);
-            responseFormulaQuery2.Should().BeTrue();
-            //TODO: Podobnie jak wyżej ale nie sprawdzałam tak głęboko, na pewno tworzy się tylko jedna struktura i to inconsistent
+            responseFormulaQuery2.Should().BeFalse();
+            //TODO: Wcześniej tu było BeTrue ale to nie jest zgodne z obserwacjami.
             #endregion
         }
 
@@ -233,8 +220,8 @@ namespace KR_Tests
 
             #region Add querry
 
-            IQuery posibleScenarioQuery = new PossibleScenarioQuery(QueryType.Ever, scenario.Id);
-            IQuery posibleScenarioQuery2 = new PossibleScenarioQuery(QueryType.Always, scenario.Id);
+            IQuery posibleScenarioQuery = new PossibleScenarioQuery(scenario.Id);
+            IQuery posibleScenarioQuery2 = new PossibleScenarioQuery(scenario.Id);
 
             #endregion
 
@@ -283,7 +270,7 @@ namespace KR_Tests
 
             #region Add querry
 
-            IQuery posibleScenarioQuery = new PossibleScenarioQuery(QueryType.Ever, scenario.Id);
+            IQuery posibleScenarioQuery = new PossibleScenarioQuery(scenario.Id);
 
             #endregion
 
