@@ -991,7 +991,7 @@ namespace KnowledgeRepresentationInterface
                     tv_elem_formula1.Visibility = Visibility.Collapsed;
 
                     string treeViewStatementFormulaSummary =
-                        this.CS.CauseStatement_ComboBox.Text + " CAUSES ( " +
+                        this.CS.CauseStatement_ComboBox.Text + " D:"+ duration + " CAUSES ( " +
                         this.CS.scenario_obs.Observations_TextBox.Text + ")";
 
                     if (this.CS.HorizonstalToggleSwitchForExpression.IsChecked == false)
@@ -1115,7 +1115,7 @@ namespace KnowledgeRepresentationInterface
                     tv_elemIIS_action.Tag = actionIIS.Id.ToString();
                     tv_elemIIS_action.Visibility = Visibility.Collapsed;
 
-                    string treeViewStatementFormulaSummaryIIS = this.IIS.ImpossibleIfStatement_ComboBox.Text + " IMPOSSIBLE IF ( ";
+                    string treeViewStatementFormulaSummaryIIS = this.IIS.ImpossibleIfStatement_ComboBox.Text + "D:" + time_actionIIS + " IMPOSSIBLE IF ( ";
 
                     if (this.IIS.HorizonstalToggleSwitchForExpression.IsChecked == false) {
                         TreeViewItem tv_elem_formulaIIS = new TreeViewItem();
@@ -1208,8 +1208,8 @@ namespace KnowledgeRepresentationInterface
                     tv_elemIS_action2.Visibility = Visibility.Collapsed;
 
                     string treeViewStatementFormulaSummaryIS =
-                        this.IS.InvokeStatementFirst_ComboBox.Text + " INVOKES " +
-                        this.IS.InvokeStatementSecend_ComboBox.Text + " IF ( ";
+                        this.IS.InvokeStatementFirst_ComboBox.Text + " D:" + time_action1 + " INVOKES " +
+                        this.IS.InvokeStatementSecend_ComboBox.Text + " D:" + time_action2 + " AFTER:" + waitTimeValue + " IF ( ";
                     if (this.IS.HorizonstalToggleSwitchForExpression.IsChecked == false) {
                         TreeViewItem tv_elem_formulaIS = new TreeViewItem();
                         tv_elem_formulaIS.Header = "Formula: " + this.IS.scenario_obs.Observations_TextBox.Text;
@@ -1295,7 +1295,7 @@ namespace KnowledgeRepresentationInterface
                     tv_elemRS_fluent.Visibility = Visibility.Collapsed;
 
                     string treeViewStatementFormulaSummaryRS =
-                        this.RS.ReleaseStatementActions_ComboBox.Text + " RELEASES " +
+                        this.RS.ReleaseStatementActions_ComboBox.Text + " D:" + durationRS + " RELEASES " +
                         this.RS.ReleaseStatementFluents_ComboBox.Text + " IF ( ";
 
                     if (this.RS.HorizonstalToggleSwitchForExpression.IsChecked == false)
@@ -1347,7 +1347,7 @@ namespace KnowledgeRepresentationInterface
                     int time2 = -1;
                     
                     time2 = (int)this.TS.TriggerStatementAction_Numeric.Value;
-                    if (this.TS.TriggerStatementAction_Numeric.Value == null)
+                    if (this.TS.TriggerStatementAction_Numeric.Value == null || time2==0)
                     {
                         MessageBox.Show($"Incorrect action duration");
                         return;
@@ -1372,8 +1372,8 @@ namespace KnowledgeRepresentationInterface
                     tv_elem_formulaTS.Visibility = Visibility.Collapsed;
 
                     string treeViewStatementFormulaSummaryTS =
-                        "TRIGGERS " + this.TS.TriggerStatementAction_ComboBox.Text +
-                        " IF " + "( " + this.TS.scenario_obs.Observations_TextBox.Text + "), D: " + time2;
+                        "TRIGGERS " + this.TS.TriggerStatementAction_ComboBox.Text + " D:" + time2 +
+                        " IF " + "( " + this.TS.scenario_obs.Observations_TextBox.Text + ")";
 
 
                     TreeViewItem tv_statement_summaryTS = new TreeViewItem();
