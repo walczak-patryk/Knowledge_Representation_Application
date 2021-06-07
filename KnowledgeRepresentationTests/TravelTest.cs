@@ -28,6 +28,7 @@ namespace KR_Tests
          * (driving_slow,8) causes arrived
          * (driving_slow,8) causes ¬late
          * (driving_fast,6) causes arrived
+         * (driving_fast,6) causes ¬late
          * (driving_fast,1) causes deer_dead if deer_on_road
          * (driving_fast,1) causes ¬deer_on_road if deer_on_road
          */
@@ -125,12 +126,18 @@ namespace KR_Tests
              * Obs={(¬late∧¬arrived∧ ¬dead_deer∧ ¬deer_on_road,0), (¬late∧arrived∧ ¬dead_deer∧ ¬deer_on_road,14)}
              * Acs:{(sleep,6,0),(driving_slow,8,6)}
              * 
-             * Kwerenda:
+             * Kwerenda1:
              * Czy w chwili 5 scenariusza wykonywana jest akcja sleep?
-             * 
              * 
              * Odpowiedź:
              * W tym przypadku w chwili 5 wykonywana akcja sleep.
+             *
+             *
+             * Kwerenda2:
+             * Czy w chwili 5 scenariusza wykonywana jest akcja drivingSlow?
+             * 
+             * Odpowiedź:
+             * Nie, w tym przypadku w chwili 5 nie jest wykonywana akcja drivingSlow.
              */
 
             #region Add specific formulas
@@ -163,7 +170,6 @@ namespace KR_Tests
             bool response = engine.ExecuteQuery(query);
             response.Should().BeTrue();
             bool response2 = engine.ExecuteQuery(query2);
-            //TODO: jest tylko jedna i w dodatku inconsistent structure. Ale najpierw trzeba uspójnić domenę z opisem u góry
             response2.Should().BeFalse();
 
             #endregion
@@ -176,7 +182,7 @@ namespace KR_Tests
              * Obs={(¬late∧ ¬arrived∧ ¬dead_dear∧ ¬dear_on_road,0),¬late∧arrived∧dead_dear∧¬dear_on_road,14)}
              * Acs:{(sleep,8,0),(driving_fast,6,8)}
              * 
-             * Kwerenda:Czy w chwili5scenariusza wykonywana jest akcjadriving_slow?
+             * Kwerenda:Czy w chwili 5 scenariusza wykonywana jest akcjadriving_slow?
              * 
              * Odpowiedź:W tym przypadku w chwili5 nie jest wykonywanadriving_slow. 
              * Mimo, że ta akcja nie jest wogóle wykonywana w danym scenariuszu, nadal możemy zapytać o jej wykonanie w danej chwili czasowejscenariusza.
