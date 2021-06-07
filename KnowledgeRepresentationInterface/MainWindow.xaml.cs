@@ -956,11 +956,15 @@ namespace KnowledgeRepresentationInterface
                         MessageBox.Show($"Incorrect second formula");
                         return;
                     }
+                    int duration = Convert.ToInt32(this.CS.DurationUIntegerUpDown.Value);
+                    if (duration == 0){
+                        MessageBox.Show($"Action duration cannot be 0");
+                    }
 
                     Action action = (Action)this.CS.CauseStatement_ComboBox.SelectedItem;
-                    int time = Convert.ToInt32(TimeInfinity_UpDown.Value);
+                    //int time = Convert.ToInt32(TimeInfinity_UpDown.Value);
 
-                    ActionTime actionTime = new ActionTime(action, time);
+                    ActionTime actionTime = new ActionTime(action, duration);
 
                     IStatement statement;
                     if (this.CS.HorizonstalToggleSwitchForExpression.IsChecked) {
@@ -1083,6 +1087,12 @@ namespace KnowledgeRepresentationInterface
                         MessageBox.Show($"Incorrect second formula");
                         return;
                     }
+                    int time_actionIIS = Convert.ToInt32(this.IIS.DurationUIntegerUpDown.Value);
+                    if(time_actionIIS == 0){
+                        MessageBox.Show($"Incorrect action duration");
+                        return;
+                    }
+                    // tu chyba brakuje action time
 
                     Action actionIIS = (Action)this.IIS.ImpossibleIfStatement_ComboBox.SelectedItem;
 
@@ -1155,15 +1165,24 @@ namespace KnowledgeRepresentationInterface
                         return;
                     }
 
+                    int time_action1 = Convert.ToInt32(this.IS.DurationUIntegerUpDown1.Value);
+                    int time_action2 = Convert.ToInt32(this.IS.DurationUIntegerUpDown2.Value);
+
+                    if (time_action1 == 0 || time_action2 == 0)
+                    {
+                        MessageBox.Show($"Action duration cannot be 0");
+                        return;
+                    }
+
                     Action actionIS1 = (Action)this.IS.InvokeStatementFirst_ComboBox.SelectedItem;
                     Action actionIS2 = (Action)this.IS.InvokeStatementSecend_ComboBox.SelectedItem;
 
                     int timeIS = Convert.ToInt32(TimeInfinity_UpDown.Value);
 
-                    ActionTime actionTimeIS1 = new ActionTime(actionIS1, timeIS);
-                    ActionTime actionTimeIS2 = new ActionTime(actionIS2, timeIS);
+                    ActionTime actionTimeIS1 = new ActionTime(actionIS1, time_action1);
+                    ActionTime actionTimeIS2 = new ActionTime(actionIS2, time_action2);
 
-                    int waitTimeValue = Convert.ToInt32(this.IS.Action_Duration_UIntUpDown.Value);
+                    int waitTimeValue = Convert.ToInt32(this.IS.Action_Wait_UIntUpDown.Value);
 
                     IStatement statementIS;
                     if (this.IS.HorizonstalToggleSwitchForExpression.IsChecked) { 
@@ -1236,6 +1255,8 @@ namespace KnowledgeRepresentationInterface
                         MessageBox.Show($"Incorrect formula");
                         return;
                     }
+                    // TODO wstawic durationRS do ActionTime
+                    int durationRS = Convert.ToInt32(this.RS.DurationUIntegerUpDown.Value);
 
                     Action actionRS = (Action)this.RS.ReleaseStatementActions_ComboBox.SelectedItem;
                     Fluent fluentRS = (Fluent)this.RS.ReleaseStatementFluents_ComboBox.SelectedItem;
@@ -1316,12 +1337,13 @@ namespace KnowledgeRepresentationInterface
                         return;
                     }
                     int time2 = -1;
+                    
+                    time2 = (int)this.TS.TriggerStatementAction_Numeric.Value;
                     if (this.TS.TriggerStatementAction_Numeric.Value == null)
                     {
                         MessageBox.Show($"Incorrect action duration");
                         return;
                     }
-                    time2 = (int)this.TS.TriggerStatementAction_Numeric.Value;
                     Action actionTS = (Action)this.TS.TriggerStatementAction_ComboBox.SelectedItem;
                     var actionT = new ActionTime(actionTS, time2);
                     IStatement statementTS = new TriggerStatement(actionT, this.TS.Get_Formula());
