@@ -25,11 +25,11 @@ namespace KR_Tests
         * jajek. Zrobienie którejkolwiek z potrawwymaga pójścia do sklepu. 
         * Ponadto, w kuchni dostępny jest tylko jeden palnik.
         * 
-        * (making_szakszuka,3)causes¬jajka∧ ¬palnik∧szakszuka
-        * (making_omllet,3)causes¬jajka∧ ¬palnik∧szakszuka
+        * (making_szakszuka,3) causes ¬jajka ∧ ¬palnik ∧szakszuka
+        * (making_omllet,3) causes ¬jajka ∧ ¬palnik ∧ omlet
         * impossible (making_szakszuka, 3) if ¬palnik or ¬eggs
         * impossible (making_omlet, 3) if ¬palnik or ¬eggs
-        * (buy_eggs,4)causes eggs
+        * (buy_eggs,1) causes eggs
          */
 
         #region Variables
