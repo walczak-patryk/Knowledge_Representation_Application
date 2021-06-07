@@ -959,6 +959,7 @@ namespace KnowledgeRepresentationInterface
                     int duration = Convert.ToInt32(this.CS.DurationUIntegerUpDown.Value);
                     if (duration == 0){
                         MessageBox.Show($"Action duration cannot be 0");
+                        return;
                     }
 
                     Action action = (Action)this.CS.CauseStatement_ComboBox.SelectedItem;
@@ -1255,20 +1256,27 @@ namespace KnowledgeRepresentationInterface
                         MessageBox.Show($"Incorrect formula");
                         return;
                     }
-                    // TODO wstawic durationRS do ActionTime
+                    //TODO zabezpieczenie przed nieporpawna wartoscia
                     int durationRS = Convert.ToInt32(this.RS.DurationUIntegerUpDown.Value);
 
+                    if (durationRS == 0)
+                    {
+                        MessageBox.Show($"Action duration cannot be 0");
+                        return;
+                    }
+
                     Action actionRS = (Action)this.RS.ReleaseStatementActions_ComboBox.SelectedItem;
+                    ActionTime actionTimeRS = new ActionTime(actionRS, durationRS);
                     Fluent fluentRS = (Fluent)this.RS.ReleaseStatementFluents_ComboBox.SelectedItem;
 
                     IStatement statementRS;
                     if(this.RS.HorizonstalToggleSwitchForExpression.IsChecked)
                     {
-                        statementRS = new ReleaseStatement(actionRS, fluentRS, null);
+                        statementRS = new ReleaseStatement(actionTimeRS, fluentRS, null);
                     }
                     else
                     {
-                        statementRS = new ReleaseStatement(actionRS, fluentRS, this.RS.Get_Formula());
+                        statementRS = new ReleaseStatement(actionTimeRS, fluentRS, this.RS.Get_Formula());
                     }
 
                     TreeViewItem tv_elemRS = new TreeViewItem();
