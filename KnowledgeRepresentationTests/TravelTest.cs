@@ -28,6 +28,8 @@ namespace KR_Tests
          * (driving_slow,8) causes arrived
          * (driving_slow,8) causes ¬late
          * (driving_fast,6) causes arrived
+         * (driving_fast,1) causes deer_dead if deer_on_road
+         * (driving_fast,1) causes ¬deer_on_road if deer_on_road
          */
 
         #region Variables
@@ -113,7 +115,6 @@ namespace KR_Tests
             engine.AddStatement(new CauseStatement(new ActionTime(drivingFast, 6), negLateFormula));
             engine.AddStatement(new CauseStatement(new ActionTime(drivingFast, 1), deerDeadFormula, deerOnRoadFormula));
             engine.AddStatement(new CauseStatement(new ActionTime(drivingFast, 1), negDeerOnRoadFormula, deerOnRoadFormula));
-            //TODO: Uspójnić domenę z opisem u góry i (chyba) z opisem testów potem przeanalizować testy
             #endregion
         }
 
@@ -160,7 +161,6 @@ namespace KR_Tests
             engine.SetMaxTime(15);
             bool response = engine.ExecuteQuery(query);
             response.Should().BeTrue();
-            //TODO: Uspójnić domenę z opisem u góry i (chyba) z opisem testów potem przeanalizować testy
             #endregion
         }
 
@@ -173,7 +173,7 @@ namespace KR_Tests
              *
              *Kwerenda:Czy w chwili 5 scenariusza wykonywana jest akcja driving_slow?
              *
-             *Odpowiedź:W tym przypadku w chwili5nie wykonywana akcja driving_slow.
+             *Odpowiedź:W tym przypadku w chwili 5 nie wykonywana akcja driving_slow.
              */
 
             #region Add specific formulas
