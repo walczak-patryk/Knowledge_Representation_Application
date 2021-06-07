@@ -95,39 +95,33 @@ namespace KR_Tests
              * Acs={(A,1,3)}
              * 
              * Kwerenda 1:
-             * Czy scenariusz jest osiagany zawsze?
+             * Czy scenariusz jest osiagany?
              * 
              * Odpowiedź 1:
-             * Nie
+             * Tak
              * 
              * Kwerenda 2:
-             * Czy scenariusz jest osiagany kiedykolwiek?
+             * Czy ¬f w chwili 5 zawsze?
              * 
              * Odpowiedź 2:
              * Tak
              * 
              * Kwerenda 3:
-             * Czy ¬f w chwili 5 zawsze?
+             * Czy ¬f w chwili 5 kiedykolwiek?
              * 
              * Odpowiedź 3:
              * Tak
              * 
              * Kwerenda 4:
-             * Czy ¬f w chwili 5 kiedykolwiek?
+             * Czy ¬f w chwili 6 zawsze?
              * 
              * Odpowiedź 4:
              * Tak
              * 
              * Kwerenda 5:
-             * Czy ¬f w chwili 6 zawsze?
-             * 
-             * Odpowiedź 5:
-             * Tak
-             * 
-             * Kwerenda 6:
              * Czy ¬f w chwili 6 kiedykolwiek?
              * 
-             * Odpowiedź 6:
+             * Odpowiedź 5:
              * Tak
              */
 
@@ -151,8 +145,7 @@ namespace KR_Tests
 
             #region Add querry
 
-            IQuery posibleScenarioQuery = new PossibleScenarioQuery(QueryType.Always, scenario.Id);
-            IQuery posibleScenarioQuery2 = new PossibleScenarioQuery(QueryType.Ever, scenario.Id);
+            IQuery posibleScenarioQuery = new PossibleScenarioQuery(scenario.Id);
             IQuery formulaQuery = new FormulaQuery(5, negfFormula, scenario.Id, QueryType.Always);
             IQuery formulaQuery2 = new FormulaQuery(5, negfFormula, scenario.Id, QueryType.Ever);
             IQuery formulaQuery3 = new FormulaQuery(6, negfFormula, scenario.Id, QueryType.Always);
@@ -163,15 +156,8 @@ namespace KR_Tests
             #region Testing
             engine.SetMaxTime(7);
 
-            /*
-
             bool responsePosibleScenarioQuery = engine.ExecuteQuery(posibleScenarioQuery);
-            responsePosibleScenarioQuery.Should().BeFalse();
-
-            bool responsePosibleScenarioQuery2 = engine.ExecuteQuery(posibleScenarioQuery2);
-            responsePosibleScenarioQuery2.Should().BeTrue();
-            */
-            //TODO: PossibleScenario test analysis
+            responsePosibleScenarioQuery.Should().BeTrue();
 
             bool responseFormulaQuery = engine.ExecuteQuery(formulaQuery);
             responseFormulaQuery.Should().BeTrue();
@@ -196,27 +182,21 @@ namespace KR_Tests
              * Acs={(B,1,1)}
              * 
              * Kwerenda 1:
-             * Czy scenariusz jest osiagany zawsze?
+             * Czy scenariusz jest osiagany?
              * 
              * Odpowiedź 1:
-             * Nie
-             * 
-             * Kwerenda 2:
-             * Czy scenariusz jest osiagany kiedykolwiek?
-             * 
-             * Odpowiedź 2:
              * Tak
              * 
-             * Kwerenda 3:
+             * Kwerenda 2:
              * Czy f w chwili 3 zawsze?
              * 
-             * Odpowiedź 3:
+             * Odpowiedź 2:
              * Nie
              * 
-             * Kwerenda 4:
+             * Kwerenda 3:
              * Czy f w chwili 3 kiedykolwiek?
              * 
-             * Odpowiedź 4:
+             * Odpowiedź 3:
              * Tak
              * 
              */
@@ -241,8 +221,7 @@ namespace KR_Tests
 
             #region Add querry
 
-            IQuery posibleScenarioQuery = new PossibleScenarioQuery(QueryType.Always, scenario.Id);
-            IQuery posibleScenarioQuery2 = new PossibleScenarioQuery(QueryType.Ever, scenario.Id);
+            IQuery posibleScenarioQuery = new PossibleScenarioQuery(scenario.Id);
             IQuery formulaQuery = new FormulaQuery(3, fFormula, scenario.Id, QueryType.Always);
             IQuery formulaQuery2 = new FormulaQuery(3, fFormula, scenario.Id, QueryType.Ever);
 
@@ -252,10 +231,7 @@ namespace KR_Tests
             engine.SetMaxTime(5);
 
             bool responsePosibleScenarioQuery = engine.ExecuteQuery(posibleScenarioQuery);
-            responsePosibleScenarioQuery.Should().BeFalse();
-            bool responsePosibleScenarioQuery2 = engine.ExecuteQuery(posibleScenarioQuery2);
-            responsePosibleScenarioQuery2.Should().BeTrue();
-            //TODO: PossibleScenario test analysis
+            responsePosibleScenarioQuery.Should().BeTrue();
             bool responseFormulaQuery = engine.ExecuteQuery(formulaQuery);
             responseFormulaQuery.Should().BeFalse();
             bool responseFormulaQuery2 = engine.ExecuteQuery(formulaQuery2);

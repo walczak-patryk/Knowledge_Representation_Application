@@ -155,7 +155,7 @@ namespace KR_Tests
 
             #region Add querry
 
-            IQuery everPosibleScenarioQuery = new PossibleScenarioQuery(QueryType.Ever, scenario.Id);
+            IQuery everPosibleScenarioQuery = new PossibleScenarioQuery(scenario.Id);
 
             #endregion
 

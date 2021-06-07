@@ -33,9 +33,9 @@ namespace KR_Lib.Queries
         /// <returns>Prawda jeżeli akcja A jest wykonywana w chwili t w każdej stukturze z listy, fałsz w.p.p.<returns>
         public bool GetAnswer(List<IStructure> modeledStructures)
         {
-            var models = modeledStructures.Where(s => s is Model);
-            if (models.Count() == 0) return false;
-            foreach (var model in models)
+            //var models = modeledStructures.Where(s => s is Model);
+            if (modeledStructures.Count() == 0) return false;
+            foreach (var model in modeledStructures)
             {
                 if (model.CheckActionBelongingToE(this.action, this.time) != true)
                     return false;
