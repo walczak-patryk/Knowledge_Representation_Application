@@ -232,7 +232,7 @@
                     <ComboBox Name="Action_Occurences_ComboBox" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" />
 
                     <!--Action occurences - numeric up down control for duration-->
-                    <xctk:UIntegerUpDown Name="Action_Occurences_Duration_UIntUpDown" ValueChanged="Action_Occurences_Duration_UIntUpDown_ValueChanged" Grid.Row="1" Grid.Column="3" Margin="3,3,3,3" >
+                    <xctk:UIntegerUpDown Name="Action_Occurences_Duration_UIntUpDown" ValueChanged="Action_Occurences_Duration_UIntUpDown_ValueChanged" Grid.Row="1" Minimum="1" Grid.Column="3" Margin="3,3,3,3" >
                         <xctk:UIntegerUpDown.Background>
                             <ImageBrush ImageSource="Backgrounds/Duration.bmp" AlignmentX="Left" Stretch="Uniform" AlignmentY="Top" />
                         </xctk:UIntegerUpDown.Background>
