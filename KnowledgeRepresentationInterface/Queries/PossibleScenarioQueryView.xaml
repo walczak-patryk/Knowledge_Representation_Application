@@ -28,10 +28,6 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <Label Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" Content="Is possible to realize" VerticalAlignment="Bottom" HorizontalAlignment="Center" />
-        <ComboBox Name="Type_ComboBox" Grid.Row="3" Grid.Column="2" HorizontalContentAlignment="Center" Grid.ColumnSpan="2" SelectedIndex="0" Margin="1,0,1,5">
-            <ComboBoxItem Content="Always" Margin="1,1,1,1" />
-            <ComboBoxItem Content="Ever" Margin="1,1,1,1" />
-        </ComboBox>
+        <Label Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" Content="Is it possible to realize the scenario?" VerticalAlignment="Bottom" HorizontalAlignment="Center" />
     </Grid>
 </UserControl>
