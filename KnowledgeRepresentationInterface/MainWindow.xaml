@@ -358,7 +358,7 @@
                     <Label Grid.Column="1" Grid.Row="6" HorizontalContentAlignment="Right">Scenario</Label>
 
                     <!--Choosen scenario combobox-->
-                    <ComboBox Grid.Row="6" Grid.Column="2" Grid.ColumnSpan="2"  Name="Query_Scenario_ComboBox" Margin="2,2,2,2"></ComboBox>
+                    <ComboBox Grid.Row="6" Grid.Column="2" SelectionChanged="Query_Scenario_ComboBox_SelectionChanged" Grid.ColumnSpan="2"  Name="Query_Scenario_ComboBox" Margin="2,2,2,2"></ComboBox>
 
                     <!--Execute query button-->
                     <Button Grid.Row="7" Grid.Column="2" Grid.ColumnSpan="2" Margin="2,2,2,2" Click="ExecuteQuery_Click">Execute query</Button>
@@ -374,6 +374,9 @@
                             </ContextMenu>
                         </Label.ContextMenu>
                     </Label>
+
+                    <!--Warning label-->
+                    <Label Name="Warning_label" Foreground="Red" Grid.Row="9" Grid.Column="2" Grid.ColumnSpan="3" />
 
                 </Grid>
             </TabItem>
