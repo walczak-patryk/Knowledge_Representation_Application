@@ -365,7 +365,7 @@ namespace KnowledgeRepresentationInterface
                     {
                         qt_PSQ = QueryType.Ever;
                     }
-                    query = new KR_Lib.Queries.PossibleScenarioQuery(qt_PSQ, selected_scenario.Id);
+                    query = new KR_Lib.Queries.PossibleScenarioQuery(selected_scenario.Id);
                     result = this.engine.ExecuteQuery(query);
                     break;
                 case 1:
