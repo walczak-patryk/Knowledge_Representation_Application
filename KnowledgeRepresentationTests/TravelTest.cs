@@ -154,6 +154,7 @@ namespace KR_Tests
             #region Add querry
 
             IQuery query = new ActionQuery(5, sleep, scenario.Id);
+            IQuery query2 = new ActionQuery(5, drivingSlow, scenario.Id);
 
             #endregion
 
@@ -161,56 +162,15 @@ namespace KR_Tests
             engine.SetMaxTime(15);
             bool response = engine.ExecuteQuery(query);
             response.Should().BeTrue();
+            bool response2 = engine.ExecuteQuery(query2);
+            //TODO: jest tylko jedna i w dodatku inconsistent structure. Ale najpierw trzeba uspójnić domenę z opisem u góry
+            response2.Should().BeFalse();
+
             #endregion
         }
 
         [TestMethod]
         public void TestScenario2()
-        {
-            /*
-             *Obs={(¬late∧ ¬arrived∧ ¬dead_dear∧ ¬dear_on_road,0),(¬late∧arrived∧ ¬dead_dear∧¬dear_on_road,14)}
-             *Acs:{(sleep,6,0),(driving_slow,8,6)}
-             *
-             *Kwerenda:Czy w chwili 5 scenariusza wykonywana jest akcja driving_slow?
-             *
-             *Odpowiedź:W tym przypadku w chwili 5 nie wykonywana akcja driving_slow.
-             */
-
-            #region Add specific formulas
-
-            IFormula observationFormula1 = new ConjunctionFormula(negLateFormula, negArrivedFormula, negDeerOnRoadFormula, negDeerDeadFormula);
-            IFormula observationFormula2 = new ConjunctionFormula(negLateFormula, arrivedFormula, negDeerOnRoadFormula, negDeerDeadFormula);
-
-            #endregion
-
-            #region Add scenarios
-
-            IScenario scenario = new Scenario("testScenario2")
-            {
-                Observations = new List<Observation>() { new Observation(observationFormula1, 0), new Observation(observationFormula2, 14) },
-                ActionOccurrences = new List<ActionOccurrence> { new ActionOccurrence(sleep, 6, 0), new ActionOccurrence(drivingSlow, 8, 6) }
-            };
-            engine.AddScenario(scenario);
-
-            #endregion
-
-            #region Add querry
-
-            IQuery query = new ActionQuery(5, drivingSlow, scenario.Id);
-
-            #endregion
-
-            #region Testing
-            engine.SetMaxTime(15);
-            bool response = engine.ExecuteQuery(query);
-            //TODO: jest tylko jedna i w dodatku inconsistent structure. Ale najpierw trzeba uspójnić domenę z opisem u góry
-            response.Should().BeFalse();
-
-            #endregion
-        }
-
-        [TestMethod]
-        public void TestScenario3()
         {
             /*
              * Obs={(¬late∧ ¬arrived∧ ¬dead_dear∧ ¬dear_on_road,0),¬late∧arrived∧dead_dear∧¬dear_on_road,14)}
@@ -231,7 +191,7 @@ namespace KR_Tests
 
             #region Add scenarios
 
-            IScenario scenario = new Scenario("testScenario3")
+            IScenario scenario = new Scenario("testScenario2")
             {
                 Observations = new List<Observation>() { new Observation(observationFormula1, 0), new Observation(observationFormula2, 14) },
                 ActionOccurrences = new List<ActionOccurrence> { new ActionOccurrence(sleep, 8, 0), new ActionOccurrence(drivingFast, 6, 8) }
