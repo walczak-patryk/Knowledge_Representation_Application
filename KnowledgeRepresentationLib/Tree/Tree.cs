@@ -316,8 +316,17 @@ namespace KR_Lib
             var curAction = node.CurrentState.CurrentActions.FirstOrDefault();
             if (curAction != null && node.CurrentState.ImpossibleActions.Contains(curAction))
             {
-                ChangeStructureToInconsistent(structure, structures);
-                return;
+                var impAct = node.CurrentState.ImpossibleActions.Where(a => a == curAction).FirstOrDefault();
+                if(impAct.DurationTime == -1)
+                {
+                    ChangeStructureToInconsistent(structure, structures);
+                    return;
+                }
+                else if( impAct.DurationTime == curAction.DurationTime)
+                {
+                    ChangeStructureToInconsistent(structure, structures);
+                    return;
+                }             
             }
              
             var obs = scenario.GetObservationsAtTime(node.Time);
