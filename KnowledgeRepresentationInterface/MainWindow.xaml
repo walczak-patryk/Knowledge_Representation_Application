@@ -310,7 +310,7 @@
 
 
                     <!--Scenario name label-->
-                    <Label Grid.Row="10" Grid.Column="1" HorizontalContentAlignment="Right" Margin="1,1,1,1">Scenario</Label>
+                    <Label Grid.Row="10" Grid.Column="1" HorizontalContentAlignment="Right">Scenario</Label>
 
                     <!--Scenario name textbox-->
                     <TextBox Name="ScenarioName_TextBox" Grid.Row="10" Grid.Column="2" Grid.ColumnSpan="3" TextChanged="ScenarioName_TextBox_TextChanged" Margin="3,3,3,3" >
