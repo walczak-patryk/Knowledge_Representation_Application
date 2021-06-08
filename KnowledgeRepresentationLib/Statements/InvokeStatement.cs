@@ -36,7 +36,7 @@ namespace KR_Lib.Statements
             }
 
             bool result = true;
-            int? startTime = currentAction.GetEndTime() + waitTime;
+            int? startTime = currentAction.GetEndTime();
             if (ifFlag)
             {
                 formulaIf.SetFluentsStates(fluents);
@@ -48,7 +48,7 @@ namespace KR_Lib.Statements
 
             if (result)
             {
-                this.actionInvokedWithTimes = new ActionWithTimes(actionInvoked, (actionInvoked as ActionTime).Time, startTime.Value);
+                this.actionInvokedWithTimes = new ActionWithTimes(actionInvoked, (actionInvoked as ActionTime).Time, startTime.Value + waitTime);
             }
             return result;
         }
