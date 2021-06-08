@@ -35,7 +35,8 @@ namespace KR_Lib.Statements
             var a = newState.ImpossibleActions.Where(act => act == action).SingleOrDefault();
             if (a == null)
             {
-                var actionWTime = (action as ActionWithTimes);
+                var actionTime = (action as ActionTime);
+                var actionWTime = new ActionWithTimes(action, actionTime.Time, -1);
                 newState.ImpossibleActions.Add(actionWTime);
             }
                

@@ -22,7 +22,7 @@ namespace KR_Lib.Statements
 
         public List<(State, HashSet<Fluent>)> DoStatement(State newState)
         {
-            var actionWTime = (action as ActionWithTimes);
+            var actionWTime = new ActionWithTimes(action, -1, -1);
             newState.ImpossibleActions.Add(actionWTime);
             return new List<(State, HashSet<Fluent>)>() {(newState, null)};
         }
