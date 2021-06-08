@@ -1006,7 +1006,7 @@ namespace KnowledgeRepresentationInterface
                     }
                     else
                     {
-                        treeViewStatementFormulaSummary += " IF ( TRUE )";
+                        treeViewStatementFormulaSummary += "";
                     }
                     TreeViewItem tv_statement_summary = new TreeViewItem();
                     tv_statement_summary.Header = treeViewStatementFormulaSummary;
@@ -1115,7 +1115,7 @@ namespace KnowledgeRepresentationInterface
                     tv_elemIIS_action.Tag = actionIIS.Id.ToString();
                     tv_elemIIS_action.Visibility = Visibility.Collapsed;
 
-                    string treeViewStatementFormulaSummaryIIS = this.IIS.ImpossibleIfStatement_ComboBox.Text + "D:" + time_actionIIS + " IMPOSSIBLE IF ( ";
+                    string treeViewStatementFormulaSummaryIIS = this.IIS.ImpossibleIfStatement_ComboBox.Text + "D:" + time_actionIIS + " IMPOSSIBLE ";
 
                     if (this.IIS.HorizonstalToggleSwitchForExpression.IsChecked == false) {
                         TreeViewItem tv_elem_formulaIIS = new TreeViewItem();
@@ -1124,11 +1124,11 @@ namespace KnowledgeRepresentationInterface
                         tv_elem_formulaIIS.Visibility = Visibility.Collapsed;
                         tv_elemIIS.Items.Add(tv_elem_formulaIIS);
 
-                        treeViewStatementFormulaSummaryIIS += this.IIS.scenario_obs.Observations_TextBox.Text + ")";
+                        treeViewStatementFormulaSummaryIIS += "IF (" +this.IIS.scenario_obs.Observations_TextBox.Text + ")";
                     }
                     else
                     {
-                        treeViewStatementFormulaSummaryIIS += "TRUE )";
+                        treeViewStatementFormulaSummaryIIS += "";
                     }
 
                     TreeViewItem tv_statement_summaryIIS = new TreeViewItem();
@@ -1209,7 +1209,7 @@ namespace KnowledgeRepresentationInterface
 
                     string treeViewStatementFormulaSummaryIS =
                         this.IS.InvokeStatementFirst_ComboBox.Text + " D:" + time_action1 + " INVOKES " +
-                        this.IS.InvokeStatementSecend_ComboBox.Text + " D:" + time_action2 + " AFTER:" + waitTimeValue + " IF ( ";
+                        this.IS.InvokeStatementSecend_ComboBox.Text + " D:" + time_action2 + " AFTER:" + waitTimeValue ;
                     if (this.IS.HorizonstalToggleSwitchForExpression.IsChecked == false) {
                         TreeViewItem tv_elem_formulaIS = new TreeViewItem();
                         tv_elem_formulaIS.Header = "Formula: " + this.IS.scenario_obs.Observations_TextBox.Text;
@@ -1217,11 +1217,11 @@ namespace KnowledgeRepresentationInterface
                         tv_elem_formulaIS.Visibility = Visibility.Collapsed;
 
                         tv_elemIS.Items.Add(tv_elem_formulaIS);
-                        treeViewStatementFormulaSummaryIS += this.IS.scenario_obs.Observations_TextBox.Text + ")";
+                        treeViewStatementFormulaSummaryIS += " IF ( " + this.IS.scenario_obs.Observations_TextBox.Text + ")";
                     }
                     else
                     {
-                        treeViewStatementFormulaSummaryIS += "TRUE )";
+                        treeViewStatementFormulaSummaryIS += "";
                     }
                     
                     tv_elemIS.Items.Add(tv_elemIS_action1);
@@ -1296,7 +1296,7 @@ namespace KnowledgeRepresentationInterface
 
                     string treeViewStatementFormulaSummaryRS =
                         this.RS.ReleaseStatementActions_ComboBox.Text + " D:" + durationRS + " RELEASES " +
-                        this.RS.ReleaseStatementFluents_ComboBox.Text + " IF ( ";
+                        this.RS.ReleaseStatementFluents_ComboBox.Text ;
 
                     if (this.RS.HorizonstalToggleSwitchForExpression.IsChecked == false)
                     {
@@ -1307,11 +1307,11 @@ namespace KnowledgeRepresentationInterface
 
                         tv_elemRS.Items.Add(tv_elem_formulaRS);
 
-                        treeViewStatementFormulaSummaryRS += this.RS.scenario_obs.Observations_TextBox.Text + ")";
+                        treeViewStatementFormulaSummaryRS += " IF ( " + this.RS.scenario_obs.Observations_TextBox.Text + ")";
                     }
                     else
                     {
-                        treeViewStatementFormulaSummaryRS += "TRUE )";
+                        treeViewStatementFormulaSummaryRS += "";
                     }
                     
 
