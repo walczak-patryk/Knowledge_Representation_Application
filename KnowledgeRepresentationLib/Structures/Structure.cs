@@ -59,7 +59,7 @@ namespace KR_Lib.Structures
         public void FinishStructure()
         {
             OcclusionRegions = new List<(Fluent, ActionWithTimes, int)>();
-            for (int i = 0; i < EndTime; i++)
+            for (int i = 0; i <= EndTime; i++)
             {
                 foreach(var actionE in E)
                 {
@@ -81,13 +81,10 @@ namespace KR_Lib.Structures
 
             bool modelCheck = true;
 
-            for(int i = 0; i < EndTime; i++)
+            foreach (var occ in OcclusionRegions)
             {
-                foreach(var occ in OcclusionRegions)
-                {
-                    if (!(H(new Formula((occ.Item1.Clone() as Fluent)), occ.Item3) != H(new Formula((occ.Item1.Clone() as Fluent)), occ.Item3 - 1)))
-                        modelCheck = false;
-                }
+                if (!(H(new Formula((occ.Item1.Clone() as Fluent)), occ.Item3) != H(new Formula((occ.Item1.Clone() as Fluent)), occ.Item3 - 1)))
+                    modelCheck = false;
             }
 
             if (modelCheck)
