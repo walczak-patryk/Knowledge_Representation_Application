@@ -47,6 +47,15 @@ namespace KR_Lib.Statements
         {
             if(CheckStatement(newState.CurrentActions.FirstOrDefault(), parentState.Fluents, parentState.ImpossibleActions, time))
                 return this.DoStatement(newState);
+            else
+            {
+                var a = newState.ImpossibleActions.Where(act => act == action).SingleOrDefault();
+                if (a != null)
+                {
+                    newState.ImpossibleActions.Remove(a);
+                    return new List<(State, HashSet<Fluent>)>() { (newState, null) };
+                }                   
+            }
             return null;
         }
     }

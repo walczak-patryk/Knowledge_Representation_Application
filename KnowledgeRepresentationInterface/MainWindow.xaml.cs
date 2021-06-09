@@ -842,7 +842,14 @@ namespace KnowledgeRepresentationInterface
 
         private void TimeInfinity_UpDown_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            engine.SetMaxTime((int)TimeInfinity_UpDown.Value);
+            if (TimeInfinity_UpDown.Value != null)
+                engine.SetMaxTime((int)TimeInfinity_UpDown.Value);
+            else
+            {
+                TimeInfinity_UpDown.Value = 1;
+                engine.SetMaxTime(1);
+            }
+                
         }
 
         private void AddFluentButton_Click(object sender, RoutedEventArgs e)

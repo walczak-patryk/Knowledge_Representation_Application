@@ -190,14 +190,6 @@ namespace KR_Lib
             }
 
             return listOfStates.Select(s => s.Item1).ToList();
-
-
-            // List<State> newStates = new List<State>() { newState };
-            // foreach (Statement statement in statements)
-            // {
-            //     statement.CheckAndDo(parentState, ref newStates, time);          
-            // }
-            // return newStates;
         }
 
         private static (State, HashSet<Fluent>) UnionStates(State state1, HashSet<Fluent> affectedFluents1, State state2, HashSet<Fluent> affectedFluents2)
@@ -348,27 +340,25 @@ namespace KR_Lib
                 structure.TimeFluents[node.Time] = node.CurrentState.Fluents;
                 if (curAction != null)
                 {
-                    ActionWithTimes actFromE = structure.E.Where(a => a == curAction).FirstOrDefault();
-                    if(actFromE == null)
+                    var actsFromE = structure.E.Where(a => a == curAction && a.DurationTime == curAction.DurationTime && a.StartTime ==curAction.StartTime).ToList();
+                    if (!actsFromE.Any())
                         structure.E.Add(curAction);
-                    else if (actFromE.DurationTime != curAction.DurationTime || actFromE.StartTime != curAction.StartTime)
-                        structure.E.Add(curAction);
+           
                 }
-                //structures.Add(structure);
             }
             //koniec dodawania elementów
 
             for(int i = 0; i < node.Children.Count; i++)
             {
-                if(i != 0)
+                if(i == node.Children.Count - 1)
+                {
+                    TreeToStructures(node.Children[i], structure, structures, scenario);
+                }
+                else
                 {
                     var newStructure = new Structure(structure);
                     structures.Add(newStructure);
                     TreeToStructures(node.Children[i], newStructure, structures, scenario);
-                }
-                else
-                {
-                    TreeToStructures(node.Children[i], structure, structures, scenario);
                 }
 
             }
