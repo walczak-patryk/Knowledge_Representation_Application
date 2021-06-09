@@ -360,12 +360,7 @@ namespace KnowledgeRepresentationInterface
             switch (Query_Type_ComboBox.SelectedIndex)
             {
                 case 0:
-                    QueryType qt_PSQ = QueryType.Always;
-                    if (this.PSQ.Type_ComboBox.SelectedIndex==1)
-                    {
-                        qt_PSQ = QueryType.Ever;
-                    }
-                    query = new KR_Lib.Queries.PossibleScenarioQuery(qt_PSQ, selected_scenario.Id);
+                    query = new KR_Lib.Queries.PossibleScenarioQuery(selected_scenario.Id);
                     result = this.engine.ExecuteQuery(query);
                     break;
                 case 1:
@@ -458,18 +453,22 @@ namespace KnowledgeRepresentationInterface
             {
                 case 0:
                     Query_GroupBox.Content = this.PSQ;
+                    Warning_label.Content = "";
                     break;
                 case 1:
                     Query_GroupBox.Content = this.AQ;
                     this.AQ.Set_Actions(this.actions);
+                    check_scenario();
                     break;
                 case 2:
                     Query_GroupBox.Content = this.FQ;
                     this.FQ.Refresh_Fluents();
+                    check_scenario();
                     break;
                 case 3:
                     Query_GroupBox.Content = this.TQ;
                     this.TQ.Refresh_Fluents();
+                    check_scenario();
                     break;
             }
         }
@@ -843,7 +842,14 @@ namespace KnowledgeRepresentationInterface
 
         private void TimeInfinity_UpDown_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            engine.SetMaxTime((int)TimeInfinity_UpDown.Value);
+            if (TimeInfinity_UpDown.Value != null)
+                engine.SetMaxTime((int)TimeInfinity_UpDown.Value);
+            else
+            {
+                TimeInfinity_UpDown.Value = 1;
+                engine.SetMaxTime(1);
+            }
+                
         }
 
         private void AddFluentButton_Click(object sender, RoutedEventArgs e)
@@ -957,11 +963,16 @@ namespace KnowledgeRepresentationInterface
                         MessageBox.Show($"Incorrect second formula");
                         return;
                     }
+                    int duration = Convert.ToInt32(this.CS.DurationUIntegerUpDown.Value);
+                    if (duration == 0){
+                        MessageBox.Show($"Action duration cannot be 0");
+                        return;
+                    }
 
                     Action action = (Action)this.CS.CauseStatement_ComboBox.SelectedItem;
-                    int time = Convert.ToInt32(TimeInfinity_UpDown.Value);
+                    //int time = Convert.ToInt32(TimeInfinity_UpDown.Value);
 
-                    ActionTime actionTime = new ActionTime(action, time);
+                    ActionTime actionTime = new ActionTime(action, duration);
 
                     IStatement statement;
                     if (this.CS.HorizonstalToggleSwitchForExpression.IsChecked) {
@@ -987,7 +998,7 @@ namespace KnowledgeRepresentationInterface
                     tv_elem_formula1.Visibility = Visibility.Collapsed;
 
                     string treeViewStatementFormulaSummary =
-                        this.CS.CauseStatement_ComboBox.Text + " CAUSES ( " +
+                        this.CS.CauseStatement_ComboBox.Text + " D:"+ duration + " CAUSES ( " +
                         this.CS.scenario_obs.Observations_TextBox.Text + ")";
 
                     if (this.CS.HorizonstalToggleSwitchForExpression.IsChecked == false)
@@ -1002,7 +1013,7 @@ namespace KnowledgeRepresentationInterface
                     }
                     else
                     {
-                        treeViewStatementFormulaSummary += " IF ( TRUE )";
+                        treeViewStatementFormulaSummary += "";
                     }
                     TreeViewItem tv_statement_summary = new TreeViewItem();
                     tv_statement_summary.Header = treeViewStatementFormulaSummary;
@@ -1084,17 +1095,23 @@ namespace KnowledgeRepresentationInterface
                         MessageBox.Show($"Incorrect second formula");
                         return;
                     }
+                    int time_actionIIS = Convert.ToInt32(this.IIS.DurationUIntegerUpDown.Value);
+                    if(time_actionIIS == 0){
+                        MessageBox.Show($"Incorrect action duration");
+                        return;
+                    }
+                    
 
                     Action actionIIS = (Action)this.IIS.ImpossibleIfStatement_ComboBox.SelectedItem;
-
+                    ActionTime actionTimeIIS = new ActionTime(actionIIS, time_actionIIS);
                     IStatement statementIIS;
                     if (this.IIS.HorizonstalToggleSwitchForExpression.IsChecked)
                     {
-                        statementIIS = new ImpossibleIfStatement(actionIIS);
+                        statementIIS = new ImpossibleIfStatement(actionTimeIIS);
                     }
                     else
                     {
-                        statementIIS = new ImpossibleIfStatement(actionIIS, this.IIS.Get_Formula());
+                        statementIIS = new ImpossibleIfStatement(actionTimeIIS, this.IIS.Get_Formula());
                     }
                     TreeViewItem tv_elemIIS = new TreeViewItem();
                     tv_elemIIS.Header = "Impossible If Statement " + ImpossibleIfStatementView.numberOfImpossibleifStatements;
@@ -1105,7 +1122,7 @@ namespace KnowledgeRepresentationInterface
                     tv_elemIIS_action.Tag = actionIIS.Id.ToString();
                     tv_elemIIS_action.Visibility = Visibility.Collapsed;
 
-                    string treeViewStatementFormulaSummaryIIS = this.IIS.ImpossibleIfStatement_ComboBox.Text + " IMPOSSIBLE IF ( ";
+                    string treeViewStatementFormulaSummaryIIS = this.IIS.ImpossibleIfStatement_ComboBox.Text + "D:" + time_actionIIS + " IMPOSSIBLE ";
 
                     if (this.IIS.HorizonstalToggleSwitchForExpression.IsChecked == false) {
                         TreeViewItem tv_elem_formulaIIS = new TreeViewItem();
@@ -1114,11 +1131,11 @@ namespace KnowledgeRepresentationInterface
                         tv_elem_formulaIIS.Visibility = Visibility.Collapsed;
                         tv_elemIIS.Items.Add(tv_elem_formulaIIS);
 
-                        treeViewStatementFormulaSummaryIIS += this.IIS.scenario_obs.Observations_TextBox.Text + ")";
+                        treeViewStatementFormulaSummaryIIS += "IF (" +this.IIS.scenario_obs.Observations_TextBox.Text + ")";
                     }
                     else
                     {
-                        treeViewStatementFormulaSummaryIIS += "TRUE )";
+                        treeViewStatementFormulaSummaryIIS += "";
                     }
 
                     TreeViewItem tv_statement_summaryIIS = new TreeViewItem();
@@ -1156,15 +1173,24 @@ namespace KnowledgeRepresentationInterface
                         return;
                     }
 
+                    int time_action1 = Convert.ToInt32(this.IS.DurationUIntegerUpDown1.Value);
+                    int time_action2 = Convert.ToInt32(this.IS.DurationUIntegerUpDown2.Value);
+
+                    if (time_action1 == 0 || time_action2 == 0)
+                    {
+                        MessageBox.Show($"Action duration cannot be 0");
+                        return;
+                    }
+
                     Action actionIS1 = (Action)this.IS.InvokeStatementFirst_ComboBox.SelectedItem;
                     Action actionIS2 = (Action)this.IS.InvokeStatementSecend_ComboBox.SelectedItem;
 
                     int timeIS = Convert.ToInt32(TimeInfinity_UpDown.Value);
 
-                    ActionTime actionTimeIS1 = new ActionTime(actionIS1, timeIS);
-                    ActionTime actionTimeIS2 = new ActionTime(actionIS2, timeIS);
+                    ActionTime actionTimeIS1 = new ActionTime(actionIS1, time_action1);
+                    ActionTime actionTimeIS2 = new ActionTime(actionIS2, time_action2);
 
-                    int waitTimeValue = Convert.ToInt32(this.IS.Action_Duration_UIntUpDown.Value);
+                    int waitTimeValue = Convert.ToInt32(this.IS.Action_Wait_UIntUpDown.Value);
 
                     IStatement statementIS;
                     if (this.IS.HorizonstalToggleSwitchForExpression.IsChecked) { 
@@ -1189,8 +1215,8 @@ namespace KnowledgeRepresentationInterface
                     tv_elemIS_action2.Visibility = Visibility.Collapsed;
 
                     string treeViewStatementFormulaSummaryIS =
-                        this.IS.InvokeStatementFirst_ComboBox.Text + " INVOKES " +
-                        this.IS.InvokeStatementSecend_ComboBox.Text + " IF ( ";
+                        this.IS.InvokeStatementFirst_ComboBox.Text + " D:" + time_action1 + " INVOKES " +
+                        this.IS.InvokeStatementSecend_ComboBox.Text + " D:" + time_action2 + " AFTER:" + waitTimeValue ;
                     if (this.IS.HorizonstalToggleSwitchForExpression.IsChecked == false) {
                         TreeViewItem tv_elem_formulaIS = new TreeViewItem();
                         tv_elem_formulaIS.Header = "Formula: " + this.IS.scenario_obs.Observations_TextBox.Text;
@@ -1198,11 +1224,11 @@ namespace KnowledgeRepresentationInterface
                         tv_elem_formulaIS.Visibility = Visibility.Collapsed;
 
                         tv_elemIS.Items.Add(tv_elem_formulaIS);
-                        treeViewStatementFormulaSummaryIS += this.IS.scenario_obs.Observations_TextBox.Text + ")";
+                        treeViewStatementFormulaSummaryIS += " IF ( " + this.IS.scenario_obs.Observations_TextBox.Text + ")";
                     }
                     else
                     {
-                        treeViewStatementFormulaSummaryIS += "TRUE )";
+                        treeViewStatementFormulaSummaryIS += "";
                     }
                     
                     tv_elemIS.Items.Add(tv_elemIS_action1);
@@ -1237,18 +1263,27 @@ namespace KnowledgeRepresentationInterface
                         MessageBox.Show($"Incorrect formula");
                         return;
                     }
+                    //TODO zabezpieczenie przed nieporpawna wartoscia
+                    int durationRS = Convert.ToInt32(this.RS.DurationUIntegerUpDown.Value);
+
+                    if (durationRS == 0)
+                    {
+                        MessageBox.Show($"Action duration cannot be 0");
+                        return;
+                    }
 
                     Action actionRS = (Action)this.RS.ReleaseStatementActions_ComboBox.SelectedItem;
+                    ActionTime actionTimeRS = new ActionTime(actionRS, durationRS);
                     Fluent fluentRS = (Fluent)this.RS.ReleaseStatementFluents_ComboBox.SelectedItem;
 
                     IStatement statementRS;
                     if(this.RS.HorizonstalToggleSwitchForExpression.IsChecked)
                     {
-                        statementRS = new ReleaseStatement(actionRS, fluentRS, null);
+                        statementRS = new ReleaseStatement(actionTimeRS, fluentRS, null);
                     }
                     else
                     {
-                        statementRS = new ReleaseStatement(actionRS, fluentRS, this.RS.Get_Formula());
+                        statementRS = new ReleaseStatement(actionTimeRS, fluentRS, this.RS.Get_Formula());
                     }
 
                     TreeViewItem tv_elemRS = new TreeViewItem();
@@ -1267,8 +1302,8 @@ namespace KnowledgeRepresentationInterface
                     tv_elemRS_fluent.Visibility = Visibility.Collapsed;
 
                     string treeViewStatementFormulaSummaryRS =
-                        this.RS.ReleaseStatementActions_ComboBox.Text + " RELEASES " +
-                        this.RS.ReleaseStatementFluents_ComboBox.Text + " IF ( ";
+                        this.RS.ReleaseStatementActions_ComboBox.Text + " D:" + durationRS + " RELEASES " +
+                        this.RS.ReleaseStatementFluents_ComboBox.Text ;
 
                     if (this.RS.HorizonstalToggleSwitchForExpression.IsChecked == false)
                     {
@@ -1279,11 +1314,11 @@ namespace KnowledgeRepresentationInterface
 
                         tv_elemRS.Items.Add(tv_elem_formulaRS);
 
-                        treeViewStatementFormulaSummaryRS += this.RS.scenario_obs.Observations_TextBox.Text + ")";
+                        treeViewStatementFormulaSummaryRS += " IF ( " + this.RS.scenario_obs.Observations_TextBox.Text + ")";
                     }
                     else
                     {
-                        treeViewStatementFormulaSummaryRS += "TRUE )";
+                        treeViewStatementFormulaSummaryRS += "";
                     }
                     
 
@@ -1317,12 +1352,13 @@ namespace KnowledgeRepresentationInterface
                         return;
                     }
                     int time2 = -1;
-                    if (this.TS.TriggerStatementAction_Numeric.Value == null)
+                    
+                    time2 = (int)this.TS.TriggerStatementAction_Numeric.Value;
+                    if (this.TS.TriggerStatementAction_Numeric.Value == null || time2==0)
                     {
                         MessageBox.Show($"Incorrect action duration");
                         return;
                     }
-                    time2 = (int)this.TS.TriggerStatementAction_Numeric.Value;
                     Action actionTS = (Action)this.TS.TriggerStatementAction_ComboBox.SelectedItem;
                     var actionT = new ActionTime(actionTS, time2);
                     IStatement statementTS = new TriggerStatement(actionT, this.TS.Get_Formula());
@@ -1343,8 +1379,8 @@ namespace KnowledgeRepresentationInterface
                     tv_elem_formulaTS.Visibility = Visibility.Collapsed;
 
                     string treeViewStatementFormulaSummaryTS =
-                        "TRIGGERS " + this.TS.TriggerStatementAction_ComboBox.Text +
-                        " IF " + "( " + this.TS.scenario_obs.Observations_TextBox.Text + "), D: " + time2;
+                        "TRIGGERS " + this.TS.TriggerStatementAction_ComboBox.Text + " D:" + time2 +
+                        " IF " + "( " + this.TS.scenario_obs.Observations_TextBox.Text + ")";
 
 
                     TreeViewItem tv_statement_summaryTS = new TreeViewItem();
@@ -1368,6 +1404,33 @@ namespace KnowledgeRepresentationInterface
         private void Queries_Tab_Selected(object sender, RoutedEventArgs e)
         {
             Result_label.Content = "";
+            check_scenario();
+        }
+
+        private void Query_Scenario_ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            check_scenario();
+        }
+
+        private void check_scenario()
+        {
+            if (Query_Scenario_ComboBox.SelectedIndex < 0 || Query_Type_ComboBox.SelectedIndex==0)
+            {
+                Warning_label.Content = "";
+                return;
+            }
+
+            ScenarioGUI selected_scenario = (ScenarioGUI)Query_Scenario_ComboBox.SelectedItem;
+
+            IQuery query = new KR_Lib.Queries.PossibleScenarioQuery(selected_scenario.Id);
+            if (this.engine.ExecuteQuery(query))
+            {
+                Warning_label.Content = "";
+            }
+            else
+            {
+                Warning_label.Content = "Warning! This scenario is impossible to realize!";
+            }
         }
     }
 }

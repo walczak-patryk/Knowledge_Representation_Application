@@ -37,7 +37,8 @@
 
         <Label Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="3" Content="Triggers action" HorizontalAlignment="Center" FontSize="15" FontWeight="Bold"/>
         <ComboBox Name="TriggerStatementAction_ComboBox" Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="3"/>
-        <xctk:UIntegerUpDown Name="TriggerStatementAction_Numeric" Grid.Row="3" Grid.Column="6" Margin="3,3,3,3" >
+        <Label Grid.Row="2" Grid.Column="6" Content="duration" HorizontalAlignment="Center" FontSize="13" VerticalAlignment="Bottom"/>
+        <xctk:UIntegerUpDown Name="TriggerStatementAction_Numeric" Minimum="1" Grid.Row="3" Grid.Column="6" Margin="10,0,0,0" >
         </xctk:UIntegerUpDown>
 
         <Label Grid.Row="4" Grid.Column="3" Grid.ColumnSpan="3" Content="if" HorizontalAlignment="Center" FontSize="15" FontWeight="Bold"/>

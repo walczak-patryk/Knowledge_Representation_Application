@@ -46,7 +46,7 @@ namespace KR_Lib.Formulas
                 foreach(var res1 in result1){
                     foreach(var res2 in result2){
                         if(CheckSetsAreValid(res1,res2))
-                            res1.Union(res2);
+                            res1.UnionWith(res2);
                     }
                 }
 
@@ -55,7 +55,7 @@ namespace KR_Lib.Formulas
                 foreach(var res3 in result3){
                     foreach(var res4 in result4){
                         if(CheckSetsAreValid(res3,res4))
-                            res3.Union(res4);
+                            res3.UnionWith(res4);
                     }
                 }
                 listOfFluents.AddRange(result1);
@@ -68,7 +68,7 @@ namespace KR_Lib.Formulas
                 foreach(var res1 in result1){
                     foreach(var res2 in result2){
                         if(CheckSetsAreValid(res1,res2))
-                            res1.Union(res2);
+                            res1.UnionWith(res2);
                     }
                 }
 
@@ -77,7 +77,7 @@ namespace KR_Lib.Formulas
                 foreach(var res3 in result3){
                     foreach(var res4 in result4){
                         if(CheckSetsAreValid(res3,res4))
-                            res3.Union(res4);
+                            res3.UnionWith(res4);
                     }
                 }
                 listOfFluents.AddRange(result1);

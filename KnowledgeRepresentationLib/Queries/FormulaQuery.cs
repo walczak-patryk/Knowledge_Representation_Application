@@ -41,12 +41,13 @@ namespace KR_Lib.Queries
         {
             bool atLeastOneTrue = false;
             bool atLeastOneFalse = false;
-            var models = modeledStructures.Where(s => s is Model);
-            if (models.Count() == 0) return false;
-            foreach (var model in models)
+            //var models = modeledStructures.Where(s => s is Model);
+            if (modeledStructures.Count() == 0) return false;
+            foreach (var model in modeledStructures)
             {
                 bool evaluationResult = model.EvaluateFormula(this.formula, this.time);
-                if (evaluationResult) atLeastOneTrue = true;
+                if (evaluationResult)
+                    atLeastOneTrue = true;
                 else atLeastOneFalse = true;
 
             }

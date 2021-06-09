@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:KnowledgeRepresentationInterface.Statements"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:toggleSwitch="clr-namespace:ToggleSwitch;assembly=ToggleSwitch"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -36,6 +37,9 @@
 
         <Label Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="3" Content="Action" HorizontalAlignment="Center" FontSize="15" FontWeight="Bold"/>
         <ComboBox Name="ReleaseStatementActions_ComboBox" Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="3"/>
+        <Label Grid.Row="1" Grid.Column="6" Content="duration" HorizontalAlignment="Center" FontSize="13" VerticalAlignment="Bottom"/>
+        <xctk:UIntegerUpDown Name="DurationUIntegerUpDown" Grid.Row="2" Minimum="1" Grid.Column="6" Margin="10,0,0,0"/>
+        
         <Label Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="3" Content="realeases fluent" HorizontalAlignment="Center" FontSize="15" FontWeight="Bold"/>
         <ComboBox Name="ReleaseStatementFluents_ComboBox" Grid.Row="4" Grid.Column="3" Grid.ColumnSpan="3"/>
         <Label Grid.Row="5" Grid.Column="3" Grid.ColumnSpan="3" Content="if" HorizontalAlignment="Center" FontSize="15" FontWeight="Bold"/>

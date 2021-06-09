@@ -161,7 +161,6 @@ namespace KR_Tests
             engine.SetMaxTime(8);
             bool response = engine.ExecuteQuery(query);
             response.Should().BeTrue();
-            //TODO: błędne sprawdzanie stanów zamiast fluentów
 
             #endregion
         }

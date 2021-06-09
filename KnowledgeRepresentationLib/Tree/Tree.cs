@@ -52,7 +52,8 @@ namespace KR_Lib
                 List<List<Fluent>> fluentsCombinations = GetAllFluentsCombinations(null, fluents);
                 foreach (List<Fluent> fluentsCombination in fluentsCombinations)
                 {
-                    State newState = new State(actions, fluentsCombination, new List<ActionWithTimes>(), new List<ActionWithTimes>());
+                    var act = actions.Select(a => a.Clone() as ActionWithTimes).ToList();
+                    State newState = new State(act, fluentsCombination, new List<ActionWithTimes>(), new List<ActionWithTimes>());
                     List<State> newStates = CheckDescription(scenario, description.GetStatements(), root.CurrentState, newState, 0);
                     foreach (State state in newStates)
                     {
@@ -202,6 +203,10 @@ namespace KR_Lib
         private static (State, HashSet<Fluent>) UnionStates(State state1, HashSet<Fluent> affectedFluents1, State state2, HashSet<Fluent> affectedFluents2)
         {
             var copyState = state1.Clone() as State;
+            if (affectedFluents1 == null)
+                affectedFluents1 = new HashSet<Fluent>();
+            if (affectedFluents2 == null)
+                affectedFluents2 = new HashSet<Fluent>();
             HashSet<Fluent> affectedIntersection = affectedFluents1.Intersect(affectedFluents2).ToHashSet();
             if (affectedIntersection.Any() && CheckFluentsInStatesAreValid(copyState, state2, affectedIntersection))
             {
@@ -312,8 +317,17 @@ namespace KR_Lib
             var curAction = node.CurrentState.CurrentActions.FirstOrDefault();
             if (curAction != null && node.CurrentState.ImpossibleActions.Contains(curAction))
             {
-                ChangeStructureToInconsistent(structure, structures);
-                return;
+                var impAct = node.CurrentState.ImpossibleActions.Where(a => a == curAction).FirstOrDefault();
+                if(impAct.DurationTime == -1)
+                {
+                    ChangeStructureToInconsistent(structure, structures);
+                    return;
+                }
+                else if( impAct.DurationTime == curAction.DurationTime)
+                {
+                    ChangeStructureToInconsistent(structure, structures);
+                    return;
+                }             
             }
              
             var obs = scenario.GetObservationsAtTime(node.Time);
@@ -332,9 +346,13 @@ namespace KR_Lib
             if (node.Time != -1)
             {
                 structure.TimeFluents[node.Time] = node.CurrentState.Fluents;
-                if (curAction != null && !structure.E.Contains(curAction))
-                    structure.E.Add(curAction);
-                //structures.Add(structure);
+                if (curAction != null)
+                {
+                    var actsFromE = structure.E.Where(a => a == curAction && a.DurationTime == curAction.DurationTime && a.StartTime ==curAction.StartTime).ToList();
+                    if (!actsFromE.Any())
+                        structure.E.Add(curAction);
+           
+                }
             }
             //koniec dodawania elementów
 

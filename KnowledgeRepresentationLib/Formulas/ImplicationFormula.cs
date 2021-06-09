@@ -22,7 +22,7 @@ namespace KR_Lib.Formulas
         {
             HashSet<Fluent> fluents = this.formula.GetFluents();
             HashSet<Fluent> fluents2 = this.formula2.GetFluents();
-            fluents.Union(fluents2);
+            fluents.UnionWith(fluents2);
 
             return fluents;
         }
@@ -42,7 +42,7 @@ namespace KR_Lib.Formulas
                 foreach(var res1 in result1){
                     foreach(var res2 in result2){
                         if(CheckSetsAreValid(res1,res2))
-                            res1.Union(res2);
+                            res1.UnionWith(res2);
                     }
                 }
 
@@ -51,7 +51,7 @@ namespace KR_Lib.Formulas
                 foreach(var res3 in result3){
                     foreach(var res4 in result4){
                         if(CheckSetsAreValid(res3,res4))
-                            res3.Union(res4);
+                            res3.UnionWith(res4);
                     }
                 }
 
@@ -60,7 +60,7 @@ namespace KR_Lib.Formulas
                 foreach(var res5 in result5){
                     foreach(var res6 in result6){
                         if(CheckSetsAreValid(res5,res6))
-                            res5.Union(res6);
+                            res5.UnionWith(res6);
                     }
                 }
                 listOfFluents.AddRange(result1);
@@ -74,7 +74,7 @@ namespace KR_Lib.Formulas
                 foreach(var res1 in result1){
                     foreach(var res2 in result2){
                         if(CheckSetsAreValid(res1,res2))
-                            res1.Union(res2);
+                            res1.UnionWith(res2);
                     }
                 }
                 listOfFluents.AddRange(result1);
