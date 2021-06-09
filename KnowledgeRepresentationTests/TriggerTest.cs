@@ -82,7 +82,7 @@ namespace KR_Tests
              *Acs={(a,1,0)}
              *
              *Kwerenda:
-             *Czy osiągalny jest stan f1∧f2 dla zadanego zbioru obserwacji?
+             *Czy scenariusz jest osiagany kiedykolwiek?
              *
              *Odpowiedź:
              *Tak
