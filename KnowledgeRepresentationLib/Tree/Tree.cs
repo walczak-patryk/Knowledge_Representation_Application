@@ -340,7 +340,7 @@ namespace KR_Lib
                 structure.TimeFluents[node.Time] = node.CurrentState.Fluents;
                 if (curAction != null)
                 {
-                    var actsFromE = structure.E.Where(a => a == curAction && a.DurationTime == curAction.DurationTime && a.StartTime ==curAction.StartTime).ToList();
+                    var actsFromE = structure.E.Where(a => a == curAction && a.DurationTime == curAction.DurationTime && a.StartTime == curAction.StartTime).ToList();
                     if (!actsFromE.Any())
                         structure.E.Add(curAction);
            
