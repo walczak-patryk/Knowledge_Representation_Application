@@ -137,9 +137,10 @@ namespace KR_Lib.Structures
 
         public bool CheckActionBelongingToE(Action action, int time)
         {
-            var result = E.Where(x => x == action).FirstOrDefault();
-            if(result != null){
-                if(time >= result.StartTime && time < result.GetEndTime())
+            var result = E.Where(x => x == action);
+            if(result.Any()){
+                var res = result.Where(r => time >= r.StartTime && time < r.GetEndTime()).ToList();
+                if(res.Any())
                     return true;
             }
             return false;    
