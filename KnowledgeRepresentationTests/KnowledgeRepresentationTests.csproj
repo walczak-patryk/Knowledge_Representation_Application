@@ -60,6 +60,7 @@
     <Compile Include="FriendsTest.cs" />
     <Compile Include="IntegrationTests.cs" />
     <Compile Include="SkipTests.cs" />
+    <Compile Include="TriggerTest.cs" />
     <Compile Include="TurkeyTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TravelTest.cs" />
