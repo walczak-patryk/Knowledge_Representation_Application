@@ -15,6 +15,8 @@ using KR_Lib;
 using KR_Lib.Scenarios;
 using KR_Lib.Queries;
 using KR_Lib.Statements;
+using System.Windows.Interop;
+using System.Runtime.InteropServices;
 
 namespace KnowledgeRepresentationInterface
 {
@@ -757,7 +759,7 @@ namespace KnowledgeRepresentationInterface
                 ImageBrush textImageBrush = new ImageBrush();
                 textImageBrush.ImageSource =
                     new BitmapImage(
-                        new Uri(@"../../Backgrounds/Scenario.bmp", UriKind.Relative)
+                        new Uri(@"/Resources/ScenarioBitmap.bmp", UriKind.Relative)
                     );
                 textImageBrush.AlignmentX = AlignmentX.Left;
                 textImageBrush.AlignmentY = AlignmentY.Top;
@@ -778,10 +780,7 @@ namespace KnowledgeRepresentationInterface
             {
                 // Create an ImageBrush.
                 ImageBrush textImageBrush = new ImageBrush();
-                textImageBrush.ImageSource =
-                    new BitmapImage(
-                        new Uri(@"../../Backgrounds/Moment.bmp", UriKind.Relative)
-                    );
+                textImageBrush.ImageSource =  this.ImageSourceFromBitmap(Properties.Resources.MomentBitmap);
                 textImageBrush.AlignmentX = AlignmentX.Left;
                 textImageBrush.AlignmentY = AlignmentY.Top;
                 textImageBrush.Stretch = Stretch.Uniform;
@@ -801,10 +800,7 @@ namespace KnowledgeRepresentationInterface
             {
                 // Create an ImageBrush.
                 ImageBrush textImageBrush = new ImageBrush();
-                textImageBrush.ImageSource =
-                    new BitmapImage(
-                        new Uri(@"../../Backgrounds/Moment.bmp", UriKind.Relative)
-                    );
+                textImageBrush.ImageSource = this.ImageSourceFromBitmap(Properties.Resources.MomentBitmap);
                 textImageBrush.AlignmentX = AlignmentX.Left;
                 textImageBrush.AlignmentY = AlignmentY.Top;
                 textImageBrush.Stretch = Stretch.Uniform;
@@ -823,10 +819,8 @@ namespace KnowledgeRepresentationInterface
             {
                 // Create an ImageBrush.
                 ImageBrush textImageBrush = new ImageBrush();
-                textImageBrush.ImageSource =
-                    new BitmapImage(
-                        new Uri(@"../../Backgrounds/Duration.bmp", UriKind.Relative)
-                    );
+                textImageBrush.ImageSource = this.ImageSourceFromBitmap(Properties.Resources.DurationBitmap);
+
                 textImageBrush.AlignmentX = AlignmentX.Left;
                 textImageBrush.AlignmentY = AlignmentY.Top;
                 textImageBrush.Stretch = Stretch.Uniform;
@@ -1431,6 +1425,20 @@ namespace KnowledgeRepresentationInterface
             {
                 Warning_label.Content = "Warning! This scenario is impossible to realize!";
             }
+        }
+
+        [DllImport("gdi32.dll", EntryPoint = "DeleteObject")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool DeleteObject([In] IntPtr hObject);
+
+        private ImageSource ImageSourceFromBitmap(System.Drawing.Bitmap bmp)
+        {
+            var handle = bmp.GetHbitmap();
+            try
+            {
+                return Imaging.CreateBitmapSourceFromHBitmap(handle, IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+            }
+            finally { DeleteObject(handle); }
         }
     }
 }
