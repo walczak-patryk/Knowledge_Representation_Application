@@ -230,7 +230,7 @@
                     <!--Action occurences - numeric up down control for moment-->
                     <xctk:UIntegerUpDown Name="Action_Occurences_Moment_UIntUpDown" ValueChanged="Action_Occurences_Moment_UIntUpDown_ValueChanged" Grid.Row="2" Grid.Column="0" Margin="3,3,3,3" >
                         <xctk:UIntegerUpDown.Background>
-                            <ImageBrush ImageSource="Backgrounds/Moment.bmp" AlignmentX="Left" Stretch="Uniform" AlignmentY="Top" />
+                            <ImageBrush ImageSource="Resources/MomentBitmap.bmp" AlignmentX="Left" Stretch="Uniform" AlignmentY="Top" />
                         </xctk:UIntegerUpDown.Background>
                     </xctk:UIntegerUpDown>
 
@@ -240,7 +240,7 @@
                     <!--Action occurences - numeric up down control for duration-->
                     <xctk:UIntegerUpDown Name="Action_Occurences_Duration_UIntUpDown" ValueChanged="Action_Occurences_Duration_UIntUpDown_ValueChanged" Grid.Row="2" Minimum="1" Grid.Column="4" Margin="3,3,3,3" >
                         <xctk:UIntegerUpDown.Background>
-                            <ImageBrush ImageSource="Backgrounds/Duration.bmp" AlignmentX="Left" Stretch="Uniform" AlignmentY="Top" />
+                            <ImageBrush ImageSource="Resources/DurationBitmap.bmp" AlignmentX="Left" Stretch="Uniform" AlignmentY="Top" />
                         </xctk:UIntegerUpDown.Background>
                     </xctk:UIntegerUpDown>
 
@@ -257,7 +257,7 @@
                     <!--Observations - numeric up down control-->
                     <xctk:UIntegerUpDown Name="Observations_UIntUpDown" ValueChanged="Observations_UIntUpDown_ValueChanged" Grid.Row="7" Grid.Column="1" Margin="3,3,3,3" >
                         <xctk:UIntegerUpDown.Background>
-                            <ImageBrush ImageSource="Backgrounds/Moment.bmp" AlignmentX="Left" Stretch="Uniform" AlignmentY="Top" />
+                            <ImageBrush ImageSource="Resources/MomentBitmap.bmp" AlignmentX="Left" Stretch="Uniform" AlignmentY="Top" />
                         </xctk:UIntegerUpDown.Background>
                     </xctk:UIntegerUpDown>
 
@@ -315,7 +315,7 @@
                     <!--Scenario name textbox-->
                     <TextBox Name="ScenarioName_TextBox" Grid.Row="10" Grid.Column="2" Grid.ColumnSpan="3" TextChanged="ScenarioName_TextBox_TextChanged" Margin="3,3,3,3" >
                         <TextBox.Background>
-                            <ImageBrush ImageSource="Backgrounds/Scenario.bmp" AlignmentX="Left" Stretch="Uniform" AlignmentY="Top" />
+                            <ImageBrush ImageSource="Resources/ScenarioBitmap.bmp" AlignmentX="Left" Stretch="Uniform" AlignmentY="Top" />
                         </TextBox.Background>
                     </TextBox>
 
