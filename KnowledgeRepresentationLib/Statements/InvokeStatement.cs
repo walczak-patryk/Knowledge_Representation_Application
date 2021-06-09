@@ -36,19 +36,19 @@ namespace KR_Lib.Statements
             }
 
             bool result = true;
-            int? startTime = currentAction.GetEndTime();
+            int? currentDurationTime = currentTime - currentAction.StartTime;
             if (ifFlag)
             {
                 formulaIf.SetFluentsStates(fluents);
-                result = formulaIf.Evaluate() && currentTime == startTime;
+                result = formulaIf.Evaluate() && currentDurationTime == (action as ActionTime).Time;
             } else
             {
-                result = currentTime == startTime;
+                result = currentDurationTime == (action as ActionTime).Time;
             }
 
             if (result)
             {
-                this.actionInvokedWithTimes = new ActionWithTimes(actionInvoked, (actionInvoked as ActionTime).Time, startTime.Value + waitTime);
+                this.actionInvokedWithTimes = new ActionWithTimes(actionInvoked, (actionInvoked as ActionTime).Time, currentAction.GetEndTime() + waitTime);
             }
             return result;
         }

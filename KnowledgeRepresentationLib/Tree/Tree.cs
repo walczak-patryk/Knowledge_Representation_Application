@@ -52,7 +52,8 @@ namespace KR_Lib
                 List<List<Fluent>> fluentsCombinations = GetAllFluentsCombinations(null, fluents);
                 foreach (List<Fluent> fluentsCombination in fluentsCombinations)
                 {
-                    State newState = new State(actions, fluentsCombination, new List<ActionWithTimes>(), new List<ActionWithTimes>());
+                    var act = actions.Select(a => a.Clone() as ActionWithTimes).ToList();
+                    State newState = new State(act, fluentsCombination, new List<ActionWithTimes>(), new List<ActionWithTimes>());
                     List<State> newStates = CheckDescription(scenario, description.GetStatements(), root.CurrentState, newState, 0);
                     foreach (State state in newStates)
                     {
@@ -345,8 +346,14 @@ namespace KR_Lib
             if (node.Time != -1)
             {
                 structure.TimeFluents[node.Time] = node.CurrentState.Fluents;
-                if (curAction != null && !structure.E.Contains(curAction))
-                    structure.E.Add(curAction);
+                if (curAction != null)
+                {
+                    ActionWithTimes actFromE = structure.E.Where(a => a == curAction).FirstOrDefault();
+                    if(actFromE == null)
+                        structure.E.Add(curAction);
+                    else if (actFromE.DurationTime != curAction.DurationTime || actFromE.StartTime != curAction.StartTime)
+                        structure.E.Add(curAction);
+                }
                 //structures.Add(structure);
             }
             //koniec dodawania elementów

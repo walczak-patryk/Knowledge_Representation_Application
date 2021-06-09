@@ -13,7 +13,7 @@ namespace KR_Lib.Statements
 
         public ImpossibleIfStatement(Action action, IFormula formulaIf = null) : base(action)
         {
-            if (formulaIf == null)
+            if (formulaIf != null)
             {
                 ifFlag = true;
                 this.formulaIf = formulaIf;
