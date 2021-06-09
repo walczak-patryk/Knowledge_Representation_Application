@@ -348,13 +348,11 @@ namespace KR_Lib
                 structure.TimeFluents[node.Time] = node.CurrentState.Fluents;
                 if (curAction != null)
                 {
-                    ActionWithTimes actFromE = structure.E.Where(a => a == curAction).FirstOrDefault();
-                    if(actFromE == null)
+                    var actsFromE = structure.E.Where(a => a == curAction && a.DurationTime == curAction.DurationTime && a.StartTime ==curAction.StartTime).ToList();
+                    if (!actsFromE.Any())
                         structure.E.Add(curAction);
-                    else if (actFromE.DurationTime != curAction.DurationTime || actFromE.StartTime != curAction.StartTime)
-                        structure.E.Add(curAction);
+           
                 }
-                //structures.Add(structure);
             }
             //koniec dodawania elementów
 
