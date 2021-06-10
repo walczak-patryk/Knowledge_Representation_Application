@@ -757,10 +757,7 @@ namespace KnowledgeRepresentationInterface
             {
                 // Create an ImageBrush.
                 ImageBrush textImageBrush = new ImageBrush();
-                textImageBrush.ImageSource =
-                    new BitmapImage(
-                        new Uri(@"/Resources/ScenarioBitmap.bmp", UriKind.Relative)
-                    );
+                textImageBrush.ImageSource = this.ImageSourceFromBitmap(Properties.Resources.ScenarioBitmap);
                 textImageBrush.AlignmentX = AlignmentX.Left;
                 textImageBrush.AlignmentY = AlignmentY.Top;
                 textImageBrush.Stretch = Stretch.Uniform;
